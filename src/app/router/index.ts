@@ -17,6 +17,14 @@ const routes: RouteRecordRaw[] = [
       title: "404 - Сторінку не знайдено",
     },
   },
+  {
+    path: "/components",
+    name: "Components",
+    component: () => import("@/pages/Components/index.vue"),
+    meta: {
+      title: "Components - Vue 3 Starter",
+    },
+  },
 ];
 
 const router = createRouter({
