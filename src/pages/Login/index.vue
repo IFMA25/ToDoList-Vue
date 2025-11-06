@@ -15,11 +15,11 @@ const {
   validationEmail,
   validationPassword,
   loading,
-  handleSubmit,
+  handleSubmitLogin,
 } = useValidation();
 
 const onSubmit = () => {
-  handleSubmit(() => {
+  handleSubmitLogin(() => {
     alert("✅ Form submitted!");
   }, 2000);
 };
@@ -28,8 +28,6 @@ const onSubmit = () => {
 
 <template>
   <div class="flex flex-col gap-8 p-4 max-w-md mx-auto">
-    <VLoader v-if="loading" />
-
     <VCard>
       <template #header>
         <VInput
@@ -84,10 +82,16 @@ const onSubmit = () => {
           <VButton
             icon="right"
             :disabled="loading"
+            size="sm"
             @click="onSubmit"
           >
             <template #icon-right>
-              <vue-feather type="check" />
+              <span v-if="loading">
+                <VLoader />
+              </span>
+              <span v-else>
+                <vue-feather type="check" />
+              </span>
             </template>
             Submit
           </VButton>

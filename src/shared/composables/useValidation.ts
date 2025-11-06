@@ -48,7 +48,7 @@ export function useValidation() {
     }
   });
 
-  const handleSubmit = (callback?: () => void, delay = 2000) => {
+  const handleSubmitRegister = (callback?: () => void, delay = 2000) => {
     submitted.value = true;
     emailTouched.value = true;
     passwordTouched.value = true;
@@ -59,6 +59,23 @@ export function useValidation() {
         && !validationPassword.value.error
         && !validationLogin.value.error
         && !validationConfirm.value.error) {
+      loading.value = true;
+
+      setTimeout(() => {
+        loading.value = false;
+        callback?.();
+      }, delay);
+    }
+  };
+  const handleSubmitLogin = (callback?: () => void, delay = 2000) => {
+    submitted.value = true;
+    emailTouched.value = true;
+    passwordTouched.value = true;
+
+
+    if (!validationEmail.value.error
+        && !validationPassword.value.error
+    ) {
       loading.value = true;
 
       setTimeout(() => {
@@ -84,6 +101,7 @@ export function useValidation() {
     validationPassword,
     validationLogin,
     validationConfirm,
-    handleSubmit,
+    handleSubmitRegister,
+    handleSubmitLogin,
   };
 }
