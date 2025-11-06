@@ -29,7 +29,9 @@ const emit = defineEmits(["update:modelValue"]);
       v-if="$slots.label"
       class="font-medium text-gray-700"
     >
-      <slot name="label" />
+
+      {{ props.label }}
+
     </label>
     <div class="relative">
       <input

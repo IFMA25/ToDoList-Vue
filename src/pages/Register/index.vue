@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { useValidation } from "@/shared/composables/useValidation";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VCard from "@/shared/ui/common/VCard.vue";
@@ -38,10 +37,10 @@ const onSubmit = () => {
         <VInput
           v-model="login"
           placeholder="Enter logname"
+          label="Login"
+          @blur="loginTouched = true"
         >
-          <template #label>
-            Logname
-          </template>
+          <template #label />
           <template
             v-if="(loginTouched || submitted) && validationLogin.error"
             #error
@@ -52,10 +51,10 @@ const onSubmit = () => {
         <VInput
           v-model="email"
           placeholder="Enter Email"
+          label="Email"
+          @blur="emailTouched = true"
         >
-          <template #label>
-            Email
-          </template>
+          <template #label />
           <template
             v-if="(emailTouched || submitted) && validationEmail.error"
             #error
@@ -67,10 +66,10 @@ const onSubmit = () => {
           v-model="password"
           placeholder="Enter password"
           type="password"
+          label="Password"
+          @blur="passwordTouched = true"
         >
-          <template #label>
-            Password
-          </template>
+          <template #label />
           <template
             v-if="(passwordTouched || submitted) && validationPassword.error"
             #error
@@ -82,10 +81,10 @@ const onSubmit = () => {
           v-model="confirmPassword"
           placeholder="Confirm your password"
           type="password"
+          label="Confirm password"
+          @blur="confirmPasswordTouched = true"
         >
-          <template #label>
-            Confirm password
-          </template>
+          <template #label />
           <template
             v-if="(confirmPasswordTouched || submitted) && validationConfirm.error"
             #error

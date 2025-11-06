@@ -12,7 +12,6 @@ export function useValidation() {
   const loginTouched = ref(false);
   const loading = ref(false);
 
-
   const validationEmail = computed(() => {
     if (email.value === "") {
       return { error: true, message: "Email is required" };
