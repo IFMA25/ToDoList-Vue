@@ -34,14 +34,14 @@ function addTag(newTag: string) {
 
     <Multiselect
       v-bind="$attrs"
-      id="tagging"
+      :id="props.id"
       v-model="value"
       :options="options"
       :multiple="true"
       :taggable="true"
       :placeholder="props.placeholder"
       :tag-placeholder="props.tagPlaceholder"
-      label="name"
+      :label="props.labelKey"
       :track-by="props.trackKey"
       @tag="addTag"
     />
