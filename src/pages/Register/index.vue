@@ -2,8 +2,10 @@
 import { useValidation } from "@/shared/composables/useValidation";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VCard from "@/shared/ui/common/VCard.vue";
+import VDropdown from "@/shared/ui/common/VDropdown.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
-import VLoader from "@/shared/ui/common/VLoader.vue";
+// import VLoader from "@/shared/ui/common/VLoader.vue";
+import VSwitch from "@/shared/ui/common/VSwitch.vue";
 
 const {
   email,
@@ -19,6 +21,7 @@ const {
   validationPassword,
   validationLogin,
   validationConfirm,
+  checkedSwitcher,
   loading,
   handleSubmitRegister,
 } = useValidation();
@@ -32,15 +35,16 @@ const onSubmit = () => {
 
 <template>
   <div class="flex flex-col gap-8 p-4 max-w-md mx-auto">
-    <VCard>
-      <template #header>
+    <VCard
+      title="Register"
+    >
+      <template #default>
         <VInput
           v-model="login"
           placeholder="Enter logname"
           label="Login"
           @blur="loginTouched = true"
         >
-          <template #label />
           <template
             v-if="(loginTouched || submitted) && validationLogin.error"
             #error
@@ -48,13 +52,13 @@ const onSubmit = () => {
             {{ validationLogin.message }}
           </template>
         </VInput>
+
         <VInput
           v-model="email"
           placeholder="Enter Email"
           label="Email"
           @blur="emailTouched = true"
         >
-          <template #label />
           <template
             v-if="(emailTouched || submitted) && validationEmail.error"
             #error
@@ -62,6 +66,15 @@ const onSubmit = () => {
             {{ validationEmail.message }}
           </template>
         </VInput>
+        <VDropdown
+          :options="[
+            { label: 'Male', value: 1 },
+            { label: 'Female', value: 2 },
+            { label: 'Unknown', value: 3 },
+          ]"
+          placeholder="Choose your gender"
+          label="Gender"
+        />
         <VInput
           v-model="password"
           placeholder="Enter password"
@@ -69,7 +82,6 @@ const onSubmit = () => {
           label="Password"
           @blur="passwordTouched = true"
         >
-          <template #label />
           <template
             v-if="(passwordTouched || submitted) && validationPassword.error"
             #error
@@ -84,7 +96,6 @@ const onSubmit = () => {
           label="Confirm password"
           @blur="confirmPasswordTouched = true"
         >
-          <template #label />
           <template
             v-if="(confirmPasswordTouched || submitted) && validationConfirm.error"
             #error
@@ -93,34 +104,27 @@ const onSubmit = () => {
           </template>
         </VInput>
       </template>
-
       <template #footer>
         <div class="flex items-center justify-end gap-4">
           <VButton
-            icon="left"
+            icon="log-in"
             to="/login"
-          >
-            <template #icon-left>
-              <vue-feather type="log-in" />
-            </template>
-            Login
-          </VButton>
+            text="Login"
+          />
           <VButton
-            icon="right"
+            text="Sign up"
+            icon="check"
+            icon-position="right"
             :disabled="loading"
             size="sm"
             @click="onSubmit"
-          >
-            <template #icon-right>
-              <span v-if="loading">
-                <VLoader />
-              </span>
-              <span v-else>
-                <vue-feather type="check" />
-              </span>
-            </template>
-            Submit
-          </VButton>
+          />
+        </div>
+        <div class=" flex items-center justify-left gap-4">
+          <VSwitch
+            v-model="checkedSwitcher"
+            label="Checked"
+          />
         </div>
       </template>
     </VCard>

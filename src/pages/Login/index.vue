@@ -2,12 +2,15 @@
 import { useValidation } from "@/shared/composables/useValidation";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VCard from "@/shared/ui/common/VCard.vue";
+import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
-import VLoader from "@/shared/ui/common/VLoader.vue";
+// import VLoader from "@/shared/ui/common/VLoader.vue";
+
 
 const {
   email,
   password,
+  checkedCheckbox,
   emailTouched,
   passwordTouched,
   submitted,
@@ -26,18 +29,19 @@ const onSubmit = () => {
 
 <template>
   <div class="flex flex-col gap-8 p-4 max-w-md mx-auto">
-    <VCard>
+    <VCard title="Login">
       <template #header>
+        Please enter your credentials to login.
+      </template>
+      <template #default>
         <VInput
           v-model="email"
           placeholder="Enter Email"
           label="Email"
           @blur="emailTouched = true"
         >
-          <template #label />
           <template
             v-if="(emailTouched || submitted) && validationEmail.error"
-
             #error
           >
             {{ validationEmail.message }}
@@ -50,7 +54,6 @@ const onSubmit = () => {
           label="Password"
           @blur="passwordTouched = true"
         >
-          <template #label />
           <template
             v-if="(passwordTouched || submitted) && validationPassword.error"
             #error
@@ -62,35 +65,27 @@ const onSubmit = () => {
 
       <template #footer>
         <div class="flex items-center justify-end gap-4">
+          <div class="flex items-center justify-center mr-20" />
           <VButton
-            icon="left"
+            icon="user-plus"
             to="/register"
-          >
-            <template #icon-left>
-              <div class="flex gap-2 items-center">
-                <vue-feather type="user-plus" />
-              </div>
-            </template>
-            <template #default>
-              Register
-            </template>
-          </VButton>
+            text="Register"
+          />
           <VButton
-            icon="right"
+            icon-position="right"
+            text="Sign up"
+            icon="check"
             :disabled="loading"
+            :loader="loading"
             size="sm"
             @click="onSubmit"
-          >
-            <template #icon-right>
-              <span v-if="loading">
-                <VLoader />
-              </span>
-              <span v-else>
-                <vue-feather type="check" />
-              </span>
-            </template>
-            Submit
-          </VButton>
+          />
+        </div>
+        <div class="mt-4 flex items-center justify-center ">
+          <VCheckbox
+            v-model="checkedCheckbox"
+            label="Remember me"
+          />
         </div>
       </template>
     </VCard>

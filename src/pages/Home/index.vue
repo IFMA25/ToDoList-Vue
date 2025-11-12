@@ -48,15 +48,24 @@
           >
             Репозиторій
           </a>
-          <a
-            href="/login"
+          <RouterLink
+            to="/login"
             class="inline-flex items-center justify-center rounded-xl border
             border-slate-300 px-4 py-2 text-sm font-medium
             transition hover:bg-slate-50
             focus:outline-none focus:ring-2 focus:ring-slate-400"
           >
             Login
-          </a>
+          </RouterLink>
+          <RouterLink
+            to="/admprofiles"
+            class="inline-flex items-center justify-center rounded-xl border
+            border-slate-300 px-4 py-2 text-sm font-medium
+            transition hover:bg-slate-50
+            focus:outline-none focus:ring-2 focus:ring-slate-400"
+          >
+            Admin Profiles
+          </RouterLink>
         </div>
       </div>
     </section>

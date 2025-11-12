@@ -33,6 +33,15 @@ const routes: RouteRecordRaw[] = [
       title: "Register - Vue 3 Starter",
     },
   },
+  {
+    path: "/admprofiles",
+    name: "AdminProfiles",
+    component: () => import("@/pages/Admin-Profiles/index.vue"),
+    meta: {
+      title: "Register - Vue 3 Starter",
+    },
+  },
+
 ];
 
 const router = createRouter({
