@@ -10,6 +10,7 @@ type TaggingProps = {
   trackKey?: string;
   placeholder?: string;
   tagPlaceholder?: string;
+  label?: string;
   id: string;
 };
 const props = defineProps<TaggingProps>();
@@ -30,15 +31,13 @@ function addTag(newTag: string) {
 
 <template>
   <div>
-    <label class="typo__label">Tagging</label>
+    <label class="typo__label">{{ props.label }}</label>
 
     <Multiselect
       v-bind="$attrs"
       :id="props.id"
       v-model="value"
       :options="options"
-      :multiple="true"
-      :taggable="true"
       :placeholder="props.placeholder"
       :tag-placeholder="props.tagPlaceholder"
       :label="props.labelKey"
