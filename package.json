@@ -15,11 +15,9 @@
   "dependencies": {
     "@vueuse/core": "^13.6.0",
     "axios": "^1.12.2",
-    "feather-icons": "^4.29.0",
     "pinia": "^2.1.0",
     "vue": "^3.4.0",
     "vue-feather": "^2.0.0",
-    "vue-multiselect": "^3.4.0",
     "vue-router": "^4.2.0"
   },
   "devDependencies": {
@@ -52,5 +50,5 @@
     "node": ">=18.0.0",
     "pnpm": ">=10.0.0"
   },
-  "packageManager": "pnpm@10.21.0"
+  "packageManager": "pnpm@10.0.0"
 }

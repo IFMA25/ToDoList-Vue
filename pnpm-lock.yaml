@@ -14,9 +14,6 @@ importers:
       axios:
         specifier: ^1.12.2
         version: 1.12.2
-      feather-icons:
-        specifier: ^4.29.0
-        version: 4.29.2
       pinia:
         specifier: ^2.1.0
         version: 2.3.1(typescript@5.9.2)(vue@3.5.18(typescript@5.9.2))
@@ -26,9 +23,6 @@ importers:
       vue-feather:
         specifier: ^2.0.0
         version: 2.0.0(feather-icons@4.29.2)(vue@3.5.18(typescript@5.9.2))
-      vue-multiselect:
-        specifier: ^3.4.0
-        version: 3.4.0
       vue-router:
         specifier: ^4.2.0
         version: 4.5.1(vue@3.5.18(typescript@5.9.2))
@@ -2417,10 +2411,6 @@ packages:
     peerDependencies:
       feather-icons: ^4.28.0
       vue: ^3.0.0
-
-  vue-multiselect@3.4.0:
-    resolution: {integrity: sha512-NtaL1/VOsGsvM+H0EZswy1E+RcA5yeCpCxrhT28CBwKu9D1WbMSXBfIDNDw0v+T4enVRfOD5X7u2gyIJWCFX9w==}
-    engines: {node: '>= 14.18.1', npm: '>= 6.14.15'}
 
   vue-router@4.5.1:
     resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
@@ -4838,8 +4828,6 @@ snapshots:
     dependencies:
       feather-icons: 4.29.2
       vue: 3.5.18(typescript@5.9.2)
-
-  vue-multiselect@3.4.0: {}
 
   vue-router@4.5.1(vue@3.5.18(typescript@5.9.2)):
     dependencies:

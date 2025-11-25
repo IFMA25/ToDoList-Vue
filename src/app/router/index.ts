@@ -17,31 +17,6 @@ const routes: RouteRecordRaw[] = [
       title: "404 - Сторінку не знайдено",
     },
   },
-  {
-    path: "/login",
-    name: "Login",
-    component: () => import("@/pages/Login/index.vue"),
-    meta: {
-      title: "Login - Vue 3 Starter",
-    },
-  },
-  {
-    path: "/register",
-    name: "Register",
-    component: () => import("@/pages/Register/index.vue"),
-    meta: {
-      title: "Register - Vue 3 Starter",
-    },
-  },
-  {
-    path: "/admprofiles",
-    name: "AdminProfiles",
-    component: () => import("@/pages/Admin-Profiles/index.vue"),
-    meta: {
-      title: "Register - Vue 3 Starter",
-    },
-  },
-
 ];
 
 const router = createRouter({
