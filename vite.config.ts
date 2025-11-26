@@ -6,6 +6,7 @@ export default ({mode}: any) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};
 
     return defineConfig({
+        base: "/TodoList-Vue/",
         plugins: [vue()],
         resolve: {
             alias: {

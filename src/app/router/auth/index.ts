@@ -2,12 +2,20 @@ import { RouteRecordRaw } from "vue-router";
 
 const authRoutes: RouteRecordRaw[] = [
   {
-    path: "/signin",
-    name: "SignIn",
+    path: "/auth/:mode",
+    name: "auth",
     component: () => import("@/pages/Auth/index.vue"),
     meta: {
-      title: "Sign in",
+      title: "Authentication",
     },
+  },
+  {
+    path: "/signin",
+    redirect: "/auth/signin",
+  },
+  {
+    path: "/signup",
+    redirect: "/auth/signup",
   },
 ];
 
