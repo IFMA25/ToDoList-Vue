@@ -1,22 +1,25 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
+import authRoutes from "./auth";
+
 const routes: RouteRecordRaw[] = [
-  {
-    path: "/",
-    name: "Home",
-    component: () => import("@/pages/Home/index.vue"),
-    meta: {
-      title: "Home - Vue 3 Starter",
-    },
-  },
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: () => import("@/pages/SignIn/index.vue"),
+  //   meta: {
+  //     title: "Main home",
+  //   },
+  // },
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: () => import("@/pages/NotFound/index.vue"),
     meta: {
-      title: "404 - Сторінку не знайдено",
+      title: "404 - Page not found",
     },
   },
+  ...authRoutes,
 ];
 
 const router = createRouter({
