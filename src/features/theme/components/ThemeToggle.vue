@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-import { useThemeStore } from "../composables/useTheme";
+import { useThemeStore } from "../store/useThemeStore";
 
 const themeStore = useThemeStore();
 
@@ -15,7 +15,6 @@ const toggleTheme = () => {
 <template>
   <button
     class="theme-toggle"
-    :aria-label="isDark ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'"
     @click="toggleTheme"
   >
     <span v-if="isDark">🌙</span>

@@ -5,6 +5,11 @@ import { useRoute, useRouter } from "vue-router";
 import SignIn from "./components/SignIn.vue";
 import SignUp from "./components/SignUp.vue";
 
+const SIGN_IN = "Login";
+const SIGN_UP = "Create account";
+const SIGNIN_TEXT = "Don't have an account?";
+const SIGNUP_TEXT = "Already have an account?";
+
 type Mode = "signin" | "signup";
 
 const route = useRoute();
@@ -18,8 +23,9 @@ const pageMode = computed((): Mode => {
   return "signin";
 });
 
-const switchTo = (mode: Mode) => {
-  router.push({
+const toggleMode = () => {
+  const mode = pageMode.value === "signin" ?  "signup" : "signin";
+  router.replace({
     name: "auth",
     params: {
       mode,
@@ -30,16 +36,19 @@ const switchTo = (mode: Mode) => {
 </script>
 
 <template>
-  <div class="flex gap-2">
-    <button @click="switchTo('signin')">
-      Sign In
-    </button>
-    <button @click="switchTo('signup')">
-      Sign Up
-    </button>
-  </div>
   <div>
     <SignIn v-show="pageMode === 'signin'" />
     <SignUp v-show="pageMode === 'signup'" />
+    <div class="flex gap-4 mt-4 items-center">
+      <p class="text-center text-sm text-base-content">
+        {{ pageMode === 'signin' ? SIGNIN_TEXT : SIGNUP_TEXT }}
+      </p>
+      <button
+        class="text-blue-700"
+        @click="toggleMode"
+      >
+        {{ pageMode === 'signin' ? SIGN_IN : SIGN_UP }}
+      </button>
+    </div>
   </div>
 </template>
