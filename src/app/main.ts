@@ -6,9 +6,23 @@ import App from "./App.vue";
 import router from "./router";
 
 import "./main.scss";
+import { setupApiClient } from "@/shared/api";
 
 // Create Vue app instance
 const app = createApp(App);
+
+setupApiClient({
+  onTokenRefreshFailed: () => {
+    const currentRoute = router.currentRoute.value;
+
+    if (currentRoute.name !== "signin") {
+      router.push({
+        name: "signin",
+        query: { redirect: currentRoute.fullPath },
+      });
+    }
+  },
+});
 
 // Install plugins
 app.use(createPinia());

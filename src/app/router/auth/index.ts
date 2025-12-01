@@ -7,6 +7,7 @@ const authRoutes: RouteRecordRaw[] = [
     component: () => import("@/pages/Auth/index.vue"),
     meta: {
       title: "Authentication",
+      layout: "auth",
     },
   },
 ];

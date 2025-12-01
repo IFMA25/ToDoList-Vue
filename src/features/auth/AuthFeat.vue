@@ -47,7 +47,7 @@ const toggleMode = () => {
         class="text-blue-700"
         @click="toggleMode"
       >
-        {{ pageMode === 'signin' ? SIGN_IN : SIGN_UP }}
+        {{ pageMode === 'signin' ? SIGN_UP : SIGN_IN }}
       </button>
     </div>
   </div>
