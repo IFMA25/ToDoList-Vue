@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
-
 import { useSignupValidation } from "@/features/auth/composables/useSignUpValidation";
 import { tokenManager } from "@/shared/api";
 import { RegisterRequest, RegisterResponse } from "@/shared/api/types";
@@ -8,6 +6,7 @@ import { useApiPost } from "@/shared/composables/useApi";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
+import { toast } from "vue-sonner";
 
 const { formData, v$ } = useSignupValidation();
 
@@ -15,13 +14,8 @@ const { loading, error, execute } = useApiPost<RegisterResponse, RegisterRequest
 
 const handleSubmit = async () => {
   const isValid = await v$.value.$validate();
-  console.log("Validation result:", isValid);
-  console.log("Form data:", formData);
-  console.log("Validation errors:", v$.value.$errors);
 
   if (!isValid) {
-    console.error("Form is not valid");
-    console.error("Invalid fields:", v$.value.$errors);
     return;
   }
 
@@ -31,7 +25,6 @@ const handleSubmit = async () => {
         email: formData.email,
         password: formData.password,
         name: formData.name,
-        // surname: formData.surname
       },
     });
 
@@ -41,7 +34,8 @@ const handleSubmit = async () => {
         refreshToken: result.refreshToken,
       });
 
-      console.log("Успешная регистрация!", result);
+      console.log(error);
+      toast("Registration successful!");
     }
   } catch (err) {
     console.error("Ошибка регистрации:", err);
@@ -78,17 +72,6 @@ const handleSubmit = async () => {
         }"
         @blur="v$.name.$touch()"
       />
-      <!-- <VInput
-        type="text"
-        label="Surname"
-        class="w-[60%]"
-        v-model="formData.surname"
-        :validation="{
-        error: v$.surname.$error,
-        message: String(v$.surname.$errors[0]?.$message ?? '')
-      }"
-      @blur="v$.surname.$touch()"
-      /> -->
     </div>
 
     <VInput

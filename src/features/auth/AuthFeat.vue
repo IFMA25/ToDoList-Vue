@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed  } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import SignIn from "./components/SignIn.vue";
@@ -16,7 +16,7 @@ const route = useRoute();
 const router = useRouter();
 
 const pageMode = computed((): Mode => {
-  const mode = route.params.mode;
+  const mode = route.query.mode;
   if (mode === "signin" || mode === "signup") {
     return mode;
   }
@@ -27,12 +27,11 @@ const toggleMode = () => {
   const mode = pageMode.value === "signin" ?  "signup" : "signin";
   router.replace({
     name: "auth",
-    params: {
+    query: {
       mode,
     },
   });
 };
-
 </script>
 
 <template>
