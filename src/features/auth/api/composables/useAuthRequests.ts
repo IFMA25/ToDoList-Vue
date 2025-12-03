@@ -1,36 +1,25 @@
 import { tokenManager } from "@/shared/api";
-import { LoginResponse, LoginRequest } from "@/shared/api/types";
+import type { LoginResponse, RegisterResponse, LoginRequest, RegisterRequest } from "@/shared/api/types";
+import type { UseApiOptions } from "@/shared/api/types";
 import { useApiPost } from "@/shared/composables";
 
-
-export const useAuthRequests = () => {
-  const register = (
-    email: string,
-    password: string,
-    options?: { onSuccess?: (response: any) => void },
-  ) => useApiPost<LoginRequest>(
-    "/auth/register", {
-      data: { email, password },
-      immediate: false,
-      onSuccess: options?.onSuccess,
-    });
-
-  const login = (
-    email: string,
-    password: string,
-  ) => useApiPost<LoginResponse>(
-    "/auth/login", {
-      data: { email, password },
-      immediate: false,
-      onSuccess: (response) => {
-        tokenManager.setTokens({
-          accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
-        // ...(response.expiresIn && { expiresIn: response.expiresIn })
-        });
-      },
-    });
-
-  return { register, login };
+export const useLogin = (options?: UseApiOptions<LoginResponse, LoginRequest>) => {
+  return useApiPost<LoginResponse, LoginRequest>("/api/auth/login", {
+    immediate: false,
+    ...options,
+    onSuccess: (response) => {
+      tokenManager.setTokens({
+        accessToken: response.accessToken,
+        refreshToken: response.refreshToken,
+      });
+      options?.onSuccess?.(response);
+    },
+  });
 };
 
+export const useRegister = (options?: UseApiOptions<RegisterResponse, RegisterRequest>) => {
+  return useApiPost<RegisterResponse, RegisterRequest>("/api/auth/register", {
+    immediate: false,
+    ...options,
+  });
+};

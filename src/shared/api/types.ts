@@ -183,18 +183,14 @@ export interface RegisterRequest {
   email: string;
   password: string;
   name: string;
-  // surname: string;
 }
 
 export interface RegisterResponse {
-  accessToken: string;
-  refreshToken: string;
-  user?: {
-    id: string;
-    email: string;
-    name: string;
-    // surname: string;
-  }
+  email: string;
+  name: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface LoginRequest {
@@ -205,10 +201,4 @@ export interface LoginRequest {
 export interface LoginResponse {
   accessToken: string;
   refreshToken: string;
-  user?: {
-    id: string;
-    email: string;
-    name: string;
-    // surname: string;
-  }
 }

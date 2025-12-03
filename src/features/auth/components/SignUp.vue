@@ -1,16 +1,34 @@
 <script setup lang="ts">
-import { useSignupValidation } from "@/features/auth/composables/useSignUpValidation";
-import { tokenManager } from "@/shared/api";
-import { RegisterRequest, RegisterResponse } from "@/shared/api/types";
-import { useApiPost } from "@/shared/composables/useApi";
+import { ref } from "vue";
+import { toast } from "vue-sonner";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
-import { toast } from "vue-sonner";
+import { useSignupValidation } from "@/features/auth/composables/useSignUpValidation";
+import { useRegister } from "@/features/auth/api/composables/useAuthRequests";
+import { useRouter } from "vue-router";
+
 
 const { formData, v$ } = useSignupValidation();
+const router = useRouter();
 
-const { loading, error, execute } = useApiPost<RegisterResponse, RegisterRequest>("api/auth/register");
+const errorRegistration = ref<string | null>(null);
+
+const { execute, loading, error } = useRegister({
+  onSuccess: () => {
+    toast.success("Registration successful!");
+    router.replace({ name: "auth", query: { mode: "signin" } });
+  },
+  onError: () => {
+    if(error.value?.status === 409){
+        errorRegistration.value = error.value.message;
+      }else{
+        errorRegistration.value = null;
+        toast.error("Registration failed. Please try again.");
+      }
+    return;
+  }
+});
 
 const handleSubmit = async () => {
   const isValid = await v$.value.$validate();
@@ -19,29 +37,14 @@ const handleSubmit = async () => {
     return;
   }
 
-  try {
-    const result = await execute({
-      data: {
-        email: formData.email,
-        password: formData.password,
-        name: formData.name,
-      },
-    });
-
-    if (result && !error.value) {
-      tokenManager.setTokens({
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
-      });
-
-      console.log(error);
-      toast("Registration successful!");
+  await execute({ 
+    data: {
+      email: formData.email,
+      password: formData.password,
+      name: formData.name,
     }
-  } catch (err) {
-    console.error("Ошибка регистрации:", err);
-  }
+  });
 };
-
 </script>
 
 <template>
@@ -55,24 +58,21 @@ const handleSubmit = async () => {
       type="email"
       label="E-mail"
       :validation="{
-        error: v$.email.$error,
-        message: String(v$.email.$errors[0]?.$message ?? '')
+        error: v$.email.$error || errorRegistration,
+        message: String(errorRegistration ? errorRegistration : v$.email.$errors[0]?.$message)
       }"
       @blur="v$.email.$touch()"
     />
-    <div class="flex gap-2">
       <VInput
         v-model="formData.name"
         type="text"
         label="Name"
-        class="w-[40%]"
         :validation="{
           error: v$.name.$error,
           message: String(v$.name.$errors[0]?.$message ?? '')
         }"
         @blur="v$.name.$touch()"
       />
-    </div>
 
     <VInput
       v-model="formData.password"
@@ -99,7 +99,6 @@ const handleSubmit = async () => {
       btn-color="gray"
       text="Create account"
       :loading="loading"
-      :disabled="loading"
     />
     <VCheckbox
       v-model="formData.agreeToTerms"
@@ -112,6 +111,7 @@ const handleSubmit = async () => {
         error: v$.agreeToTerms.$error,
         message: String(v$.agreeToTerms.$errors[0]?.$message ?? '')
       }"
+      :loading="loading"
       @blur="v$.agreeToTerms.$touch()"
     />
   </form>

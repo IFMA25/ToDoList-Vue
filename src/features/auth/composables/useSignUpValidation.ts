@@ -7,7 +7,6 @@ export function useSignupValidation() {
   const formData = reactive({
     email: "",
     name: "",
-    surname: "",
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -21,12 +20,9 @@ export function useSignupValidation() {
     name: {
       requiredTrimmed: validationRules.requiredTrimmed,
     },
-    // surname: {
-    //     requiredTrimmed: validationRules.requiredTrimmed
-    // },
     password: {
       required: validationRules.required,
-      minLength: validationRules.minLength(6),
+      minLength: validationRules.minLength(8),
       hasUpperCase: validationRules.hasUpperCase,
       hasNumber: validationRules.hasNumber,
     },
