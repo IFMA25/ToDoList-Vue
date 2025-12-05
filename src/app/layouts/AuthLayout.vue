@@ -6,7 +6,8 @@
 
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-[url('@/app/assets/backgrounds/main-bg.png')] bg-cover bg-no-repeat"
+    class="min-h-screen flex items-center justify-center
+    bg-[url('@/app/assets/backgrounds/main-bg.png')] bg-cover bg-no-repeat"
   >
     <router-view />
   </div>

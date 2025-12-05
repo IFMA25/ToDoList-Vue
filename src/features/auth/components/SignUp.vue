@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
+
+import { useRegister } from "@/features/auth/api/composables/useAuthRequests";
+import { useSignUpValidation } from "@/features/auth/composables/useSignUpValidation";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
-import { useSignupValidation } from "@/features/auth/composables/useSignUpValidation";
-import { useRegister } from "@/features/auth/api/composables/useAuthRequests";
-import { useRouter } from "vue-router";
 
-
-const { formData, v$ } = useSignupValidation();
+const { formData, v$ } = useSignUpValidation();
 const router = useRouter();
 
 const errorRegistration = ref<string | null>(null);
@@ -17,17 +17,17 @@ const errorRegistration = ref<string | null>(null);
 const { execute, loading, error } = useRegister({
   onSuccess: () => {
     toast.success("Registration successful!");
-    router.replace({ name: "auth", query: { mode: "signin" } });
+    router.replace({ name: "signin", query: { mode: "signin" } });
   },
   onError: () => {
     if(error.value?.status === 409){
-        errorRegistration.value = error.value.message;
-      }else{
-        errorRegistration.value = null;
-        toast.error("Registration failed. Please try again.");
-      }
+      errorRegistration.value = error.value.message;
+    }else{
+      errorRegistration.value = null;
+      toast.error("Registration failed. Please try again.");
+    }
     return;
-  }
+  },
 });
 
 const handleSubmit = async () => {
@@ -37,12 +37,12 @@ const handleSubmit = async () => {
     return;
   }
 
-  await execute({ 
+  await execute({
     data: {
       email: formData.email,
       password: formData.password,
       name: formData.name,
-    }
+    },
   });
 };
 </script>
@@ -63,16 +63,16 @@ const handleSubmit = async () => {
       }"
       @blur="v$.email.$touch()"
     />
-      <VInput
-        v-model="formData.name"
-        type="text"
-        label="Name"
-        :validation="{
-          error: v$.name.$error,
-          message: String(v$.name.$errors[0]?.$message ?? '')
-        }"
-        @blur="v$.name.$touch()"
-      />
+    <VInput
+      v-model="formData.name"
+      type="text"
+      label="Name"
+      :validation="{
+        error: v$.name.$error,
+        message: String(v$.name.$errors[0]?.$message ?? '')
+      }"
+      @blur="v$.name.$touch()"
+    />
 
     <VInput
       v-model="formData.password"

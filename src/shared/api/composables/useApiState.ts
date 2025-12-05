@@ -18,7 +18,7 @@
 import type { AxiosResponse } from "axios";
 import { ref, type Ref } from "vue";
 
-import type { ApiState, ApiError } from "../api/types";
+import type { ApiState, ApiError } from "../types";
 
 export interface UseApiStateReturn<T = unknown> {
   /** Response data */

@@ -3,7 +3,7 @@ import { computed, reactive } from "vue";
 
 import { validationRules, confirmPassword } from "@/shared/utils/index";
 
-export function useSignupValidation() {
+export function useSignUpValidation() {
   const formData = reactive({
     email: "",
     name: "",

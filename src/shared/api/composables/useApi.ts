@@ -11,12 +11,36 @@
  * - Callbacks (onSuccess, onError, onBefore, onFinish)
  * - Type safety
  * - Full response access (headers, status, config)
+ * - Auto cleanup on unmount (can be disabled for stores)
  *
- * @example Basic usage (most common)
+ * @example Basic usage in components (most common)
  * ```ts
  * const { data, loading, error, execute } = useApi<User[]>('/users', {
  *   immediate: true,
- *   onSuccess: (users) => console.log('Loaded', users.length, 'users')
+ *   onSuccess: (response) => {
+ *     console.log('Loaded', response.data.length, 'users')
+ *     console.log('Status:', response.status)
+ *     console.log('Headers:', response.headers)
+ *   }
+ * })
+ * ```
+ *
+ * @example Usage in Pinia stores (disable auto cleanup)
+ * ```ts
+ * export const useUserStore = defineStore('user', () => {
+ *   const fetchUsers = async () => {
+ *     const { execute } = useApi<User[]>('/users', {
+ *       autoCleanup: false // Important! Prevents cleanup on component unmount
+ *     })
+ *     return execute()
+ *   }
+ *
+ *   const createUser = async (data: CreateUserDto) => {
+ *     const { execute } = useApiPost<User, CreateUserDto>('/users', {
+ *       autoCleanup: false
+ *     })
+ *     return execute({ data })
+ *   }
  * })
  * ```
  *
@@ -47,18 +71,19 @@
  */
 
 import { useDebounceFn } from "@vueuse/core";
-import { ref, onUnmounted, type Ref } from "vue";
+import type { AxiosResponse } from "axios";
+import { ref, type Ref, onUnmounted } from "vue";
 
-import apiClient from "../api/client";
+import apiClient from "../client";
 import type {
   UseApiOptions,
   UseApiReturn,
   ApiRequestConfig,
   ApiError,
-} from "../api/types";
+} from "../types";
 
 import { handleApiError } from "@/shared/api";
-import { useApiState } from "@/shared/composables/useApiState";
+import { useApiState } from "@/shared/api/composables";
 
 /**
  * Main composable for API requests
@@ -79,6 +104,7 @@ export function useApi<T = unknown, D = unknown>(
     skipErrorNotification = false,
     retry = false,
     retryDelay = 1000,
+    autoCleanup = true,
     ...axiosConfig
   } = options;
 
@@ -87,9 +113,10 @@ export function useApi<T = unknown, D = unknown>(
   const abortController = ref<AbortController | null>(null);
 
   /**
-   * Execute request
-   */
-  const executeRequest = async (config?: ApiRequestConfig<D>): Promise<T | null> => {
+     * Execute request
+     */
+  const executeRequest = async (config?: ApiRequestConfig<D>):
+  Promise<T | null> => {
     // Cancel previous request if exists
     if (abortController.value) {
       abortController.value.abort();
@@ -125,12 +152,17 @@ export function useApi<T = unknown, D = unknown>(
       state.setStatusCode(response.status);
 
       // Success callback
-      onSuccess?.(response.data);
+      if (onSuccess) {
+        onSuccess(response as AxiosResponse<T>);
+      }
 
       return response.data;
-    } catch (err: unknown) {
+    }
+    catch (err: unknown) {
       // Ignore cancelled requests
-      if ((err as { name?: string })?.name === "AbortError" || (err as { name?: string })?.name === "CanceledError") {
+      if ((err as { name?: string })?.name === "AbortError" || (err as {
+        name?: string
+      })?.name === "CanceledError") {
         return null;
       }
 
@@ -152,22 +184,23 @@ export function useApi<T = unknown, D = unknown>(
       }
 
       return null;
-    } finally {
+    }
+    finally {
       state.setLoading(false);
       onFinish?.();
     }
   };
 
   /**
-   * Execute with debouncing if specified
-   */
+     * Execute with debouncing if specified
+     */
   const execute = debounce > 0
     ? useDebounceFn(executeRequest, debounce)
     : executeRequest;
 
   /**
-   * Abort request
-   */
+     * Abort request
+     */
   const abort = (message?: string) => {
     if (abortController.value) {
       abortController.value.abort(message);
@@ -176,17 +209,20 @@ export function useApi<T = unknown, D = unknown>(
   };
 
   /**
-   * Reset state
-   */
+     * Reset state
+     */
   const reset = () => {
     abort();
     state.reset();
   };
 
-  // Automatic abort on unmount
-  onUnmounted(() => {
-    abort();
-  });
+  // Automatic cleanup on component unmount
+  // Can be disabled for stores/services via autoCleanup: false option
+  if (autoCleanup) {
+    onUnmounted(() => {
+      abort();
+    });
+  }
 
   // Immediate execution
   if (immediate) {
@@ -239,7 +275,8 @@ async function retryRequest<T, D>(
 
   try {
     return await requestFn(config);
-  } catch {
+  }
+  catch {
     return retryRequest(requestFn, maxRetries, delay, config, currentRetry + 1);
   }
 }

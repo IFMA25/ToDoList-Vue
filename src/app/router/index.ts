@@ -3,14 +3,14 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import authRoutes from "./auth";
 
 const routes: RouteRecordRaw[] = [
-  // {
-  //   path: "/",
-  //   name: "Home",
-  //   component: () => import("@/pages/SignIn/index.vue"),
-  //   meta: {
-  //     title: "Main home",
-  //   },
-  // },
+  {
+    path: "/",
+    name: "home",
+    component: () => import("@/pages/Home/index.vue"),
+    meta: {
+      title: "Home",
+    },
+  },
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",

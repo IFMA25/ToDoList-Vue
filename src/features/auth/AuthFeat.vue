@@ -26,7 +26,7 @@ const pageMode = computed((): Mode => {
 const toggleMode = () => {
   const mode = pageMode.value === "signin" ?  "signup" : "signin";
   router.replace({
-    name: "auth",
+    name: "signin",
     query: {
       mode,
     },
@@ -36,8 +36,8 @@ const toggleMode = () => {
 
 <template>
   <div>
-    <SignIn v-show="pageMode === 'signin'" />
-    <SignUp v-show="pageMode === 'signup'" />
+    <SignIn v-if="pageMode === 'signin'" />
+    <SignUp v-if="pageMode === 'signup'" />
     <div class="flex gap-4 mt-4 items-center">
       <p class="text-center text-sm text-base-content">
         {{ pageMode === 'signin' ? SIGNIN_TEXT : SIGNUP_TEXT }}

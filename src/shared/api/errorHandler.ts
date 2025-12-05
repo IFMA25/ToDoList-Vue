@@ -89,7 +89,7 @@ export class ErrorHandler {
   ): ApiError {
     const {
       showToast = true,
-      customMessage,
+      // customMessage,
       logToConsole = import.meta.env.DEV,
     } = options;
 
@@ -110,11 +110,11 @@ export class ErrorHandler {
     // Show toast notification
     if (showToast) {
       // const toast = useToast();
-      const message = customMessage || apiError.message;
+      // const message = customMessage || apiError.message;
 
       // For validation errors, show the first error
       if (apiError.errors && Object.keys(apiError.errors).length > 0) {
-        const firstError = Object.values(apiError.errors)[0][0];
+        // const firstError = Object.values(apiError.errors)[0][0];
         // toast.error(firstError || message);
       } else {
         // toast.error(message);
