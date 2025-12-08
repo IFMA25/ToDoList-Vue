@@ -15,9 +15,9 @@ setupApiClient({
   onTokenRefreshFailed: () => {
     const currentRoute = router.currentRoute.value;
 
-    if (currentRoute.name !== "signin") {
+    if (currentRoute.name !== "auth") {
       router.push({
-        name: "signin",
+        name: "auth",
         query: { redirect: currentRoute.fullPath },
       });
     }
@@ -30,6 +30,9 @@ app.use(router);
 
 // Register global component
 app.component("VueFeather", VueFeather);
+
+// Router readiness
+await router.isReady();
 
 // Mount the app
 app.mount("#app");

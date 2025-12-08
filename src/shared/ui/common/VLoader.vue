@@ -1,20 +1,19 @@
-<script setup>
+<script setup lang="ts">
 
 defineOptions({ inheritAttrs: false });
-const props = defineProps({
-  text: {
-    type: String,
-    default: "",
+
+const props = withDefaults(
+  defineProps<{
+    text?: string;
+    color?: string;
+    size?: string;
+  }>(),
+  {
+    text: "",
+    color: "#2533b0",
+    size: "w-full h-full",
   },
-  color: {
-    type: String,
-    default: "#2533b0",
-  },
-  size: {
-    type: String,
-    default: "w-full h-full",
-  },
-});
+);
 
 </script>
 

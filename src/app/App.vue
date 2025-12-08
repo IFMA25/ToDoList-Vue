@@ -5,7 +5,7 @@ import MasterLayout from "@/app/layouts/MasterLayout.vue";
 <template>
   <div
     id="app"
-    class="min-h-screen bg-blue-800 text-neutral"
+    class="min-h-screen text-neutral"
   >
     <MasterLayout />
   </div>

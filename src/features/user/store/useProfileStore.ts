@@ -4,9 +4,9 @@ import { toast } from "vue-sonner";
 
 import { useProfileRequest } from "../api/composables/useProfileRequest";
 
-import { Profile } from "@/shared/api/types";
+import { Profile } from "@/features/auth/types";
 
-const ERROR = "You are not authorized. Please log in.";
+const ERROR_MSG = "You are not authorized. Please log in.";
 
 const profileData = ref<Profile | null>(null);
 
@@ -22,7 +22,7 @@ export const useProfileStore = defineStore("profile", () => {
     },
     onError: () => {
       if (error.value.status === 401) {
-        toast.error(ERROR);
+        toast.error(ERROR_MSG);
       }
       return;
     },

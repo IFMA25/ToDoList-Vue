@@ -1,6 +1,6 @@
-import { tokenManager } from "@/shared/api";
+import type { LoginResponse, RegisterResponse, LoginRequest, RegisterRequest } from "@/features/auth/types";
+import { tokenManager, UseApiOptions } from "@/shared/api";
 import { useApiPost } from "@/shared/api/composables/useApi";
-import type { LoginResponse, RegisterResponse, LoginRequest, RegisterRequest, UseApiOptions } from "@/shared/api/types";
 
 export const useLogin = (options?: UseApiOptions<LoginResponse, LoginRequest>) => {
   return useApiPost<LoginResponse, LoginRequest>("/auth/login", {

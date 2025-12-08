@@ -1,35 +1,27 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, useSlots } from "vue";
 import VueFeather from "vue-feather";
 
-const props = defineProps({
-  type: {
-    type: String,
-    default: "text",
-  },
-  inputColor: {
-    type: String,
-    default: "grey",
-  },
-  label: {
-    type: String,
-    default: "",
-  },
-  supportText: {
-    type: String,
-    default: "",
-  },
-  validation: {
-    type: Object,
-    default: () => ({ error: false, message: "" }),
-  },
-  modelValue: {
-    type: String,
-    default: "",
-  },
+import { ValidationState } from "@/features/auth/types";
+
+const props = withDefaults(defineProps<{
+  type?: string;
+  variant?: string;
+  label?: string;
+  placeholder?: string;
+  supportText?: string;
+  validation?: ValidationState;
+}>(), {
+  type: "text",
+  variant: "main",
+  label: "",
+  supportText: "",
+  placeholder: "",
+  validation: undefined,
 });
-// "blur" без нього в консоли ворнинги, тому що идет ємит блура
-const emit = defineEmits(["update:modelValue", "blur"]);
+
+const model = defineModel<string>();
+const emit = defineEmits(["blur"]);
 
 const visible = ref(false);
 
@@ -39,12 +31,17 @@ const handleToggle = () => {
 
 const slots = useSlots();
 
-const inputColorStyles = {
-  green: "border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-500",
-  red: "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500",
-  blue: "border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500",
-  gray: "border-gray-400 focus:border-gray-400 focus:ring-2 focus:ring-gray-400",
+const inputStyles = {
+  main: "border-b border-border focus:border-b-2 focus:border-secondary placeholder:text-placeholder placeholder:text-sm",
+  error: "border-b border-error focus:border-b-2",
+
 };
+
+const hasError = computed(() => props.validation?.$error ?? false);
+
+const errorMessage = computed(() => {
+  return props.validation?.$errors?.[0]?.$message ?? "";
+});
 
 const inputClass = computed(() => {
   const hasLeft = !!slots["icon-left"];
@@ -54,9 +51,9 @@ const inputClass = computed(() => {
     hasRight ? "pr-[40px]" : "pr-2",
   ].join(" ");
 
-  const colorClass = props.validation.error ?
-    inputColorStyles.red
-    : inputColorStyles[props.inputColor];
+  const colorClass = hasError.value ?
+    inputStyles.error
+    : inputStyles[props.variant];
   return [paddingClass, colorClass].join(" ");
 });
 
@@ -69,26 +66,27 @@ const inputClass = computed(() => {
   >
     <p class="text-sm font-medium text-gray-800 mb-1">{{ props.label }}</p>
     <div class="relative">
-      <slot
-        v-if="$slots['icon-left']"
-        name="icon-left"
-      />
-      <input
+      <div class="absolute bottom-[4px] left-[10px] w-[25px] p-0">
+        <slot
+          v-if="$slots['icon-left']"
+          name="icon-left"
+        />
+      </div>
 
+      <input
+        v-model="model"
         :type="props.type === 'password' && !visible ? 'password' : 'text'"
-        class="w-full rounded-md border p-2 outline-none text-sm
-        text-gray-700 transition-all duration-200"
+        class="w-full bg-transparent outline-none focus:outline-none py-2"
         :class="inputClass"
-        :value="props.modelValue"
+        :placeholder="props.placeholder"
         name="input"
         @blur="emit('blur', $event)"
-        @input="emit('update:modelValue', $event.target.value)"
       >
       <button
         v-if="props.type === 'password'"
         type="button"
         class="absolute bottom-[4px] right-[10px] w-[25px] p-0
-        bg-transparent border-none text-gray-400 hover:text-blue-600
+        bg-transparent border-none text-placeholder hover:text-secondary
         transition-colors duration-200"
         @click="handleToggle"
       >
@@ -102,10 +100,10 @@ const inputClass = computed(() => {
         name="icon-right"
       />
       <p
-        class="text-sm absolute top-[100%] left-0"
-        :class="props.validation.error ? 'text-red-600 font-medium' : 'text-gray-500'"
+        class="text-sm absolute top-[calc(100%+2px)] left-0"
+        :class="hasError ? 'text-red-600 font-medium' : 'text-gray-500'"
       >
-        {{ props.validation.error ? props.validation.message : props.supportText }}
+        {{ hasError ? errorMessage : props.supportText }}
       </p>
     </div>
   </label>

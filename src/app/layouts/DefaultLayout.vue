@@ -16,9 +16,10 @@ const { removeProfileData } = profileStore;
 
 const handleLogout = () => {
   tokenManager.clearTokens();
-  router.replace({ name: "signin", query: { mode: "signin" } });
+  router.push({ name: "auth", query: { mode: "signin" } });
   removeProfileData();
 };
+
 onMounted(() => {
   profileStore.requestProfileData();
 });
@@ -28,14 +29,14 @@ onMounted(() => {
   <div class="min-h-screen flex items-center justify-center p-8">
     <VLoader
       v-if="loading"
-      color="white"
+      color="primaryDark"
       size="w-[100px] h-[100px]"
     />
     <div v-else-if="profileData">
       <router-view />
       <VButton
-        btn-color="green"
         text="Logout"
+        :loading="false"
         @click="handleLogout"
       />
       <Profile :data-profile="profileData" />

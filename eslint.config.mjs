@@ -82,7 +82,7 @@ export default [
 
       // TypeScript specific rules
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', {
+      '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
         ignoreRestSiblings: true
@@ -208,7 +208,7 @@ export default [
 
       // TypeScript rules for Vue files
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', {
+      '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
         ignoreRestSiblings: true

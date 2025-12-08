@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import VueFeather from "vue-feather";
 import { useRouter } from "vue-router";
 
 import { useLogin } from "../api/composables/useAuthRequests";
@@ -7,6 +8,8 @@ import { useSignInValidation } from "../composables/useSignInValidation";
 
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
+
+const BTN_SIGNIN = "Sign in";
 
 const router = useRouter();
 const { formData, v$ } = useSignInValidation();
@@ -47,23 +50,31 @@ const handleSubmit = async() => {
     <VInput
       v-model="formData.email"
       type="email"
-      label="E-mail"
-      :validation="{
-        error: v$.email.$error,
-        message: String(v$.email.$errors[0]?.$message ?? '')
-      }"
+      placeholder="Email Address"
+      :validation="v$.email"
       @blur="v$.email.$touch()"
-    />
+    >
+      <template #icon-left>
+        <VueFeather
+          type="mail"
+          class="w-5 h-5 text-accent"
+        />
+      </template>
+    </VInput>
     <VInput
       v-model="formData.password"
       type="password"
-      label="Password"
-      :validation="{
-        error: v$.password.$error,
-        message: String(v$.password.$errors[0]?.$message ?? '')
-      }"
+      placeholder="Password"
+      :validation="v$.password"
       @blur="v$.password.$touch()"
-    />
+    >
+      <template #icon-left>
+        <VueFeather
+          type="lock"
+          class="w-5 h-5 text-accent"
+        />
+      </template>
+    </VInput>
     <p
       v-if="error"
       class="text-sm text-red-600 font-medium"
@@ -72,8 +83,7 @@ const handleSubmit = async() => {
     </p>
     <VButton
       type="submit"
-      btn-color="gray"
-      text="Login"
+      :text="BTN_SIGNIN"
       :loading="loading"
     />
   </form>

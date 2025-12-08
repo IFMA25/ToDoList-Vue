@@ -44,6 +44,33 @@
  * })
  * ```
  *
+ * @example Public endpoints (no auth, no token refresh on 401)
+ * ```ts
+ * // Login page - public endpoint that should not trigger token refresh
+ * const { data, loading, error, execute } = useApiPost<AuthResponse, LoginDto>('/auth/login', {
+ *   authMode: 'public', // Won't attempt token refresh on 401, no auth header
+ *   skipErrorNotification: false // Will still show error toast
+ * })
+ *
+ * // Public content endpoint
+ * const { data } = useApi<PublicContent>('/public/content', {
+ *   immediate: true,
+ *   authMode: 'public' // 401 errors won't trigger refresh token flow
+ * })
+ *
+ * // Optional auth - works with or without token
+ * const { data } = useApi<Content>('/content', {
+ *   immediate: true,
+ *   authMode: 'optional' // Adds token if available, but 401 won't refresh
+ * })
+ *
+ * // Check auth status without triggering refresh
+ * const { execute: checkAuth } = useApi<User>('/auth/me', {
+ *   authMode: 'optional', // If 401 - just return error, don't refresh
+ *   skipErrorNotification: true // Don't show error toast
+ * })
+ * ```
+ *
  * @example Advanced usage with full response
  * ```ts
  * const { data, response, execute } = useApi<User[]>('/users', {
@@ -74,16 +101,15 @@ import { useDebounceFn } from "@vueuse/core";
 import type { AxiosResponse } from "axios";
 import { ref, type Ref, onUnmounted } from "vue";
 
-import apiClient from "../client";
+
+import { apiClient, handleApiError } from "@/shared/api";
+import { useApiState } from "@/shared/api/composables";
 import type {
   UseApiOptions,
   UseApiReturn,
   ApiRequestConfig,
   ApiError,
-} from "../types";
-
-import { handleApiError } from "@/shared/api";
-import { useApiState } from "@/shared/api/composables";
+} from "@/shared/api/types";
 
 /**
  * Main composable for API requests
@@ -105,6 +131,7 @@ export function useApi<T = unknown, D = unknown>(
     retry = false,
     retryDelay = 1000,
     autoCleanup = true,
+    authMode = "default",
     ...axiosConfig
   } = options;
 
@@ -138,6 +165,7 @@ export function useApi<T = unknown, D = unknown>(
         ...axiosConfig,
         ...config,
         signal: abortController.value.signal,
+        authMode: config?.authMode || authMode,
       };
 
       // Execute request

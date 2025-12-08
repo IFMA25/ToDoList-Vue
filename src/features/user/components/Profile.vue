@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { Profile } from "@/shared/api/types";
+import { Profile } from "@/features/auth/types";
+
+
 
 const props = defineProps<{
   dataProfile: Profile,

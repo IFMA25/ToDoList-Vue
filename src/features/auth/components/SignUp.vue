@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import VueFeather from "vue-feather";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -9,6 +10,10 @@ import VButton from "@/shared/ui/common/VButton.vue";
 import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
 
+const SUCCESS_MSG = "Registration successful!";
+const ERROR_MSG = "Registration failed. Please try again!";
+const BTN_SIGNUP = "Sign up";
+
 const { formData, v$ } = useSignUpValidation();
 const router = useRouter();
 
@@ -16,15 +21,15 @@ const errorRegistration = ref<string | null>(null);
 
 const { execute, loading, error } = useRegister({
   onSuccess: () => {
-    toast.success("Registration successful!");
-    router.replace({ name: "signin", query: { mode: "signin" } });
+    toast.success(SUCCESS_MSG);
+    router.push({ name: "auth", query: { mode: "signin" } });
   },
   onError: () => {
     if(error.value?.status === 409){
       errorRegistration.value = error.value.message;
     }else{
       errorRegistration.value = null;
-      toast.error("Registration failed. Please try again.");
+      toast.error(ERROR_MSG);
     }
     return;
   },
@@ -54,50 +59,65 @@ const handleSubmit = async () => {
     @submit.prevent="handleSubmit"
   >
     <VInput
-      v-model="formData.email"
-      type="email"
-      label="E-mail"
-      :validation="{
-        error: v$.email.$error || errorRegistration,
-        message: String(errorRegistration ? errorRegistration : v$.email.$errors[0]?.$message)
-      }"
-      @blur="v$.email.$touch()"
-    />
-    <VInput
       v-model="formData.name"
       type="text"
-      label="Name"
-      :validation="{
-        error: v$.name.$error,
-        message: String(v$.name.$errors[0]?.$message ?? '')
-      }"
+      placeholder="Username"
+      :validation="v$.name"
       @blur="v$.name.$touch()"
-    />
-
+    >
+      <template #icon-left>
+        <VueFeather
+          type="user"
+          class="w-5 h-5 text-accent"
+        />
+      </template>
+    </VInput>
+    <VInput
+      v-model="formData.email"
+      type="email"
+      placeholder="Email Address"
+      :validation="v$.email"
+      @blur="v$.email.$touch()"
+    >
+      <template #icon-left>
+        <VueFeather
+          type="mail"
+          class="w-5 h-5 text-accent"
+        />
+      </template>
+    </VInput>
     <VInput
       v-model="formData.password"
       type="password"
-      label="Password"
-      :validation="{
-        error: v$.password.$error,
-        message: String(v$.password.$errors[0]?.$message ?? '')
-      }"
+      placeholder="Create Password"
+      :validation="v$.password"
       @blur="v$.password.$touch()"
-    />
+    >
+      <template #icon-left>
+        <VueFeather
+          type="lock"
+          class="w-5 h-5 text-accent"
+        />
+      </template>
+    </VInput>
     <VInput
       v-model="formData.confirmPassword"
       type="password"
-      label="Confirm password"
-      :validation="{
-        error: v$.confirmPassword.$error,
-        message: String(v$.confirmPassword.$errors[0]?.$message ?? '')
-      }"
+      placeholder="Confirm Password"
+      :validation="v$.confirmPassword"
       @blur="v$.confirmPassword.$touch()"
-    />
+    >
+      <template #icon-left>
+        <VueFeather
+          type="lock"
+          class="w-5 h-5 text-accent"
+        />
+      </template>
+    </VInput>
     <VButton
       type="submit"
-      btn-color="gray"
-      text="Create account"
+      variant="main"
+      :text="BTN_SIGNUP"
       :loading="loading"
     />
     <VCheckbox
