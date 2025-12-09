@@ -17,10 +17,8 @@ const props = withDefaults(
   }>(),
   {
     type: "button",
-    disabled: false,
     variant: "main",
     text: "",
-    loading: false,
     to: null,
     icon: "",
   },
@@ -41,7 +39,7 @@ const isRouterLink = computed(() => !!props.to);
     :is="isRouterLink ? RouterLink : 'button'"
     class="flex justify-center gap-3 cursor-pointer "
     :class="[btnClass, {
-      'opacity-60 cursor-not-allowed': props.disabled
+      'opacity-60 cursor-not-allowed': props.disabled || props.loading
     }]"
     v-bind="
       isRouterLink

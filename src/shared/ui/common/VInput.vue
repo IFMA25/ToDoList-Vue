@@ -11,6 +11,9 @@ const props = withDefaults(defineProps<{
   placeholder?: string;
   supportText?: string;
   validation?: ValidationState;
+  iconLeft?: string;
+  iconRight?: string;
+  iconColor?: string;
 }>(), {
   type: "text",
   variant: "main",
@@ -18,6 +21,9 @@ const props = withDefaults(defineProps<{
   supportText: "",
   placeholder: "",
   validation: undefined,
+  iconLeft: "",
+  iconRight: "",
+  iconColor: "",
 });
 
 const model = defineModel<string>();
@@ -32,8 +38,8 @@ const handleToggle = () => {
 const slots = useSlots();
 
 const inputStyles = {
-  main: "border-b border-border focus:border-b-2 focus:border-secondary placeholder:text-placeholder placeholder:text-sm",
-  error: "border-b border-error focus:border-b-2",
+  main: "border-b border-border focus:border-b-1 focus:border-secondary placeholder:text-placeholder placeholder:text-sm focus:shadow-[0_1px_0_0_theme('colors.secondary')]",
+  error: "border-b border-error focus:border-b-1 focus:shadow-[0_1px_0_0_theme('colors.error')]",
 
 };
 
@@ -43,9 +49,11 @@ const errorMessage = computed(() => {
   return props.validation?.$errors?.[0]?.$message ?? "";
 });
 
+
+
 const inputClass = computed(() => {
-  const hasLeft = !!slots["icon-left"];
-  const hasRight = !!slots["icon-right"] || props.type === "password";
+  const hasLeft = !!slots["icon-left"] || props.iconLeft;
+  const hasRight = !!slots["icon-right"] || props.iconRight || props.type === "password";
   const paddingClass = [
     hasLeft ? "pl-[40px]" : "pl-2",
     hasRight ? "pr-[40px]" : "pr-2",
@@ -67,8 +75,14 @@ const inputClass = computed(() => {
     <p class="text-sm font-medium text-gray-800 mb-1">{{ props.label }}</p>
     <div class="relative">
       <div class="absolute bottom-[4px] left-[10px] w-[25px] p-0">
+        <VueFeather
+          v-if="props.iconLeft && !$slots['icon-left']"
+          :type="props.iconLeft"
+          class="w-5 h-5 "
+          :class="`text-${props.iconColor}`"
+        />
         <slot
-          v-if="$slots['icon-left']"
+          v-else-if="$slots['icon-left']"
           name="icon-left"
         />
       </div>
@@ -76,7 +90,8 @@ const inputClass = computed(() => {
       <input
         v-model="model"
         :type="props.type === 'password' && !visible ? 'password' : 'text'"
-        class="w-full bg-transparent outline-none focus:outline-none py-2"
+        class="w-full bg-transparent outline-none
+        focus:outline-none py-2 transition-all duration-300"
         :class="inputClass"
         :placeholder="props.placeholder"
         name="input"
@@ -95,8 +110,14 @@ const inputClass = computed(() => {
           class="w-5 h-5"
         />
       </button>
+      <VueFeather
+        v-if="props.iconRight && props.type !== 'password' && !$slots['icon-right']"
+        :type="props.iconRight"
+        class="w-5 h-5"
+        :class="`text-${props.iconColor}`"
+      />
       <slot
-        v-if="$slots['icon-right']"
+        v-else-if="$slots['icon-right']"
         name="icon-right"
       />
       <p

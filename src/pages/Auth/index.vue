@@ -1,7 +1,7 @@
 <script setup>
-import AuthFeat from "@/features/auth/AuthFeat.vue";
+import AuthFeature from "@/features/auth/AuthFeature.vue";
 </script>
 
 <template>
-  <AuthFeat />
+  <AuthFeature />
 </template>

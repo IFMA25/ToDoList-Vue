@@ -14,14 +14,13 @@ const router = useRouter();
 
 const toggleMode = () => {
   const mode = props.pageMode === "signin" ?  "signup" : "signin";
-  router.push({
+  router.replace({
     name: "auth",
     query: {
       mode,
     },
   });
 };
-
 </script>
 
 <template>

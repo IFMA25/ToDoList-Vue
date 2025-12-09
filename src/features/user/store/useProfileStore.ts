@@ -28,7 +28,7 @@ export const useProfileStore = defineStore("profile", () => {
     },
   });
 
-  const requestProfileData = async () => {
+  const fetchProfile = async () => {
     await execute();
   };
 
@@ -40,7 +40,7 @@ export const useProfileStore = defineStore("profile", () => {
     profileData,
     loading,
     error,
-    requestProfileData,
+    fetchProfile,
     removeProfileData,
   };
 });

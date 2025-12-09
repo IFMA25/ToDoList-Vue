@@ -1,23 +1,34 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import VueFeather from "vue-feather";
 import { useRouter } from "vue-router";
 
 import { useLogin } from "../api/composables/useAuthRequests";
 import { useSignInValidation } from "../composables/useSignInValidation";
 
+import { tokenManager } from "@/shared/api/tokenManager";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
 
 const BTN_SIGNIN = "Sign in";
+const SIGN_UP = "Create account";
+const SIGNIN_TEXT = "Don't have an account?";
+
+const emit = defineEmits<{
+  (event: "switchMode", mode: "signup");
+}>();
 
 const router = useRouter();
+
 const { formData, v$ } = useSignInValidation();
 
 const errorLogin = ref<string | null>(null);
 
 const { execute, loading, error } = useLogin({
-  onSuccess: () => {
+  onSuccess: (response) => {
+    tokenManager.setTokens({
+      accessToken: response.data.accessToken,
+      refreshToken: response.data.refreshToken,
+    });
     router.replace({ name: "home" });
   },
   onError: () => {
@@ -52,29 +63,19 @@ const handleSubmit = async() => {
       type="email"
       placeholder="Email Address"
       :validation="v$.email"
+      icon-left="mail"
+      icon-color="accent"
       @blur="v$.email.$touch()"
-    >
-      <template #icon-left>
-        <VueFeather
-          type="mail"
-          class="w-5 h-5 text-accent"
-        />
-      </template>
-    </VInput>
+    />
     <VInput
       v-model="formData.password"
       type="password"
       placeholder="Password"
       :validation="v$.password"
+      icon-left="lock"
+      icon-color="accent"
       @blur="v$.password.$touch()"
-    >
-      <template #icon-left>
-        <VueFeather
-          type="lock"
-          class="w-5 h-5 text-accent"
-        />
-      </template>
-    </VInput>
+    />
     <p
       v-if="error"
       class="text-sm text-red-600 font-medium"
@@ -87,4 +88,15 @@ const handleSubmit = async() => {
       :loading="loading"
     />
   </form>
+  <div class="flex gap-4 mt-4 items-center">
+    <p class="text-center text-sm text-base-content">
+      {{ SIGNIN_TEXT }}
+    </p>
+    <button
+      class="text-blue-700"
+      @click="emit('switchMode', 'signup')"
+    >
+      {{ SIGN_UP }}
+    </button>
+  </div>
 </template>

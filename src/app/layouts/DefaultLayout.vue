@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 
@@ -11,35 +10,45 @@ import VLoader from "@/shared/ui/common/VLoader.vue";
 
 const router = useRouter();
 const profileStore = useProfileStore();
-const { loading, profileData } = storeToRefs(profileStore);
-const { removeProfileData } = profileStore;
 
 const handleLogout = () => {
   tokenManager.clearTokens();
   router.push({ name: "auth", query: { mode: "signin" } });
-  removeProfileData();
+  profileStore.removeProfileData();
 };
 
 onMounted(() => {
-  profileStore.requestProfileData();
+  profileStore.fetchProfile();
 });
-
 </script>
+
 <template>
-  <div class="min-h-screen flex items-center justify-center p-8">
+  <div class="min-h-screen flex p-8 bg-blue-900">
     <VLoader
-      v-if="loading"
+      v-if="profileStore.loading"
       color="primaryDark"
       size="w-[100px] h-[100px]"
     />
-    <div v-else-if="profileData">
+    <div
+      v-else
+      class="border-2 border-red-500"
+    >
+      <div>
+        Header
+      </div>
+      <aside>
+        Sidebar
+      </aside>
       <router-view />
       <VButton
         text="Logout"
         :loading="false"
         @click="handleLogout"
       />
-      <Profile :data-profile="profileData" />
+      <Profile :data-profile="profileStore.profileData" />
+      <footer>
+        footer
+      </footer>
     </div>
   </div>
 </template>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import VueFeather from "vue-feather";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -10,12 +9,18 @@ import VButton from "@/shared/ui/common/VButton.vue";
 import VCheckbox from "@/shared/ui/common/VCheckbox.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
 
+const BTN_SIGNUP = "Sign up";
 const SUCCESS_MSG = "Registration successful!";
 const ERROR_MSG = "Registration failed. Please try again!";
-const BTN_SIGNUP = "Sign up";
+const SIGN_IN = "Login";
+const SIGNUP_TEXT = "Already have an account?";
 
-const { formData, v$ } = useSignUpValidation();
+const emit = defineEmits<{
+  (event: "switchMode", mode: "signin");
+}>();
+
 const router = useRouter();
+const { formData, v$ } = useSignUpValidation();
 
 const errorRegistration = ref<string | null>(null);
 
@@ -31,16 +36,13 @@ const { execute, loading, error } = useRegister({
       errorRegistration.value = null;
       toast.error(ERROR_MSG);
     }
-    return;
   },
 });
 
 const handleSubmit = async () => {
   const isValid = await v$.value.$validate();
 
-  if (!isValid) {
-    return;
-  }
+  if (!isValid) return;
 
   await execute({
     data: {
@@ -54,66 +56,44 @@ const handleSubmit = async () => {
 
 <template>
   <form
-    action="#"
     class="flex flex-col gap-5"
     @submit.prevent="handleSubmit"
   >
     <VInput
       v-model="formData.name"
-      type="text"
       placeholder="Username"
       :validation="v$.name"
+      icon-left="user"
+      icon-color="accent"
       @blur="v$.name.$touch()"
-    >
-      <template #icon-left>
-        <VueFeather
-          type="user"
-          class="w-5 h-5 text-accent"
-        />
-      </template>
-    </VInput>
+    />
     <VInput
       v-model="formData.email"
       type="email"
       placeholder="Email Address"
       :validation="v$.email"
+      icon-left="mail"
+      icon-color="accent"
       @blur="v$.email.$touch()"
-    >
-      <template #icon-left>
-        <VueFeather
-          type="mail"
-          class="w-5 h-5 text-accent"
-        />
-      </template>
-    </VInput>
+    />
     <VInput
       v-model="formData.password"
       type="password"
       placeholder="Create Password"
       :validation="v$.password"
+      icon-left="lock"
+      icon-color="accent"
       @blur="v$.password.$touch()"
-    >
-      <template #icon-left>
-        <VueFeather
-          type="lock"
-          class="w-5 h-5 text-accent"
-        />
-      </template>
-    </VInput>
+    />
     <VInput
       v-model="formData.confirmPassword"
       type="password"
       placeholder="Confirm Password"
       :validation="v$.confirmPassword"
+      icon-left="lock"
+      icon-color="accent"
       @blur="v$.confirmPassword.$touch()"
-    >
-      <template #icon-left>
-        <VueFeather
-          type="lock"
-          class="w-5 h-5 text-accent"
-        />
-      </template>
-    </VInput>
+    />
     <VButton
       type="submit"
       variant="main"
@@ -131,8 +111,17 @@ const handleSubmit = async () => {
         error: v$.agreeToTerms.$error,
         message: String(v$.agreeToTerms.$errors[0]?.$message ?? '')
       }"
-      :loading="loading"
-      @blur="v$.agreeToTerms.$touch()"
     />
   </form>
+  <div class="flex gap-4 mt-4 items-center">
+    <p class="text-center text-sm text-base-content">
+      {{ SIGNUP_TEXT }}
+    </p>
+    <button
+      class="text-blue-700"
+      @click="emit('switchMode', 'signin')"
+    >
+      {{ SIGN_IN }}
+    </button>
+  </div>
 </template>
