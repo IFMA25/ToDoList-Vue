@@ -1,7 +1,7 @@
 <template>
   <div
     class="min-h-screen flex flex-col items-center justify-center
-     bg-primary bg-cover bg-no-repeat"
+     bg-red-500 bg-cover bg-no-repeat"
   >
     <router-view />
   </div>

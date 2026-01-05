@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Profile } from "@/features/auth/types";
+import { Profile } from "@/features/profile/types";
 
 const props = defineProps<{
   dataProfile: Profile | null,

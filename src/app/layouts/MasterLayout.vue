@@ -5,9 +5,9 @@ import { Toaster } from "vue-sonner";
 
 import AuthLayout from "@/app/layouts/AuthLayout.vue";
 import DefaultLayout from "@/app/layouts/DefaultLayout.vue";
-import ThemeToggle from "@/features/theme/components/ThemeToggle.vue";
 import { useThemeStore } from "@/features/theme/store/useThemeStore";
 import "vue-sonner/style.css";
+import Header from "@/widgets/Header.vue";
 
 const themeStore = useThemeStore();
 const route = useRoute();
@@ -24,16 +24,21 @@ const routeLayout = computed(() => {
   if(typeof metaLayout === "string"){
     return layouts[metaLayout];
   }
-  return layouts.default; ;
+  return layouts.default;
 });
 </script>
 
 <template>
-  <Toaster position="top-center" />
-  <header class="fixed top-0 left-0 w-full bg-transparent z-50 px-4 py-2">
-    <ThemeToggle />
-  </header>
-  <main>
-    <component :is="routeLayout" />
-  </main>
+  <div class="h-screen flex flex-col">
+    <Toaster position="top-center" />
+    <header class="flex justify-end w-full px-6 py-4 bg-white gap-4">
+      <Header />
+    </header>
+    <main class="flex-1 mx-auto w-full max-w-[1920px] overflow-auto border-3 border-purple-600">
+      <component :is="routeLayout" />
+    </main>
+    <footer class="flex-none bg-gray-800 text-white px-6 py-4 h-50 border-2 border-green-600">
+      Footer
+    </footer>
+  </div>
 </template>

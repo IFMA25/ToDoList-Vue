@@ -62,9 +62,8 @@ const inputClass = computed(() => {
   const colorClass = hasError.value ?
     inputStyles.error
     : inputStyles[props.variant];
-  return [paddingClass, colorClass].join(" ");
+  return `${paddingClass} ${colorClass}`;
 });
-
 </script>
 
 <template>
@@ -79,7 +78,7 @@ const inputClass = computed(() => {
           v-if="props.iconLeft && !$slots['icon-left']"
           :type="props.iconLeft"
           class="w-5 h-5 "
-          :class="`text-${props.iconColor}`"
+          :class="props.iconColor"
         />
         <slot
           v-else-if="$slots['icon-left']"
@@ -89,7 +88,9 @@ const inputClass = computed(() => {
 
       <input
         v-model="model"
-        :type="props.type === 'password' && !visible ? 'password' : 'text'"
+        :type="props.type === 'password'
+          ? (visible ? 'text' : 'password')
+          : props.type"
         class="w-full bg-transparent outline-none
         focus:outline-none py-2 transition-all duration-300"
         :class="inputClass"
@@ -110,16 +111,18 @@ const inputClass = computed(() => {
           class="w-5 h-5"
         />
       </button>
-      <VueFeather
-        v-if="props.iconRight && props.type !== 'password' && !$slots['icon-right']"
-        :type="props.iconRight"
-        class="w-5 h-5"
-        :class="`text-${props.iconColor}`"
-      />
-      <slot
-        v-else-if="$slots['icon-right']"
-        name="icon-right"
-      />
+      <div class="absolute bottom-[4px] right-[10px] w-[25px] p-0">
+        <VueFeather
+          v-if="props.iconRight && props.type !== 'password' && !$slots['icon-right']"
+          :type="props.iconRight"
+          class="w-5 h-5"
+          :class="props.iconColor"
+        />
+        <slot
+          v-else-if="$slots['icon-right']"
+          name="icon-right"
+        />
+      </div>
       <p
         class="text-sm absolute top-[calc(100%+2px)] left-0"
         :class="hasError ? 'text-red-600 font-medium' : 'text-gray-500'"

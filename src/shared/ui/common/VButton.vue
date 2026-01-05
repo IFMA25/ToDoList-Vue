@@ -8,7 +8,7 @@ import VLoader from "./VLoader.vue";
 const props = withDefaults(
   defineProps<{
     text: string;
-    loading: boolean;
+    loading?: boolean;
     type?: string;
     variant?: string;
     disabled?: boolean;

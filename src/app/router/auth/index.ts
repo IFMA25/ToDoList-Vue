@@ -9,17 +9,6 @@ const authRoutes: RouteRecordRaw[] = [
       title: "Authentication",
       layout: "auth",
     },
-    // beforeEnter: (to) => {
-    //   const mode = to.query.mode;
-    //   if (mode !== "signup" && mode !== "signin") {
-    //     return {
-    //       name: "auth",
-    //       query: {
-    //         mode: "signin",
-    //       },
-    //     };
-    //   }
-    // },
   },
 ];
 

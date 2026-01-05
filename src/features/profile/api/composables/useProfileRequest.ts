@@ -1,4 +1,4 @@
-import { ProfileResponse } from "@/features/auth/types";
+import { ProfileResponse } from "@/features/profile/types";
 import { UseApiOptions } from "@/shared/api";
 import { useApiGet } from "@/shared/api/composables/useApi";
 

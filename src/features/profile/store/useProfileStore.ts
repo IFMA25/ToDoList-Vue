@@ -4,7 +4,7 @@ import { toast } from "vue-sonner";
 
 import { useProfileRequest } from "../api/composables/useProfileRequest";
 
-import { Profile } from "@/features/auth/types";
+import { Profile } from "@/features/profile/types";
 
 const ERROR_MSG = "You are not authorized. Please log in.";
 

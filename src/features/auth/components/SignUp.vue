@@ -64,7 +64,7 @@ const handleSubmit = async () => {
       placeholder="Username"
       :validation="v$.name"
       icon-left="user"
-      icon-color="accent"
+      icon-color="text-accent"
       @blur="v$.name.$touch()"
     />
     <VInput
@@ -73,7 +73,7 @@ const handleSubmit = async () => {
       placeholder="Email Address"
       :validation="v$.email"
       icon-left="mail"
-      icon-color="accent"
+      icon-color="text-accent"
       @blur="v$.email.$touch()"
     />
     <VInput
@@ -82,7 +82,7 @@ const handleSubmit = async () => {
       placeholder="Create Password"
       :validation="v$.password"
       icon-left="lock"
-      icon-color="accent"
+      icon-color="text-accent"
       @blur="v$.password.$touch()"
     />
     <VInput
@@ -91,7 +91,7 @@ const handleSubmit = async () => {
       placeholder="Confirm Password"
       :validation="v$.confirmPassword"
       icon-left="lock"
-      icon-color="accent"
+      icon-color="text-accent"
       @blur="v$.confirmPassword.$touch()"
     />
     <VButton

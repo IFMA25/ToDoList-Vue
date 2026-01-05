@@ -53,6 +53,7 @@ const handleSubmit = async() => {
 </script>
 
 <template>
+  <h2>{{ $t("signIn.title") }}</h2>
   <form
     action="#"
     class="flex flex-col gap-5"
@@ -64,7 +65,7 @@ const handleSubmit = async() => {
       placeholder="Email Address"
       :validation="v$.email"
       icon-left="mail"
-      icon-color="accent"
+      icon-color="text-accent"
       @blur="v$.email.$touch()"
     />
     <VInput
@@ -73,7 +74,7 @@ const handleSubmit = async() => {
       placeholder="Password"
       :validation="v$.password"
       icon-left="lock"
-      icon-color="accent"
+      icon-color="text-accent"
       @blur="v$.password.$touch()"
     />
     <p

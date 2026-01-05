@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import AdminPanel from "@/features/adminPanel/components/AdminPanel.vue";
 </script>
 
 <template>
-  <div class="text-center text-lg">
-    Home page
-  </div>
+  <AdminPanel />
 </template>
