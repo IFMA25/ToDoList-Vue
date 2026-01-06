@@ -31,7 +31,7 @@ export const useThemeStore = defineStore("theme", () => {
     if (theme === "dark") {
       document.documentElement.setAttribute("data-theme", "dark");
     } else {
-      document.documentElement.removeAttribute("data-theme");
+      document.documentElement.setAttribute("data-theme", "light");
     }
   };
 

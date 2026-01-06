@@ -1,16 +1,19 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import { useProfileRequest } from "../api/composables/useProfileRequest";
 
 import { Profile } from "@/features/profile/types";
+import { tokenManager } from "@/shared/api";
 
 const ERROR_MSG = "You are not authorized. Please log in.";
 
-const profileData = ref<Profile | null>(null);
-
 export const useProfileStore = defineStore("profile", () => {
+  const profileData = ref<Profile | null>(null);
+
+  const router = useRouter();
 
   const { execute, loading, error, data } = useProfileRequest({
     onSuccess: () => {
@@ -32,8 +35,10 @@ export const useProfileStore = defineStore("profile", () => {
     await execute();
   };
 
-  const removeProfileData = () => {
+  const handleLogout = () => {
     profileData.value = null;
+    tokenManager.clearTokens();
+    router.push({ name: "auth", query: { mode: "signin" } });
   };
 
   return {
@@ -41,6 +46,6 @@ export const useProfileStore = defineStore("profile", () => {
     loading,
     error,
     fetchProfile,
-    removeProfileData,
+    handleLogout,
   };
 });

@@ -9,6 +9,7 @@ const props = withDefaults(
   defineProps<{
     text: string;
     loading?: boolean;
+    loadColor?: string;
     type?: string;
     variant?: string;
     disabled?: boolean;
@@ -18,6 +19,7 @@ const props = withDefaults(
   {
     type: "button",
     variant: "main",
+    loadColor: "white",
     text: "",
     to: null,
     icon: "",
@@ -25,7 +27,8 @@ const props = withDefaults(
 );
 
 const btnStyles = {
-  main: "relative overflow-hidden border-none rounded-[10px] py-[12px] px-2 bg-gradient-to-r from-primaryDark to-primaryLight before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-primaryLight before:to-primaryDark before:opacity-0 before:transition-opacity before:duration-1000 hover:before:opacity-100 before:z-0 [&>*]:relative [&>*]:z-10 font-semibold text-[18px] leading-[20px] text-white uppercase",
+  main: "relative border-none rounded-[10px] py-[12px] px-2 bg-gradient-to-r from-primaryDark to-primaryLight before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-primaryLight before:to-primaryDark before:opacity-0 before:transition-opacity before:duration-1000 hover:before:opacity-100 before:z-0 [&>*]:relative [&>*]:z-10 font-semibold text-[18px] leading-[20px] text-white uppercase",
+  loadMore: "border border-gray-400 bg-white rounded-[10px] py-[10px] px-10 text-black font-semibold text-[18px] uppercase",
 };
 
 const btnClass = computed(() => btnStyles[props.variant] ?? "");
@@ -37,7 +40,7 @@ const isRouterLink = computed(() => !!props.to);
 <template>
   <component
     :is="isRouterLink ? RouterLink : 'button'"
-    class="flex justify-center gap-3 cursor-pointer "
+    class="flex justify-center gap-3 cursor-pointer overflow-hidden"
     :class="[btnClass, {
       'opacity-60 cursor-not-allowed': props.disabled || props.loading
     }]"
@@ -56,7 +59,7 @@ const isRouterLink = computed(() => !!props.to);
     >
       <VLoader
         v-if="props.loading && !$slots['icon-start'] && !props.icon"
-        color="white"
+        color="props.loadColor"
       />
       <slot
         v-else-if="$slots['icon-start'] && !props.loading"

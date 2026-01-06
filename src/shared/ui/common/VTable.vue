@@ -37,7 +37,7 @@ const props = defineProps<{
         <tbody class="divide-y divide-slate-300">
           <tr
             v-for="(row, index) in props.rows"
-            :key="index"
+            :key="row.id"
             class="hover:bg-blue-50 transition-colors"
             :class="{ 'bg-gray-50': index % 2 === 1 }"
           >
