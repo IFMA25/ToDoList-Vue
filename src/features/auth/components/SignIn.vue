@@ -5,6 +5,7 @@ import { useRouter } from "vue-router";
 import { useLogin } from "../api/composables/useAuthRequests";
 import { useSignInValidation } from "../composables/useSignInValidation";
 
+import { useProfileStore } from "@/features/profile/store/useProfileStore";
 import { tokenManager } from "@/shared/api/tokenManager";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
@@ -18,18 +19,27 @@ const emit = defineEmits<{
 }>();
 
 const router = useRouter();
+const profileStore = useProfileStore();
 
 const { formData, v$ } = useSignInValidation();
 
 const errorLogin = ref<string | null>(null);
 
 const { execute, loading, error } = useLogin({
-  onSuccess: (response) => {
+  onSuccess: async (response) => {
+
     tokenManager.setTokens({
       accessToken: response.data.accessToken,
       refreshToken: response.data.refreshToken,
     });
-    router.replace({ name: "home" });
+
+    await profileStore.fetchProfile();
+
+    if (profileStore.profileData?.role === "admin") {
+      router.replace({ name: "users" });
+    } else {
+      router.replace({ name: "home" });
+    }
   },
   onError: () => {
     errorLogin.value = error.value.message;

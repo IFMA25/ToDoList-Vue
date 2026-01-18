@@ -21,7 +21,7 @@ function createApiClient(): AxiosInstance {
     baseURL: import.meta.env.VITE_API_URL
       ? `${import.meta.env.VITE_API_URL}`
       : "/api",
-    timeout: 30000,
+    timeout: 100000,
     headers: {
       "Content-Type": "application/json",
     },
@@ -41,7 +41,7 @@ const apiClient = createApiClient();
 let isInterceptorsSetup = false;
 
 export function setupApiClient(options: {
-  onTokenRefreshFailed?: () => void;
+  onTokenRefreshFailed?: () => void
 } = {}): void {
   if (isInterceptorsSetup) {
     return;

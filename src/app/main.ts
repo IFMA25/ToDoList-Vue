@@ -12,18 +12,7 @@ import i18n from "@/shared/i18n";
 // Create Vue app instance
 const app = createApp(App);
 
-setupApiClient({
-  onTokenRefreshFailed: () => {
-    const currentRoute = router.currentRoute.value;
-
-    if (currentRoute.name !== "auth") {
-      router.push({
-        name: "auth",
-        query: { redirect: currentRoute.fullPath },
-      });
-    }
-  },
-});
+setupApiClient();
 
 // Install plugins
 app.use(createPinia());

@@ -4,8 +4,6 @@ import { computed } from "vue";
 import { useLanguageStore } from "@/features/translation/composables/useLanguageStore";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
-import VDropdownContent from "@/shared/ui/common/dropdown/VDropdownContent.vue";
-
 
 const language = useLanguageStore();
 
@@ -15,37 +13,27 @@ const languageText = computed(() => {
 
 const supportedLocales = language.supportedLocales();
 
-const changeLang = (lang: string, close: () => void) => {
+const changeLang = (lang: string) => {
   language.setLanguage(lang);
-  close();
 };
 </script>
 
 <template>
-  <VDropdown>
+  <VDropdown placement="tf">
     <template #trigger="{toggle}">
       <VButton
         :text="languageText"
         @click="toggle"
       />
     </template>
-    <template #content="{ isOpen, close }">
-      <VDropdownContent
-        :is-open="isOpen"
-        placement="tf"
+    <ul class="text-center cursor-pointer">
+      <li
+        v-for="locale in supportedLocales"
+        :key="locale"
+        @click="changeLang(locale)"
       >
-        <template #default>
-          <ul class="text-center cursor-pointer">
-            <li
-              v-for="locale in supportedLocales"
-              :key="locale"
-              @click="changeLang(locale, close)"
-            >
-              {{ locale.toUpperCase() }}
-            </li>
-          </ul>
-        </template>
-      </VDropdownContent>
-    </template>
+        {{ locale.toUpperCase() }}
+      </li>
+    </ul>
   </VDropdown>
 </template>

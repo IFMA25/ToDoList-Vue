@@ -47,13 +47,13 @@ export interface ApiRequestConfig<D = unknown> extends AxiosRequestConfig<D> {
   /** Custom success message */
   successMessage?: string
   /**
-   * Authentication mode
-   * - 'default': authenticated request, will refresh token on 401 (default)
-   * - 'public': public endpoint, no auth header, no refresh on 401
-   * - 'optional': adds auth if available, but no refresh on 401
-   *
-   * @default 'default'
-   */
+     * Authentication mode
+     * - 'default': authenticated request, will refresh token on 401 (default)
+     * - 'public': public endpoint, no auth header, no refresh on 401
+     * - 'optional': adds auth if available, but no refresh on 401
+     *
+     * @default 'default'
+     */
   authMode?: AuthMode
   /** Use retry logic */
   retry?: boolean | number
@@ -96,8 +96,14 @@ export interface UseApiOptions<T = unknown,
   debounce?: number
   /** Request timeout */
   timeout?: number
-  /** Enable automatic cleanup on component unmount (default: true). Set to false for stores/services */
-  autoCleanup?: boolean
+  /**
+     * Use global abort controller from filters
+     * When global filters change, this request will be automatically cancelled
+     * Set to false for important requests that should NOT be cancelled (e.g., save, submit)
+     * @default true
+     */
+  useGlobalAbort?: boolean
+  initialLoading?: boolean
 }
 
 /**
@@ -134,7 +140,7 @@ export interface UseApiReturn<T = unknown, D = unknown> {
  */
 export interface AuthTokens {
   accessToken: string
-  refreshToken: string
+  refreshToken?: string
   expiresIn?: number
 }
 

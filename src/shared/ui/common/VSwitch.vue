@@ -4,34 +4,44 @@ import VueFeather from "vue-feather";
 
 const modelValue = defineModel<boolean>({ default: false });
 
-const props = withDefaults(defineProps<{
-  variant: string;
-  label?: string;
-  icon?: string;
-}>(), {
-  variant: "",
-  label: "",
-  icon: "",
-});
+const props = withDefaults(
+  defineProps<{
+    variant: string;
+    label?: string;
+    icon?: string;
+    id?: string;
+  }>(),
+  {
+    variant: "",
+    label: "",
+    icon: "",
+    id: "",
+  },
+);
 
-const variantStyle = {
+const variantStyle = computed(() => ({
   themeSwitch: {
     bodyThumb: "w-[22px] h-[22px] bg-thumb",
     bodySwitch: "w-[64px] h-[26px] bg-switch bg-cover bg-center",
   },
-};
+  default: {
+    bodyThumb: "w-5 h-5 bg-white",
+    bodySwitch: modelValue.value
+      ? "w-11 h-6 bg-blue-700"
+      : "w-11 h-6 bg-blue-300",
+  },
+}));
 
 const switchClass = computed(() => {
-  return variantStyle[props.variant].bodySwitch;
+  return variantStyle.value[props.variant].bodySwitch;
 });
 
 const thumbClass = computed(() => {
   const translateThumb = modelValue.value
     ? "left-[calc(100%-2px)] -translate-x-full"
     : "left-[2px]";
-  return `${variantStyle[props.variant].bodyThumb} ${translateThumb}`;
+  return `${variantStyle.value[props.variant].bodyThumb} ${translateThumb}`;
 });
-
 </script>
 
 <template>
@@ -53,7 +63,7 @@ const thumbClass = computed(() => {
       </div>
     </div>
     <input
-      id="switch"
+      :id="id || `switch-${Math.random()}`"
       v-model="modelValue"
       type="checkbox"
       class="absolute opacity-0 pointer-events-none"
@@ -66,4 +76,3 @@ const thumbClass = computed(() => {
     </slot>
   </label>
 </template>
-

@@ -30,3 +30,9 @@ export const validationRules = {
 
 export const confirmPassword = (password: string) =>
   helpers.withMessage("Passwords do not match", sameAs(password));
+
+
+export function capitalizeFirstLetter(value: string): string {
+  if (!value) return value;
+  return value[0].toUpperCase() + value.slice(1);
+}

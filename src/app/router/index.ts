@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import authRoutes from "./auth";
+import { guards } from "./guards";
 
-import { tokenManager } from "@/shared/api";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -11,6 +11,26 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/pages/Home/index.vue"),
     meta: {
       title: "Home",
+      role: "user",
+    },
+  },
+  {
+    path: "/users",
+    name: "users",
+    component: () => import("@/pages/Users/index.vue"),
+    meta: {
+      title: "Admin",
+      role: "admin",
+      permission: "READ_USERS",
+    },
+  },
+  {
+    path: "/users/:id",
+    name: "usersInfo",
+    component: () => import("@/pages/Users/UserInfo.vue"),
+    meta: {
+      title: "Users",
+      role: "admin",
     },
   },
   {
@@ -29,14 +49,6 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to) => {
-  const token = tokenManager.getAccessToken();
-  if (!token && to.meta.layout !== "auth") {
-    return ({ name: "auth" });
-  }
-  if (token && to.name === "auth") {
-    return ({ name: "home" });
-  }
-});
+router.beforeEach(guards);
 
 export default router;

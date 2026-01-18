@@ -32,6 +32,7 @@ export const useProfileStore = defineStore("profile", () => {
   });
 
   const fetchProfile = async () => {
+    if (profileData.value) return;
     await execute();
   };
 

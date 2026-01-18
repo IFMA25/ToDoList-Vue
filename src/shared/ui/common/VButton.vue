@@ -3,7 +3,9 @@ import { computed } from "vue";
 import VueFeather from "vue-feather";
 import { RouterLink } from "vue-router";
 
+
 import VLoader from "./VLoader.vue";
+
 
 const props = withDefaults(
   defineProps<{
@@ -26,16 +28,22 @@ const props = withDefaults(
   },
 );
 
+
 const btnStyles = {
   main: "relative border-none rounded-[10px] py-[12px] px-2 bg-gradient-to-r from-primaryDark to-primaryLight before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-primaryLight before:to-primaryDark before:opacity-0 before:transition-opacity before:duration-1000 hover:before:opacity-100 before:z-0 [&>*]:relative [&>*]:z-10 font-semibold text-[18px] leading-[20px] text-white uppercase",
-  loadMore: "border border-gray-400 bg-white rounded-[10px] py-[10px] px-10 text-black font-semibold text-[18px] uppercase",
+  default: "border border-gray-400 bg-white rounded-[10px] py-[10px] px-10 text-black font-semibold text-[18px] uppercase",
+  action: "w-full text-black font-semibold text-[20px] loadMore text-center",
 };
+
 
 const btnClass = computed(() => btnStyles[props.variant] ?? "");
 
+
 const isRouterLink = computed(() => !!props.to);
 
+
 </script>
+
 
 <template>
   <component
@@ -59,7 +67,7 @@ const isRouterLink = computed(() => !!props.to);
     >
       <VLoader
         v-if="props.loading && !$slots['icon-start'] && !props.icon"
-        color="props.loadColor"
+        :color="props.loadColor"
       />
       <slot
         v-else-if="$slots['icon-start'] && !props.loading"

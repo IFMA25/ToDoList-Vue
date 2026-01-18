@@ -9,7 +9,7 @@ import VLoader from "@/shared/ui/common/VLoader.vue";
 const profileStore = useProfileStore();
 
 onMounted(() => {
-  profileStore.fetchProfile();
+  // profileStore.fetchProfile();
 });
 </script>
 

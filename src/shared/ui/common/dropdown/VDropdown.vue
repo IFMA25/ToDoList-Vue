@@ -1,54 +1,59 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { ref, onUnmounted, watch } from "vue";
 
-const isOpen = ref<boolean>(false);
+import VDropdownContent from "./VDropdownContent.vue";
+
+const isOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
-const close = () => (isOpen.value = false);
-const toggle = () => {
-  isOpen.value = !isOpen.value;
-};
+const close = () => { isOpen.value = false; };
+const toggle = () => { isOpen.value = !isOpen.value; };
 
-const handelClick = (e: MouseEvent) => {
-  const target = e.target;
-  if(!dropdownRef.value) return;
-
-  if(target instanceof Node && !dropdownRef.value.contains(target)){
+const handleOutsideInteraction = (event: Event) => {
+  if (dropdownRef.value &&
+    event.target instanceof Node &&
+    !dropdownRef.value.contains(event.target)) {
     close();
   }
 };
 
-const handelKeyDown = (e: KeyboardEvent) => {
-  if(e.key === "Escape" && isOpen.value){
-    close();
-  }
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === "Escape" && isOpen.value) close();
 };
 
-onMounted(() => {
-  document.addEventListener("click", handelClick);
-  document.addEventListener("keydown", handelKeyDown);
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    document.addEventListener("click", handleOutsideInteraction);
+    window.addEventListener("keydown", handleKeydown);
+  } else {
+    document.removeEventListener("click", handleOutsideInteraction);
+    window.removeEventListener("keydown", handleKeydown);
+  }
 });
+
 onUnmounted(() => {
-  document.removeEventListener("click", handelClick);
-  document.removeEventListener("keydown", handelKeyDown);
+  document.removeEventListener("click", handleOutsideInteraction);
+  window.removeEventListener("keydown", handleKeydown);
 });
-
 </script>
 
 <template>
   <div
     ref="dropdownRef"
-    class="relative inline-block"
+    class="relative"
   >
     <slot
       name="trigger"
       :toggle="toggle"
       :is-open="isOpen"
     />
-    <slot
-      name="content"
+
+    <VDropdownContent
       :is-open="isOpen"
-      :close="close"
-    />
+      v-bind="$attrs"
+      @close="close"
+    >
+      <slot />
+    </VDropdownContent>
   </div>
 </template>

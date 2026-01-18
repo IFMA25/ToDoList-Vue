@@ -38,12 +38,14 @@ class LocalStorageTokenStorage implements TokenStorage {
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
+    return null; // Refresh token is stored in httpOnly cookie
   }
 
   setTokens(tokens: AuthTokens): void {
     localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
+
+    // We don't store refresh token in local storage
+    // localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
 
     if (tokens.expiresIn) {
       const expiresAt = Date.now() + tokens.expiresIn * 1000;
@@ -53,7 +55,7 @@ class LocalStorageTokenStorage implements TokenStorage {
 
   clearTokens(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    // localStorage.removeItem(REFRESH_TOKEN_KEY);
     localStorage.removeItem(TOKEN_EXPIRES_KEY);
   }
 
@@ -130,7 +132,8 @@ class TokenManager {
      * Check if tokens exist
      */
   hasTokens(): boolean {
-    return !!(this.getAccessToken() && this.getRefreshToken());
+    // We only check for access token because refresh token is in HttpOnly cookie
+    return !!this.getAccessToken();
   }
 
   /**
