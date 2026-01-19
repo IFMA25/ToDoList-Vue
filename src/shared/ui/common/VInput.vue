@@ -40,7 +40,7 @@ const slots = useSlots();
 const inputStyles = {
   main: "border-b border-border focus:border-b-1 focus:border-secondary placeholder:text-placeholder placeholder:text-sm focus:shadow-[0_1px_0_0_theme('colors.secondary')]",
   error: "border-b border-error focus:border-b-1 focus:shadow-[0_1px_0_0_theme('colors.error')]",
-
+  search: "max-w-[20rem] border-2 border-border rounded-lg placeholder-disabled py-[14px] pl-[44px] pr-4 focus:border-borderFocus focus:outline-none",
 };
 
 const hasError = computed(() => props.validation?.$error ?? false);
@@ -55,8 +55,8 @@ const inputClass = computed(() => {
   const hasLeft = !!slots["icon-left"] || props.iconLeft;
   const hasRight = !!slots["icon-right"] || props.iconRight || props.type === "password";
   const paddingClass = [
-    hasLeft ? "pl-[40px]" : "pl-2",
-    hasRight ? "pr-[40px]" : "pr-2",
+    hasLeft ? "pl-[44px]" : "pl-2",
+    hasRight ? "pr-[44px]" : "pr-2",
   ].join(" ");
 
   const colorClass = hasError.value ?
@@ -68,16 +68,16 @@ const inputClass = computed(() => {
 
 <template>
   <label
-    class="block"
+    class="block w-full"
     v-bind="$attrs"
   >
     <p class="text-sm font-medium text-gray-800 mb-1">{{ props.label }}</p>
     <div class="relative">
-      <div class="absolute bottom-[4px] left-[10px] w-[25px] p-0">
+      <div class="absolute left-4 top-1/2 -translate-y-1/2 flex justify-center items-center">
         <VueFeather
           v-if="props.iconLeft && !$slots['icon-left']"
           :type="props.iconLeft"
-          class="w-5 h-5 "
+          class="w-5 h-5 text-disabled"
           :class="props.iconColor"
         />
         <slot

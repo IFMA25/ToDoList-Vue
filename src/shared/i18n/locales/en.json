@@ -1,5 +1,8 @@
 {
     "signIn": {
         "title": "Login"
+    },
+    "search": {
+        "placeholder": "Search by name or email…"
     }
 }

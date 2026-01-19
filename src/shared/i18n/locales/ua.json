@@ -1,5 +1,8 @@
 {
     "signIn": {
         "title": "Логін"
+    },
+    "search": {
+        "placeholder": "Пошук по імені або email…"
     }
 }

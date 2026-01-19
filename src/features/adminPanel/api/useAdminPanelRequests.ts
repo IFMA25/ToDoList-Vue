@@ -16,7 +16,7 @@ import {
 
 export const useAdminRequest = (options?: UseApiOptions<UsersResponse>) => {
   return useApiGet("/users", {
-    immediate: false,
+    immediate: true,
     ...options,
   });
 };

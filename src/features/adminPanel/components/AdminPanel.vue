@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted , computed, ref } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -7,9 +8,13 @@ import { useAdminRequest, useUserDeleteRequest } from "../api/useAdminPanelReque
 import { RowData, UsersResponse } from "../types";
 
 import VButton from "@/shared/ui/common/VButton.vue";
+import VInput from "@/shared/ui/common/VInput.vue";
 import VModal from "@/shared/ui/common/VModal.vue";
 import VTable, { TableColumn } from "@/shared/ui/common/VTable.vue";
 import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
+
+
+const { t } = useI18n();
 
 const TABLE_HEADS: TableColumn<RowData>[] = [
   { key: "name", label: "Name" },
@@ -25,6 +30,8 @@ const usersData = ref<UsersResponse | null>(null);
 const confirmModal = ref<boolean>(false);
 const selectedUserId = ref< string | null>(null);
 const selectedUserName = ref< string | null>(null);
+const search = ref<string>("");
+let searchDebounce: ReturnType<typeof setTimeout> | undefined;
 
 const router = useRouter();
 
@@ -67,7 +74,11 @@ const loadMore = () => {
   execute({
     params: {
       limit,
-      offset: currentOffset + limit },
+      offset: currentOffset + limit,
+      q: search.value.trim() || undefined,
+      // sort: sort.value,
+      // order: order.value,
+    },
   });
 };
 
@@ -107,13 +118,39 @@ const handelAction = (rowData: RowData, action: string) => {
   }
 };
 
+const fetchUsers = (opts?: { reset?: boolean }) => {
+  const reset = opts?.reset ?? false;
+  const limit = usersData.value?.pagination.limit ?? 10;
+  const offset = reset ? 0 : (usersData.value?.pagination.offset ?? 0);
+
+  if (reset) usersData.value = null;
+
+  execute({
+    params: {
+      limit,
+      offset,
+      q: search.value.trim() || undefined,
+      // sort: sort.value,
+      // order: order.value,
+    },
+  });
+};
+
+
 const closeConfirmModal = () => confirmModal.value = false;
 
 const loadingTable = computed(() => loading.value || deleteUser.loading.value);
 
-onMounted(() => {
-  execute();
+watch(search, () => {
+  if (searchDebounce) clearTimeout(searchDebounce);
+
+  searchDebounce = setTimeout(() => {
+    fetchUsers({ reset: true });
+  }, 400);
 });
+
+onBeforeUnmount(() => clearTimeout(searchDebounce));
+
 </script>
 
 <template>
@@ -136,7 +173,14 @@ onMounted(() => {
       />
     </template>
   </VModal>
-  <div class="h-full flex items-center justify-center">
+  <div class="h-full flex items-center justify-center flex-col gap-6">
+    <VInput
+      v-model="search"
+      :placeholder="t('search.placeholder')"
+      type="search"
+      variant="search"
+      icon-left="search"
+    />
     <VTable
       :rows="tableRows"
       :heads="TABLE_HEADS"

@@ -30,7 +30,9 @@ export default {
         'primaryLight': '#0968AC',
         'secondary': '#012E43',  
         'accent': '#7F1917',     
-        'border': '#27272766',
+        'border': '#D3E0FC', //
+        'disabled': '#94A3B8', //
+        'borderFocus': '#3E0DA8', //
         'switchBorder': 'url("@/app/assets/backgrounds/light-icon.png")',
         'switchBg': '#FFD22F',
         'thumbBg': "linear-gradient(to bottom, #F5F995, #ECA123)",
@@ -50,7 +52,9 @@ export default {
         'primaryLight': '#510D00',
         'secondary': '#7F1917',
         'accent': '#FFFFFF99',
-        'border': '#FFFFFF99',
+        'border': '#D3E0FC', //
+        'borderFocus': '#3E0DA8', //
+        'disabled': '#94A3B8', //
         'switchBorder': 'url("@/app/assets/backgrounds/dark-icon.png")',
         'switchBg': '#D2D9E3',
         'thumbBg': "linear-gradient(to bottom, #CECECE66, #CECECE)",
