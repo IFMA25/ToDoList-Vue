@@ -1,19 +1,15 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends { id: string }">
 import VButton from "@/shared/ui/common/VButton.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 
-interface TableColumn {
-  key: string;
+export interface TableColumn<T> {
+  key: keyof T | "action";
   label: string;
 }
 
-interface TableRow {
-  [key: string]: string;
-}
-
 interface Props {
-  rows: TableRow[];
-  heads: TableColumn[];
+  rows: T[];
+  heads: TableColumn<T>[];
   loading?: boolean;
   hasMore?: boolean;
 }
@@ -62,7 +58,7 @@ const {
           <tr>
             <th
               v-for="head in heads"
-              :key="head.key"
+              :key="String(head.key)"
               class="px-6 py-3 text-center text-xs font-medium text-gray-700
                 uppercase tracking-wider border-b border-slate-300 bg-gray-200"
             >
@@ -80,7 +76,7 @@ const {
           >
             <td
               v-for="head in heads"
-              :key="head.key"
+              :key="String(head.key)"
               class="px-6 py-4 text-sm text-gray-900 border-r border-slate-300 last:border-r-0"
             >
               <slot
@@ -89,7 +85,7 @@ const {
                 :row="row"
               />
               <template v-else>
-                {{ row[head.key] }}
+                {{ String(row[head.key as keyof T] ?? "") }}
               </template>
             </td>
           </tr>

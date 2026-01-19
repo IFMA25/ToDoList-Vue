@@ -1,3 +1,5 @@
+import { computed, Ref } from "vue";
+
 import {
   UserResponse,
   UsersResponse,
@@ -48,10 +50,11 @@ export const usePermissionsRoleRequest = (
 };
 
 export const useUserDeleteRequest = (
-  userId: string,
+  userId: Ref<string | null>,
   options?: UseApiOptions<DeleteResponse>,
 ) => {
-  return useApiDelete<DeleteResponse>(`/users/${userId}`, {
+  const url = computed(() => (userId.value ? `/users/${userId.value}` : ""));
+  return useApiDelete<DeleteResponse>(url, {
     immediate: false,
     ...options,
   });

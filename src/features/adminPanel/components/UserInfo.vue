@@ -44,7 +44,7 @@ const permissionsQuery = usePermissionsRequest();
 
 const permissionsRoleQuery = usePermissionsRoleRequest();
 
-const updateRole = useUpdateUserRole(userId, {
+const updatedRole = useUpdateUserRole(userId, {
   onError: (error) => {
     if (error.status === 403) {
       toast.error(ROLE_ERROR_MSG);
@@ -83,6 +83,7 @@ const initData = async () => {
   }
 };
 
+// отправляю оба запроса, или нужно смотреть были ли изменения и потом отправлять соответсвующий запрос
 const updatedUserData = async () => {
   const activePermissions = Object.entries(userPermissions.value)
     .filter(([_, isActive]) => isActive)
@@ -92,12 +93,17 @@ const updatedUserData = async () => {
     const [updatedDataWithPermissions, updatedDataWithRole] = await Promise.all(
       [
         updatePermissions.execute({ data: { permissions: activePermissions } }),
-        updateRole.execute({ data: { role: userData.value?.role } }),
+        updatedRole.execute({ data: { role: userData.value?.role } }),
       ],
     );
 
-    if (updatedDataWithRole && updatedDataWithPermissions)
-      userData.value = updatedDataWithRole;
+    if (updatedDataWithRole && updatedDataWithPermissions){
+      userData.value = {
+        ...userData.value,
+        permissions: updatedDataWithPermissions.permissions,
+        role: updatedDataWithRole.role,
+      };
+    }
 
     toast.success(UPDATE_SUCCESS_MSG);
   } catch (err) {
@@ -142,12 +148,13 @@ const isLoading = computed(
     userQuery.loading.value ||
     permissionsQuery.loading.value ||
     permissionsRoleQuery.loading.value ||
-    updateRole.loading.value ||
+    updatedRole.loading.value ||
     updatePermissions.loading.value,
 );
 
 watch(
   () => userData.value?.permissions,
+
   (permissions) => {
     if (!permissions) return;
     setPermissions(permissions);

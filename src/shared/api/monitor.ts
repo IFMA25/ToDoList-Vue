@@ -36,19 +36,20 @@ export interface AuthEventPayload {
  * Track authentication events
  */
 // export function trackAuthEvent(type: AuthEventType, payload: AuthEventPayload = {}): void {
-//   const timestamp = new Date().toISOString();
+export function trackAuthEvent(): void {
+  new Date().toISOString();
 
-// Prepare structured log data
-// const logData = {
-//   event: type,
-//   timestamp,
-//   ...payload,
-// };
+  // Prepare structured log data
+  // const logData = {
+  //   event: type,
+  //   timestamp,
+  //   ...payload,
+  // };
 
-// In production, you would replace console.log with your APM client
-// Example: Sentry.addBreadcrumb({ category: 'auth', message: type, data: payload });
+  // In production, you would replace console.log with your APM client
+  // Example: Sentry.addBreadcrumb({ category: 'auth', message: type, data: payload });
 
-// return;
+  return;
 // switch (type) {
 //   case AuthEventType.REFRESH_START:
 //     console.groupCollapsed(`🔐 [Auth] Token Refresh Triggered`);
@@ -72,4 +73,4 @@ export interface AuthEventPayload {
 //   default:
 //     console.log(`[Auth Monitor] ${type}`, logData);
 // }
-// }
+}

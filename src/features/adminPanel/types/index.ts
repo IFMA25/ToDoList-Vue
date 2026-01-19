@@ -42,3 +42,12 @@ export type PermissionRole = {
 export interface DeleteResponse {
   message: string;
 }
+
+export interface RowData {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  createdAt: string;
+}
+
