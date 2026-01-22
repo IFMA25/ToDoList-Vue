@@ -1,4 +1,4 @@
-export type UserRole = "admin" | "user" | "ADMIN" | "USER";
+export type UserRole = "admin" | "user";
 
 export interface User {
   id: string;
@@ -45,9 +45,10 @@ export interface DeleteResponse {
 
 export interface RowData {
   id: string;
-  email: string;
-  name: string;
+  member: {
+    name: string;
+    email: string;
+  };
   role: UserRole;
   createdAt: string;
 }
-

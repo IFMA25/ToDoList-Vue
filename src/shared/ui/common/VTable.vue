@@ -84,9 +84,13 @@ const {
                 name="action"
                 :row="row"
               />
-              <template v-else>
+              <slot
+                v-else
+                :name="`cell-${String(head.key)}`"
+                :row="row"
+              >
                 {{ String(row[head.key as keyof T] ?? "") }}
-              </template>
+              </slot>
             </td>
           </tr>
         </tbody>

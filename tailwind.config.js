@@ -9,7 +9,7 @@ export default {
               'screen-2xl': '1920px',
             },
             fontFamily: {
-                sans: ['Open Sans', 'system-ui', 'sans-serif'],
+                sans: ['Inter', 'system-ui', 'sans-serif'],
             },
             spacing: {
                 18: '4.5rem',
@@ -25,12 +25,13 @@ export default {
     createThemes({
       
       light: {
-        'primary': '#FFFFFFDB', 
+        'primary': '#0F172A', //
+        'primarySelected': '#6C7CFF', //
         'primaryDark': '#001E32',
         'primaryLight': '#0968AC',
-        'secondary': '#012E43',  
+        'secondary': '#475569',  //
         'accent': '#7F1917',     
-        'border': '#D3E0FC', //
+        'default': '#D3E0FC', //
         'disabled': '#94A3B8', //
         'borderFocus': '#3E0DA8', //
         'switchBorder': 'url("@/app/assets/backgrounds/light-icon.png")',
@@ -47,12 +48,13 @@ export default {
         // 'info': '#3b82f6',
       },
       dark: {
-        'primary': '#000000B2',  
+        'primary': '#0F172A',  
+        'primarySelected': '#6C7CFF', //
         'primaryDark': '#A62023',
         'primaryLight': '#510D00',
         'secondary': '#7F1917',
         'accent': '#FFFFFF99',
-        'border': '#D3E0FC', //
+        'default': '#D3E0FC', //
         'borderFocus': '#3E0DA8', //
         'disabled': '#94A3B8', //
         'switchBorder': 'url("@/app/assets/backgrounds/dark-icon.png")',

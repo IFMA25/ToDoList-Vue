@@ -40,7 +40,7 @@ const slots = useSlots();
 const inputStyles = {
   main: "border-b border-border focus:border-b-1 focus:border-secondary placeholder:text-placeholder placeholder:text-sm focus:shadow-[0_1px_0_0_theme('colors.secondary')]",
   error: "border-b border-error focus:border-b-1 focus:shadow-[0_1px_0_0_theme('colors.error')]",
-  search: "max-w-[20rem] border-2 border-border rounded-lg placeholder-disabled py-[14px] pl-[44px] pr-4 focus:border-borderFocus focus:outline-none",
+  search: "max-w-[20rem] border-2 border-default rounded-lg placeholder-disabled py-3 pl-[2.625rem] pr-4 focus:border-borderFocus focus:outline-none ",
 };
 
 const hasError = computed(() => props.validation?.$error ?? false);
@@ -68,10 +68,13 @@ const inputClass = computed(() => {
 
 <template>
   <label
-    class="block w-full"
+    class="block"
     v-bind="$attrs"
   >
-    <p class="text-sm font-medium text-gray-800 mb-1">{{ props.label }}</p>
+    <p
+      v-if="props.label"
+      class="text-[1rem] leading-[1.3] text-primary mb-1"
+    >{{ props.label }}</p>
     <div class="relative">
       <div class="absolute left-4 top-1/2 -translate-y-1/2 flex justify-center items-center">
         <VueFeather

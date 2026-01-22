@@ -8,6 +8,8 @@ import router from "./router";
 import "./main.scss";
 import { setupApiClient } from "@/shared/api";
 import i18n from "@/shared/i18n";
+import "vue-multiselect/dist/vue-multiselect.min.css";
+
 
 // Create Vue app instance
 const app = createApp(App);

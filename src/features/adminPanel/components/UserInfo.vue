@@ -11,12 +11,16 @@ import {
   useUserInfoRequest,
 } from "../api/useAdminPanelRequests";
 import { Permission, PermissionRole, UserResponse, UserRole } from "../types";
+import { sameArray } from "../utils";
 
 import VButton from "@/shared/ui/common/VButton.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 import VSwitch from "@/shared/ui/common/VSwitch.vue";
 import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
 import { capitalizeFirstLetter } from "@/shared/utils";
+
+
+type SubmitMode = "none" | "permissions" | "role";
 
 const USER_ERROR_MSG = "User not found!";
 const ROLE_ERROR_MSG = "Cannot change your own role!";
@@ -26,11 +30,20 @@ const USER_ROLES: UserRole[] = ["admin", "user"];
 
 const route = useRoute();
 const userId = String(route.params.id || "");
+
 const permissionsAll = ref<Permission[]>([]);
 const permissionRole = ref<PermissionRole>(null);
+
+const responseUserData = ref<UserResponse | null>(null);
 const userData = ref<UserResponse | null>(null);
+
 const userPermissions = ref<Record<string, boolean>>({});
+
+const submitMode = ref<SubmitMode>("none");
+
 const selectedAllPermissions = ref<boolean>(false);
+
+const isUpdating = ref<boolean>(false);
 
 const userQuery = useUserInfoRequest(userId, {
   onError: (error) => {
@@ -61,11 +74,6 @@ const updatePermissions = useUpdateUserPermissions(userId, {
 });
 
 const initData = async () => {
-  userData.value = null;
-  permissionsAll.value = [];
-  permissionRole.value = null;
-  userPermissions.value = {};
-
   try {
     const [userResponse, permissionsResponse, rolesResponse] =
       await Promise.all([
@@ -74,40 +82,61 @@ const initData = async () => {
         permissionsRoleQuery.execute(),
       ]);
 
-    if (userResponse) userData.value = userResponse;
     if (permissionsResponse) permissionsAll.value = permissionsResponse;
     if (rolesResponse) permissionRole.value = rolesResponse;
+
+    if (userResponse) {
+      userData.value = userResponse;
+      responseUserData.value = structuredClone(userResponse);
+      setPermissions(userResponse.permissions ?? []);
+      setSubmitMode();
+    }
   } catch (error) {
     toast.error(REQUEST_ERROR);
     console.error(error);
   }
 };
 
-// отправляю оба запроса, или нужно смотреть были ли изменения и потом отправлять соответсвующий запрос
 const updatedUserData = async () => {
-  const activePermissions = Object.entries(userPermissions.value)
-    .filter(([_, isActive]) => isActive)
-    .map(([key]) => key);
+  if (!userData.value) return;
 
+  setSubmitMode();
+
+  if (submitMode.value === "none") return;
+
+  const activePermissions = getActivePermissions();
+
+  isUpdating.value = true;
   try {
-    const [updatedDataWithPermissions, updatedDataWithRole] = await Promise.all(
-      [
-        updatePermissions.execute({ data: { permissions: activePermissions } }),
-        updatedRole.execute({ data: { role: userData.value?.role } }),
-      ],
-    );
+    if (submitMode.value === "permissions") {
+      const updateUserData = await updatePermissions.execute({
+        data: { permissions: activePermissions },
+      });
 
-    if (updatedDataWithRole && updatedDataWithPermissions){
-      userData.value = {
-        ...userData.value,
-        permissions: updatedDataWithPermissions.permissions,
-        role: updatedDataWithRole.role,
-      };
+      responseData(updateUserData);
     }
 
+    if (submitMode.value === "role") {
+      const updateWithRole = await updatedRole.execute({
+        data: { role: userData.value.role },
+      });
+
+      responseData(updateWithRole);
+
+      const updateWithPermissions = await updatePermissions.execute({
+        data: { permissions: activePermissions },
+      });
+
+      responseData(updateWithPermissions);
+    }
+    submitMode.value = "none";
     toast.success(UPDATE_SUCCESS_MSG);
+    return;
   } catch (err) {
+    toast.error(REQUEST_ERROR);
     console.error("Update failed:", err);
+  } finally{
+    isUpdating.value = false;
   }
 };
 
@@ -122,6 +151,7 @@ const handleChangeRole = (role: UserRole) => {
       : permissionRole.value.USER || [];
 
   setPermissions(rolePermissions);
+  setSubmitMode();
 };
 
 const handleSelectedPermissions = () => {
@@ -134,35 +164,60 @@ const handleSelectedPermissions = () => {
     selectedAllPermissions.value = true;
     setPermissions(permissionRole.value.ADMIN || []);
   }
+
+  setSubmitMode();
+};
+
+const setSubmitMode = () => {
+  if (!userData.value || !responseUserData.value) {
+    submitMode.value = "none";
+    return;
+  }
+
+  const roleChanged = userData.value.role !== responseUserData.value.role;
+
+  const currentPermissions = getActivePermissions();
+  const basePermissions = [...(responseUserData.value.permissions ?? [])].sort();
+  const permissionsChanged = !sameArray(currentPermissions, basePermissions);
+
+  if (roleChanged) submitMode.value = "role";
+  else if (permissionsChanged) submitMode.value = "permissions";
+  else submitMode.value = "none";
 };
 
 const setPermissions = (activePermissions: string[]) => {
-  permissionsAll.value.forEach((p) => {
-    userPermissions.value[p.value] = activePermissions.includes(p.value);
+  permissionsAll.value.forEach((permission) => {
+    userPermissions.value[permission.value] = activePermissions.includes(permission.value);
   });
+};
+
+const getActivePermissions = () =>
+  Object.entries(userPermissions.value)
+    .filter(([_, isActive]) => isActive)
+    .map(([key]) => key)
+    .sort();
+
+const responseData = (data: UserResponse) => {
+  userData.value = data;
+  responseUserData.value = structuredClone(data);
+  setPermissions(data.permissions ?? []);
 };
 
 const isLoading = computed(
   () =>
-    !userData.value ||
     userQuery.loading.value ||
     permissionsQuery.loading.value ||
     permissionsRoleQuery.loading.value ||
-    updatedRole.loading.value ||
-    updatePermissions.loading.value,
+    isUpdating.value,
 );
+
+const currentRole = computed(() => userData.value?.role ?? "");
 
 watch(
-  () => userData.value?.permissions,
-
-  (permissions) => {
-    if (!permissions) return;
-    setPermissions(permissions);
-  },
-  { immediate: true },
+  userPermissions,
+  () => setSubmitMode(),
+  { deep: true },
 );
-
-// или watch??
 
 onMounted(() => {
   initData();
@@ -209,7 +264,7 @@ onMounted(() => {
         <template #trigger="{ toggle }">
           <VButton
             type="button"
-            :text="userData?.role"
+            :text="currentRole"
             @click="toggle"
           />
         </template>
