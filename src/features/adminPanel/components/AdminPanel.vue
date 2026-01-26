@@ -7,6 +7,7 @@ import { toast } from "vue-sonner";
 
 import { useAdminRequest, useUserDeleteRequest } from "../api/useAdminPanelRequests";
 import { RowData, UsersResponse } from "../types";
+import { formatDate } from "../utils";
 
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
@@ -14,6 +15,7 @@ import VModal from "@/shared/ui/common/VModal.vue";
 import VSelect from "@/shared/ui/common/VSelect.vue";
 import VTable, { TableColumn } from "@/shared/ui/common/VTable.vue";
 import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
+import { capitalizeFirstLetter } from "@/shared/utils";
 
 const { t } = useI18n();
 
@@ -22,13 +24,12 @@ type SortOrder = "asc" | "desc";
 
 const TABLE_HEADS: TableColumn<RowData>[] = [
   { key: "member", label: "Member" },
-  // { key: "email", label: "Email" },
   { key: "role", label: "Role" },
   { key: "createdAt", label: "Registered" },
   { key: "action", label: "" },
 ];
 
-const ACTIONS = ["Edit", "Delete"];
+const ACTIONS = ["user profile", "remove user"];
 const ERROR_MSG = "Admin role required!";
 
 const OPTIONS_ROLE = ["All roles", "Admins", "Users"];
@@ -119,9 +120,9 @@ const handleDelete = async () => {
 };
 
 const handelAction = (rowData: RowData, action: string) => {
-  if (action === "Edit") {
+  if (action === "user profile") {
     router.push({ name: "usersInfo", params: { id: rowData.id } });
-  } else if (action === "Delete") {
+  } else if (action === "remove user") {
     selectedUserId.value = rowData.id;
     selectedUserName.value = rowData.member.name;
     confirmModal.value = true;
@@ -149,7 +150,7 @@ const tableRows = computed<RowData[]>(() => {
       email: user.email,
     },
     role: user.role,
-    createdAt: new Date(user.createdAt).toLocaleDateString(),
+    createdAt: formatDate(user.createdAt),
   }));
 });
 
@@ -242,28 +243,29 @@ onMounted(() => fetchUsers());
     >
       <template #cell-member="{ row }">
         <div class="flex flex-col leading-tight">
-          <span class="font-medium text-slate-900">{{ row.member.name }}</span>
-          <span class="text-xs text-slate-500">{{ row.member.email }}</span>
+          <span class="mb-1">{{ row.member.name }}</span>
+          <span class="text-xs text-secondary">{{ row.member.email }}</span>
         </div>
       </template>
       <template
         #action="{ row }"
       >
-        <VDropdown placement="tf">
+        <VDropdown>
           <template #trigger="{toggle}">
             <VButton
               text="..."
-              variant="action"
+              class="w-full justify-end text-primarySelected font-bold text-lg"
               @click="toggle"
             />
           </template>
-          <ul class="text-center cursor-pointer flex flex-col gap-2">
+          <ul class="cursor-pointer flex flex-col gap-2">
             <li
               v-for="action in ACTIONS"
               :key="action"
+              :class="action === 'remove user' && 'text-danger hover:text-dangerHover'"
               @click="handelAction( row, action)"
             >
-              {{ action }}
+              {{ capitalizeFirstLetter(action) }}
             </li>
           </ul>
         </VDropdown>

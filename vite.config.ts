@@ -1,5 +1,6 @@
 import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
+import svgLoader from 'vite-svg-loader'
 import {fileURLToPath} from "url";
 import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import path from "path";
@@ -11,6 +12,7 @@ export default ({mode}: any) => {
         base: "/TodoList-Vue/",
         plugins: [
             vue(),
+            svgLoader(),
             VueI18nPlugin({
                 include: path.resolve(__dirname, "src/shared/i18n/locales/**"),
             }),

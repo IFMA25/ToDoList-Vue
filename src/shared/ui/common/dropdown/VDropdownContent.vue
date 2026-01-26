@@ -9,16 +9,12 @@ const props = withDefaults(defineProps<{
   placement?: keyof typeof placeVariant;
 }>(), {
   width: "w-full",
-  placement: "bl",
+  placement: "bottom",
 });
 
 const placeVariant = {
-  tf: "top-full left-0",
-  bf: "bottom-full left-0",
-  tl: "top-full right-[calc(100%-20px)]",
-  tr: "top-full left-[calc(100%-20px)]",
-  bl: "bottom-full right-[calc(100%-20px)]",
-  br: "bottom-full left-[calc(100%-20px)]",
+  bottom: "top-full right-0",
+  top: "bottom-full right-0",
 };
 
 const propContentClass = computed(() => {
@@ -31,7 +27,8 @@ const propContentClass = computed(() => {
   <Transition name="dropdown">
     <div
       v-if="props.isOpen"
-      class="absolute bg-white shadow-lg rounded py-2 z-20 min-w-max p-6"
+      class="absolute text-nowrap min-w-40 border border-default bg-white
+        shadow-dropdown rounded py-3 px-5 text-primary text-base z-10"
       :class="propContentClass"
       v-bind="$attrs"
       @click="emit('close')"

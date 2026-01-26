@@ -33,6 +33,8 @@ export const confirmPassword = (password: string) =>
 
 
 export function capitalizeFirstLetter(value: string): string {
-  if (!value) return value;
-  return value[0].toUpperCase() + value.slice(1);
+  return value
+    .split(" ")
+    .map((word) => word ? word[0].toUpperCase() + word.slice(1) : word)
+    .join(" ");
 }

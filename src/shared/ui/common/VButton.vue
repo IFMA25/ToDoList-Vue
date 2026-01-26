@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import VueFeather from "vue-feather";
 import { RouterLink } from "vue-router";
 
 
+import VIcon from "./VIcon.vue";
 import VLoader from "./VLoader.vue";
 
 
 const props = withDefaults(
   defineProps<{
-    text: string;
+    text?: string;
     loading?: boolean;
     loadColor?: string;
     type?: string;
@@ -17,14 +17,16 @@ const props = withDefaults(
     disabled?: boolean;
     to?: string | null;
     icon?: string;
+    collapsed?: boolean;
   }>(),
   {
     type: "button",
-    variant: "main",
     loadColor: "white",
+    variant: "",
     text: "",
     to: null,
     icon: "",
+    collapsed: false,
   },
 );
 
@@ -32,37 +34,29 @@ const props = withDefaults(
 const btnStyles = {
   main: "relative border-none rounded-[10px] py-[12px] px-2 bg-gradient-to-r from-primaryDark to-primaryLight before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-primaryLight before:to-primaryDark before:opacity-0 before:transition-opacity before:duration-1000 hover:before:opacity-100 before:z-0 [&>*]:relative [&>*]:z-10 font-semibold text-[18px] leading-[20px] text-white uppercase",
   default: "border border-gray-400 bg-white rounded-[10px] py-[10px] px-10 text-black font-semibold text-[18px] uppercase",
-  action: "w-full text-black font-semibold text-[20px] loadMore text-center",
+  nav: "items-center gap-2",
 };
 
 
 const btnClass = computed(() => btnStyles[props.variant] ?? "");
 
-
 const isRouterLink = computed(() => !!props.to);
-
-
 </script>
-
 
 <template>
   <component
     :is="isRouterLink ? RouterLink : 'button'"
-    class="flex justify-center gap-3 cursor-pointer overflow-hidden"
-    :class="[btnClass, {
-      'opacity-60 cursor-not-allowed': props.disabled || props.loading
-    }]"
-    v-bind="
-      isRouterLink
-        ? {
-          to: props.to,
-          ...$attrs,
-        }
-        : { type: props.type, disabled: props.disabled || props.loading, ...$attrs }
-    "
+    :to="isRouterLink ? props.to : undefined"
+    class="flex cursor-pointer"
+    v-bind="$attrs"
+    :class="[
+      btnClass,
+      $attrs.class,
+      { 'opacity-60 cursor-not-allowed': props.disabled || props.loading }
+    ]"
   >
     <span
-      v-if="props.loading"
+      v-if="props.icon || props.loading"
       class="w-[20px] flex justify-center items-center"
     >
       <VLoader
@@ -70,17 +64,21 @@ const isRouterLink = computed(() => !!props.to);
         :color="props.loadColor"
       />
       <slot
-        v-else-if="$slots['icon-start'] && !props.loading"
+        v-else-if="$slots['icon-start']"
         name="icon-start"
       />
-      <VueFeather
-        v-else-if="props.icon && !props.loading"
-        :type="props.icon"
+      <VIcon
+        v-else
+        :name="props.icon"
       />
     </span>
     <span
       v-if="props.text"
-      class="flex justify-center items-center"
+      class="flex items-center transition-all"
+      :class="props.collapsed
+        ? 'opacity-0 w-0 delay-50 pointer-events-none'
+        : 'opacity-100 delay-100'"
+      :aria-hidden="props.collapsed ? 'true' : 'false'"
     >
       {{ props.text }}
     </span>

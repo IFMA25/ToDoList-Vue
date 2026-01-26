@@ -29,8 +29,7 @@ const {
 
 <template>
   <div
-    class="relative h-full w-full border border-slate-400 rounded-lg shadow-sm
-    bg-white overflow-hidden flex flex-col"
+    class="relative h-full w-full bg-white overflow-hidden flex flex-col"
   >
     <Transition
       enter-active-class="transition-opacity duration-200"
@@ -53,31 +52,32 @@ const {
       class="overflow-auto w-full h-full flex flex-col transition-opacity duration-300"
       :class="{ 'pointer-events-none select-none': loading }"
     >
-      <table class="min-w-full relative z-0">
-        <thead class="bg-gray-200 sticky top-0 z-10 shadow-sm">
+      <table class="min-w-full relative z-0 text-primary">
+        <thead class="bg-subtle sticky top-0 z-10">
           <tr>
             <th
               v-for="head in heads"
               :key="String(head.key)"
-              class="px-6 py-3 text-center text-xs font-medium text-gray-700
-                uppercase tracking-wider border-b border-slate-300 bg-gray-200"
+              class="p-2 text-left font-semibold first:rounded-l-lg last:rounded-r-lg"
             >
               {{ head.label }}
             </th>
           </tr>
         </thead>
-
-        <tbody class="divide-y divide-slate-300">
+        <tbody>
           <tr
-            v-for="(row, index) in rows"
+            v-for="(row) in rows"
             :key="row.id"
-            class="hover:bg-blue-50 transition-colors"
-            :class="{ 'bg-gray-50': index % 2 === 1 }"
+            class="border-b border-default last:border-b-0 hover:bg-default transition-colors"
           >
             <td
-              v-for="head in heads"
+              v-for="(head, colIndex) in heads"
               :key="String(head.key)"
-              class="px-6 py-4 text-sm text-gray-900 border-r border-slate-300 last:border-r-0"
+              class="pt-6 pb-2 text-sm"
+              :class="[
+                (colIndex + 1) % 2 === 0 ? 'text-toggle capitalize' : '',
+                colIndex === 3 ? 'text-xs' : ''
+              ]"
             >
               <slot
                 v-if="head.key === 'action'"

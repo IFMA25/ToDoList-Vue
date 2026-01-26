@@ -2,6 +2,8 @@
 import { computed } from "vue";
 import Multiselect from "vue-multiselect";
 
+import VIcon from "@/shared/ui/common/VIcon.vue";
+
 type Option = string;
 
 interface Props {
@@ -55,7 +57,19 @@ const closeOnSelectComputed = computed(() =>
       :show-labels="showLabels"
       :allow-empty="allowEmpty"
       aria-label="pick a value"
-    />
+    >
+      <template #caret="{ toggle }">
+        <span
+          class="multiselect__select"
+          @mousedown.prevent.stop="toggle"
+        >
+          <VIcon
+            name="icon-chevron-up"
+            class="h-5 w-5 text-secondary"
+          />
+        </span>
+      </template>
+    </Multiselect>
   </div>
 </template>
 
@@ -89,21 +103,16 @@ const closeOnSelectComputed = computed(() =>
 }
 
 .v-select :deep(.multiselect__select) {
-  @apply h-full top-0;
+  @apply h-full top-0 flex items-center justify-center;
 }
-
 .v-select :deep(.multiselect__select::before) {
-  @apply block top-1/2 -translate-y-1/2 m-0 border-0 w-[1.25rem] h-[1.25rem]
-    bg-current text-secondary
-    [mask:url('/icons/icon-chevron-up.svg')_no-repeat_center/contain]
-    [-webkit-mask:url('/icons/icon-chevron-up.svg')_no-repeat_center/contain];
+  display: none;
 }
 
 .v-select :deep(.multiselect__option--highlight) {
   @apply bg-default text-primary;
 }
 
-/* selected */
 .v-select :deep(.multiselect__option--selected) {
   @apply  text-primarySelected bg-white;
 }
