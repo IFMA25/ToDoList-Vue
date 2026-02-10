@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AdminPanel from "@/features/adminPanel/components/AdminPanel.vue";
+import UsersListFeature from "@/features/adminPanel/UsersListFeature.vue";
 </script>
 
 <template>
-  <AdminPanel />
+  <UsersListFeature />
 </template>

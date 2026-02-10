@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
 export const useThemeStore = defineStore("theme", () => {
-  const currentTheme = ref<"light" | "dark">("light");
+  const currentTheme = ref<"light" | "dark" | "system">("light");
 
   const isDark = computed(() => currentTheme.value === "dark");
   const isLight = computed(() => currentTheme.value === "light");
@@ -19,7 +19,6 @@ export const useThemeStore = defineStore("theme", () => {
   };
 
   const initTheme = () => {
-    // Check for saved theme preference or default to light
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 

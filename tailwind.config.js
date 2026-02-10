@@ -1,4 +1,5 @@
 import { createThemes } from './src/features/theme';
+import plugin from 'tailwindcss/plugin'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,82 +8,105 @@ export default {
         extend: {
           maxWidth: {
               'screen-2xl': '1920px',
-            },
-            fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
-            },
-            spacing: {
-                18: '4.5rem',
-                88: '22rem',
-            },
-           backgroundImage: {
+          },
+          fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              rubik: ['Rubik', 'sans-serif']
+          },
+          spacing: {
+              18: '4.5rem',
+              88: '22rem',
+          },
+          backgroundImage: {
             switch: "var(--color-switchBorder)",
             thumb: "var(--color-thumbBg)",
-            sidebarOverlay: "var(--color-sidebarOverlay)",//
+            sidebarOverlay: "var(--color-sidebarOverlay)",
+            bgGradient: "var(--color-bgGradient)",
+            authBg: "url('@/shared/assets/bg/bg-1.png')",
           },
           boxShadow: {
-            dropdown: "0px 2px 6px 0px rgba(0,0,0,0.15)",
+            dropdown: "0px 1px 6px 0px rgba(0,0,0,0.15)",
+            toast: "0px 4px 12px 0px #0000001A",
+            btnHover: "0px 0px 5px 0px #3E4FFF",
+            tabHover: "0px 0px 7px 0px #1F5AFF",
+          },
+          textShadow: {
+            btnHover: '0 0 7px #1F5AFF',
+            tabHover: '0 0 4px #1F5AFF',
+          },
+           dropShadow: {
+            btnHover: '0 0 7px #1F5AFF',
+            tabHover: '0 0 4px #1F5AFF',
           },
         },
     },
     plugins: [
     createThemes({
-      
       light: {
-        'primary': '#0F172A', //
-        'primarySelected': '#6C7CFF', //
-        'primaryDark': '#001E32',
-        'primaryLight': '#0968AC',
-        'secondary': '#475569',  //
-        'secondaryText': '#A6ADCF',  //
-        'accent': '#7F1917',     
-        'default': '#D3E0FC', //
-        'disabled': '#94A3B8', //
-        'danger': '#EF4444', //
-        'dangerHover': '#DC2626', //
-        'borderFocus': '#3E0DA8', //
-        'switchBorder': 'url("@/app/assets/backgrounds/light-icon.png")',
-        'switchBg': '#FFD22F',
-        'thumbBg': "linear-gradient(to bottom, #F5F995, #ECA123)",
-        'sidebarOverlay': "linear-gradient(180deg, #6CA3FF4D 0%, #B58BFF4D 50%, #64FFE24D 100%)", //
-        'sidebarBg': "#192132", //
-        'subtle': '#F0F1F3',     //
-        'toggle': '#283F78',    
-        'base-content': '#001E32',
+        'activeBtn': '#4B5BFF',
+        'bgGradient': 'linear-gradient(180deg, #1E004C66 0%, #000CF066 100%)',
+        'base': '#FFFFFF',
+        'bgBase': "#FFFFFF",
+        'borderFocus': '#3E0DA8',
+        'borderAuth': '#476FFF',
+        'danger': '#EF4444',
+        'dangerHover': '#DC2626',
+        'default': '#D3E0FC',
+        'disabled': '#CBD5E1',
+        'elevated': '#FFFFFF',
+        'muted': '#94A3B8',
+        'mutedText': '#6E76A3',
+        'negative': '#F08A8A',
         'placeholder': '#6E6E6E',
-        // 'muted': '#6b7280',       
-        // 'success': '#10b981',
-        // 'warning': '#f59e0b',
-        'error': '#ef4444',
-        // 'info': '#3b82f6',
+        'primary': '#0F172A',
+        'primaryText': '#A6ADCF',
+        'primaryBg': '#6C7CFF',
+        'secondaryBg': '#FFFFFF',
+        'primaryTextDark': '#E6E9F5',
+        'scrollbarBg': '#192132',
+        'sidebarOverlay': 'linear-gradient(180deg, #6CA3FF4D 0%, #B58BFF4D 50%, #64FFE24D 100%)',
+        'secondary': '#475569',
+        'secondaryText': '#A6ADCF',
+        'subtle': '#F0F1F3',
+        'toggle': '#283F78',
+        'warning': '#F59E0B',
       },
+      
       dark: {
-        'primary': '#0F172A',  
-        'primarySelected': '#6C7CFF', //
-        'primaryText': '#E6E9F5', //
-        'primaryDark': '#A62023',
-        'primaryLight': '#510D00',
-        'secondary': '#7F1917',
-        'secondaryText': '#A6ADCF',  //
-        'accent': '#FFFFFF99',
-        'default': '#D3E0FC', //
-        'borderFocus': '#3E0DA8', //
-        'disabled': '#94A3B8', //
-        'switchBorder': 'url("@/app/assets/backgrounds/dark-icon.png")',
-        'switchBg': '#D2D9E3',
-        'thumbBg': "linear-gradient(to bottom, #CECECE66, #CECECE)",
-        'sidebarOverlay': "linear-gradient(180deg,#6CA3FF4D_0%,#B58BFF4D_50%,#64FFE24D_100%)", //
-        'sidebarBg': "#192132", //
-        'placeholder': '#FFFFFF99',   
-        // 'base-200': '#111827',    
-        // 'base-300': '#374151',   
-        'base-content': '#FFFFFF',
-        // 'muted': '#9ca3af',
-        // 'success': '#34d399',
-        // 'warning': '#fbbf24',
-        'error': '#f87171',
-        // 'info': '#60a5fa',
+        'activeBtn': '#4B5BFF',
+        'base': '#FFFFFF',
+        'bgBase': "#0B0F1A",
+        'borderFocus': '#3E0DA8',
+        'danger': '#EF4444',
+        'dangerHover': '#DC2626',
+        'default': '#2B3D8A',
+        'disabled': '#CBD5E1', 
+        'elevated': '#1D2645',
+        'muted': '#94A3B8',
+        'negative': '#F08A8A',
+        'placeholder': '#6E6E6E',
+        'primary': '#E6E9F5',
+        'primaryText': '#6C7CFF',
+        'primaryTextDark': '#E6E9F5',
+        'secondaryBg': '#11162A',
+        'scrollbarBg': '#192132',
+        'sidebarOverlay': "linear-gradient(180deg, #6CA3FF4D 0%, #B58BFF4D 50%, #64FFE24D 100%)",
+        'secondary': '#A6ADCF',
+        'secondaryText': '#A6ADCF',
+        'subtle': '#1B2240',
+        'toggle': '#C6D3F4',
+        'warning': '#F59E0B',
       },
+    }),
+    plugin(function({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'text-shadow': (value) => ({
+            textShadow: value,
+          }),
+        },
+        { values: theme('textShadow') }
+      )
     }),
   ],
 }

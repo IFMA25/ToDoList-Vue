@@ -8,6 +8,7 @@ const authRoutes: RouteRecordRaw[] = [
     meta: {
       title: "Authentication",
       layout: "auth",
+      showHeader: true,
     },
   },
 ];

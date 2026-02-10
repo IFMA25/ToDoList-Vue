@@ -1,8 +1,59 @@
 {
-    "signIn": {
-        "title": "Логін"
+    "auth": {
+        "titleSignIn": "З поверненням",
+        "titleSignup": "Створіть свій аккаунт",
+        "placeholderEmail": "Введіть email",
+        "placeholderPassword": "Введіть пароль",
+        "labelName": "Повне ім'я",
+        "placeholderName": "Введіть ваше ім'я",
+        "labelEmail": "Email",
+        "labelPassword": "Пароль",
+        "placeholderCreatePassword": "Створіть свій пароль",
+        "signin": "Вхід",
+        "signup": "Реєстрація",
+        "supportTextPassword": "Використовуйте мінімум 8 символів"
+    },
+    "validation": {
+        "required": "Це поле обов'язкове",
+        "email": "Неправильна адреса email",
+        "minLength": "Мінімум {min} символів",
+        "hasUpperCase": "Повинно містити мінімум 1 велику літеру",
+        "hasNumber": "Повинно містити мінімум 1 цифру",
+        "requiredTrimmed": "Поле не може бути порожнім"
     },
     "search": {
         "placeholder": "Пошук по імені або email…"
+    },
+    "usersList": {
+        "title": "Керування користувачами",
+        "userProfile": "Профіль користувача",
+        "removeUser": "Видалити користувача",
+        "confirmRemove": "Видалити",
+        "cancel": "Скасувати",
+        "msgDeleteSuccess": "Користувач успішно видалений"
+    },
+    "table": {
+        "tableHeads": {
+            "member": "Користувач",
+            "role": "Роль",
+            "createdAt": "Створено",
+            "action": "Дія"
+        },
+        "tableRoles": {
+            "admin": "Адміністратор",
+            "user": "Користувач"
+        },
+        "filters": {
+        "allRoles": "Всі",
+        "admins": "Адміністратори",
+        "users": "Користувачі",
+        "newestFirst": "Новіші спочатку",
+        "oldestFirst": "Старіші спочатку",
+        "nameAsc": "Ім'я A-Z",
+        "nameDesc": "Ім'я Z-A"
+        },
+        "loadMore": "Завантажити ще"
     }
+    
+    
 }

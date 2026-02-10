@@ -1,51 +1,43 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-import i18n from "../../../shared/i18n";
+import i18n from "@/shared/i18n";
+
+const DEFAULT_LOCALE = import.meta.env.VITE_DEFAULT_LOCALE || "en";
+const SUPPORTED_LOCALES = (import.meta.env.VITE_SUPPORTED_LOCALE || "en,ua")
+  .split(",")
+  .map((l: string) => l.trim().toLowerCase());
+
+const normalizeLocale = (raw: string) => raw.toLowerCase().split("-")[0];
 
 export const useLanguageStore = defineStore("language", () => {
-  const currentLang = ref("EN");
 
-  const defaultLocale = () => {
-    return import.meta.env.VITE_DEFAULT_LOCALE;
-  };
-  const supportedLocales = () => {
-    return import.meta.env.VITE_SUPPORTED_LOCALE.split(", ");
-  };
+  const currentLang = ref<string>(DEFAULT_LOCALE);
 
   const setLanguage = (lang: string) => {
+
     currentLang.value = lang;
     i18n.global.locale.value = lang;
     localStorage.setItem("lang", lang);
-    document.querySelector("html").setAttribute("lang", lang);
+    document.querySelector("html")?.setAttribute("lang", lang);
   };
 
-  const getUserLocale = () => {
-    const locale = window.navigator.language || defaultLocale();
+  const initLanguage = () => {
 
-    return {
-      locale,
-      localeNoRegion: String(locale).split("-")[0],
-    };
-  };
-
-  const savedLang = localStorage.getItem("lang") || null;
-  if (typeof savedLang === "string") {
-    currentLang.value = savedLang;
-  } else {
-    const userLocale = getUserLocale();
-    if (userLocale.locale) {
-      currentLang.value = userLocale.locale;
+    const savedLang = localStorage.getItem("lang");
+    if (savedLang && SUPPORTED_LOCALES.includes(normalizeLocale(savedLang))) {
+      setLanguage(savedLang);
+      return;
     }
-    if (userLocale.localeNoRegion) {
-      currentLang.value = userLocale.localeNoRegion;
-    }
-  }
 
-  return {
-    currentLang,
-    savedLang,
-    supportedLocales,
-    setLanguage,
+    const browserLang = normalizeLocale(window.navigator.language);
+    if (SUPPORTED_LOCALES.includes(browserLang)) {
+      setLanguage(browserLang);
+      return;
+    }
+
+    setLanguage(DEFAULT_LOCALE);
   };
+
+  return { currentLang, supportedLocales: SUPPORTED_LOCALES, setLanguage, initLanguage };
 });

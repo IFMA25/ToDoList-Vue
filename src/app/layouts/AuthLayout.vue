@@ -1,9 +1,14 @@
+<script setup lang="ts">
+import LangSwitcher from "@/features/translation/components/LangSwitcher.vue";
+</script>
 <template>
   <div
-    class="min-h-screen flex flex-col items-center justify-center
-     bg-red-500 bg-cover bg-no-repeat"
+    class="relative h-full bg-authBg bg-cover bg-no-repeat"
   >
-    <router-view />
+    <LangSwitcher class="absolute top-4 right-6" />
+    <div class="container flex flex-col items-center justify-center mx-auto">
+      <router-view />
+    </div>
   </div>
 </template>
-<!--bg-[url('@/app/assets/backgrounds/main-bg.png')] -->
+

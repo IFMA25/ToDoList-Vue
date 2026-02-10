@@ -1,36 +1,37 @@
 <script setup lang="ts" generic="T extends { id: string }">
-import VButton from "@/shared/ui/common/VButton.vue";
+import LoadMoreButton from "./LoadMoreButton.vue";
+
+import { Pagination } from "@/features/adminPanel/types";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 
 export interface TableColumn<T> {
-  key: keyof T | "action";
+  key: keyof T | string;
   label: string;
+  position?: string;
+  columnStyles?: string;
 }
 
 interface Props {
   rows: T[];
-  heads: TableColumn<T>[];
+  heads?: TableColumn<T>[];
   loading?: boolean;
-  hasMore?: boolean;
+  pagination?: Pagination;
 }
-
-const emit = defineEmits<{
-  loadMore: [];
-}>();
 
 const {
   rows = [],
   heads = [],
   loading = false,
-  hasMore = false,
+  pagination = undefined,
 } = defineProps<Props>();
 
+defineEmits<{
+  "load-more": [currentLimit: number]
+}>();
 </script>
 
 <template>
-  <div
-    class="relative h-full w-full bg-white overflow-hidden flex flex-col"
-  >
+  <div class="relative h-full w-full  overflow-hidden flex flex-col bg-transparent">
     <Transition
       enter-active-class="transition-opacity duration-200"
       leave-active-class="transition-opacity duration-200"
@@ -39,8 +40,7 @@ const {
     >
       <div
         v-if="loading"
-        class="absolute inset-0 z-20 flex items-center justify-center
-        bg-white/60 backdrop-blur-sm"
+        class="absolute inset-0 z-20 flex items-center justify-center backdrop-blur-sm"
       >
         <VLoader
           color="primaryDark"
@@ -48,17 +48,23 @@ const {
         />
       </div>
     </Transition>
+    <div class="flex-none ">
+      <slot name="toolbar" />
+    </div>
     <div
-      class="overflow-auto w-full h-full flex flex-col transition-opacity duration-300"
+      class="flex-1 overflow-auto relative w-full min-h-0 transition-opacity duration-300"
       :class="{ 'pointer-events-none select-none': loading }"
     >
-      <table class="min-w-full relative z-0 text-primary">
-        <thead class="bg-subtle sticky top-0 z-10">
+      <table class="min-w-full text-primary leading-[1.3]">
+        <thead
+          v-if="heads"
+          class="bg-subtle sticky top-0 z-10"
+        >
           <tr>
             <th
               v-for="head in heads"
               :key="String(head.key)"
-              class="p-2 text-left font-semibold first:rounded-l-lg last:rounded-r-lg"
+              :class="[`p-2 font-semibold first:rounded-l-lg last:rounded-r-lg`, head.position]"
             >
               {{ head.label }}
             </th>
@@ -66,26 +72,17 @@ const {
         </thead>
         <tbody>
           <tr
-            v-for="(row) in rows"
+            v-for="row in rows"
             :key="row.id"
             class="border-b border-default last:border-b-0 hover:bg-default transition-colors"
           >
             <td
-              v-for="(head, colIndex) in heads"
+              v-for="head in heads"
               :key="String(head.key)"
               class="pt-6 pb-2 text-sm"
-              :class="[
-                (colIndex + 1) % 2 === 0 ? 'text-toggle capitalize' : '',
-                colIndex === 3 ? 'text-xs' : ''
-              ]"
+              :class="[head.columnStyles, head.position]"
             >
               <slot
-                v-if="head.key === 'action'"
-                name="action"
-                :row="row"
-              />
-              <slot
-                v-else
                 :name="`cell-${String(head.key)}`"
                 :row="row"
               >
@@ -95,14 +92,13 @@ const {
           </tr>
         </tbody>
       </table>
-      <VButton
-        v-if="hasMore"
-        class="mx-auto"
-        text="Load More"
-        variant="default"
-        load-color="primaryDark"
-        @click="emit('loadMore')"
-      />
+      <div v-if="pagination && pagination.hasMore">
+        <slot
+          v-if="pagination"
+          name="pagination"
+        />
+        <LoadMoreButton @load-more="$emit('load-more', pagination.limit)" />
+      </div>
     </div>
   </div>
 </template>

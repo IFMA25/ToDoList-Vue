@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useLink } from "vue-router";
 
 
 import VIcon from "./VIcon.vue";
@@ -17,7 +17,9 @@ const props = withDefaults(
     disabled?: boolean;
     to?: string | null;
     icon?: string;
+    iconSize?: string;
     collapsed?: boolean;
+    activeClass?: string;
   }>(),
   {
     type: "button",
@@ -26,19 +28,39 @@ const props = withDefaults(
     text: "",
     to: null,
     icon: "",
+    iconSize: "w-5 h-5",
     collapsed: false,
+    activeClass: "navItem-active",
   },
 );
 
-
 const btnStyles = {
-  main: "relative border-none rounded-[10px] py-[12px] px-2 bg-gradient-to-r from-primaryDark to-primaryLight before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-primaryLight before:to-primaryDark before:opacity-0 before:transition-opacity before:duration-1000 hover:before:opacity-100 before:z-0 [&>*]:relative [&>*]:z-10 font-semibold text-[18px] leading-[20px] text-white uppercase",
-  default: "border border-gray-400 bg-white rounded-[10px] py-[10px] px-10 text-black font-semibold text-[18px] uppercase",
-  nav: "items-center gap-2",
+  primary: "justify-center bg-primaryBg py-3 px-4 text-base font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
+  outline: "bg-secondaryBg py-3 px-4 text-primaryBg font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover hover:text-shadow-btnHover disabled:border-disabled disabled:text-disabled",
+  navItem: "text-secondaryText font-medium  hover:text-shadow-btnHover hover:text-primaryBg hover:drop-shadow-btnHover disabled:text-disabled ",
+  "navItem-active": "text-primaryTextDark font-medium",
+  authMode: "text-primaryTextDark font-medium hover:text-shadow-tabHover hover:text-primaryBg leading=[1.1]",
+  danger: "bg-danger py-3 px-4 text-base font-medium border-2 border-danger rounded-xl hover:bg-dangerHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
 };
 
+const { isActive } = (props.to && props.to !== "")
+  ? useLink(props)
+  : { isActive: computed(() => false) };
 
-const btnClass = computed(() => btnStyles[props.variant] ?? "");
+const btnClass = computed(() => {
+  if (isActive.value && props.variant === "navItem") {
+    return btnStyles["navItem-active"];
+  }
+  return btnStyles[props.variant] ?? "";
+});
+
+const isDisabled = computed(() => props.disabled || props.loading || isActive.value);
+
+const disabledClass = computed(() =>
+  isDisabled.value
+    ? "cursor-default shadow-none [text-shadow:none] pointer-events-none"
+    : "cursor-pointer",
+);
 
 const isRouterLink = computed(() => !!props.to);
 </script>
@@ -47,17 +69,18 @@ const isRouterLink = computed(() => !!props.to);
   <component
     :is="isRouterLink ? RouterLink : 'button'"
     :to="isRouterLink ? props.to : undefined"
-    class="flex cursor-pointer"
-    v-bind="$attrs"
+    :disabled="!isRouterLink ? isDisabled : undefined"
+    :aria-disabled="String(isDisabled)"
+    class="flex gap-2 items-center overflow-hidden transition-all duration-300"
     :class="[
       btnClass,
-      $attrs.class,
-      { 'opacity-60 cursor-not-allowed': props.disabled || props.loading }
+      disabledClass,
+      (isActive && props.activeClass) ? props.activeClass : ''
     ]"
   >
     <span
       v-if="props.icon || props.loading"
-      class="w-[20px] flex justify-center items-center"
+      :class="props.iconSize"
     >
       <VLoader
         v-if="props.loading && !$slots['icon-start'] && !props.icon"
@@ -69,26 +92,28 @@ const isRouterLink = computed(() => !!props.to);
       />
       <VIcon
         v-else
-        :name="props.icon"
+        :type="props.icon"
+        :size="props.iconSize"
       />
     </span>
-    <span
+
+    <div
       v-if="props.text"
-      class="flex items-center transition-all"
+      class="transition-all duration-300 ease-in-out"
       :class="props.collapsed
-        ? 'opacity-0 w-0 delay-50 pointer-events-none'
-        : 'opacity-100 delay-100'"
-      :aria-hidden="props.collapsed ? 'true' : 'false'"
+        ? 'opacity-0'
+        : 'opacity-100'"
     >
-      {{ props.text }}
-    </span>
+      <span class="overflow-hidden whitespace-nowrap">
+        {{ props.text }}
+      </span>
+    </div>
+
     <span
       v-if="$slots['icon-end']"
-      class="w-[25px]"
+      class="w-5 h-5"
     >
-      <slot
-        name="icon-end"
-      />
+      <slot name="icon-end" />
     </span>
   </component>
 </template>

@@ -1,14 +1,13 @@
 import { computed  } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-
-type Mode = "signin" | "signup";
+import { AuthMode } from "../types";
 
 export const useAuthMode = () => {
   const route = useRoute();
   const router = useRouter();
 
-  const switchMode = (mode: Mode) => {
+  const switchMode = (mode: AuthMode) => {
     router.replace({
       name: "auth",
       query: {
@@ -17,7 +16,7 @@ export const useAuthMode = () => {
     });
   };
 
-  const pageMode = computed<Mode>(()  => {
+  const pageMode = computed<AuthMode>(()  => {
     const mode = route.query.mode;
     if (mode === "signin" || mode === "signup") {
       return mode;

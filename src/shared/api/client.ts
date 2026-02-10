@@ -21,7 +21,7 @@ function createApiClient(): AxiosInstance {
     baseURL: import.meta.env.VITE_API_URL
       ? `${import.meta.env.VITE_API_URL}`
       : "/api",
-    timeout: 100000,
+    timeout: 30000,
     headers: {
       "Content-Type": "application/json",
     },

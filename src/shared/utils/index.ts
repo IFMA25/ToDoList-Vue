@@ -1,40 +1,38 @@
-import { required, email, minLength, sameAs, helpers } from "@vuelidate/validators";
+import { required, email, minLength, helpers } from "@vuelidate/validators";
 
-export const validationRules = {
-  required: helpers.withMessage("This field is required", required),
-  email: helpers.withMessage("Invalid email address", email),
-  minLength: (min: number) =>
-    helpers.withMessage(`Minimum ${min} characters required`, minLength(min)),
-  hasUpperCase: helpers.withMessage(
-    "Must contain min 1 uppercase letter",
-    (value: string) => /[A-Z]/.test(value),
-  ),
-  hasNumber: helpers.withMessage(
-    "Must contain min 1 number",
-    (value: string) => /\d/.test(value),
-  ),
-  requiredTrimmed: helpers.withMessage(
-    "The field must not be empty.",
-    (value: string) => {
-      if (typeof value === "string") {
-        return value.trim().length > 0;
-      }
-      return !!value;
-    },
-  ),
-  requiredCheckbox: helpers.withMessage(
-    "You must agree to continue",
-    (value: boolean) => value === true,
-  ),
+export const createValidationRules = (t: (key: string, params?: unknown) => string) => {
+  return {
+    required: helpers.withMessage(() => t("validation.required"), required),
+    email: helpers.withMessage(() => t("validation.email"), email),
+    minLength: (min: number) =>
+      helpers.withMessage(({ $params }) => t("validation.minLength", { min: $params.min }), minLength(min)),
+    hasUpperCase: helpers.withMessage(
+      () => t("validation.hasUpperCase"),
+      (value: string) => /[A-Z]/.test(value),
+    ),
+    hasNumber: helpers.withMessage(
+      () => t("validation.hasNumber"),
+      (value: string) => /\d/.test(value),
+    ),
+    requiredTrimmed: helpers.withMessage(
+      () => t("validation.requiredTrimmed"),
+      (value: string) => {
+        if (typeof value === "string") {
+          return value.trim().length > 0;
+        }
+        return !!value;
+      },
+    ),
+  };
 };
 
-export const confirmPassword = (password: string) =>
-  helpers.withMessage("Passwords do not match", sameAs(password));
-
-
-export function capitalizeFirstLetter(value: string): string {
-  return value
+export const capitalizeFirstLetter = (string: string) => {
+  if (!string) return "";
+  return string
+    .replace(/[_-]/g, " ")
+    .toLowerCase()
     .split(" ")
-    .map((word) => word ? word[0].toUpperCase() + word.slice(1) : word)
+    .filter((word) => word.length > 0)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
-}
+};

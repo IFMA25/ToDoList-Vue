@@ -2,9 +2,8 @@
 import { computed } from "vue";
 import Multiselect from "vue-multiselect";
 
+import { Option } from "@/shared/types";
 import VIcon from "@/shared/ui/common/VIcon.vue";
-
-type Option = string;
 
 interface Props {
   id:string;
@@ -17,6 +16,9 @@ interface Props {
   showLabels?: boolean;
   allowEmpty?: boolean;
   multiselectProps?: Record<string, unknown>;
+  searchable?: boolean;
+  label?: string;
+  trackBy?: string;
 }
 
 const {
@@ -30,17 +32,22 @@ const {
   showLabels = false,
   allowEmpty = false,
   multiselectProps = {},
+  searchable = false,
+  label,
+  trackBy,
 } = defineProps<Props>();
 
-const model = defineModel<Option | Option[] | null>();
+const model = defineModel<Option | null>();
 
 const closeOnSelectComputed = computed(() =>
   closeOnSelectProp ?? !multiple,
 );
+
+
 </script>
 
 <template>
-  <div class="v-select flex gap-2 items-center text-[1rem] leading-6 text-primary">
+  <div class="flex gap-2 items-center text-[1rem] leading-6 text-primary">
     <label
       :for="id"
       class="whitespace-nowrap"
@@ -56,64 +63,87 @@ const closeOnSelectComputed = computed(() =>
       :placeholder="placeholder"
       :show-labels="showLabels"
       :allow-empty="allowEmpty"
+      :searchable="searchable"
       aria-label="pick a value"
+      :label="label"
+      :track-by="trackBy"
     >
       <template #caret="{ toggle }">
-        <span
+        <button
           class="multiselect__select"
           @mousedown.prevent.stop="toggle"
         >
           <VIcon
-            name="icon-chevron-up"
-            class="h-5 w-5 text-secondary"
+            type="icon-chevron-up"
+            class="h-5 w-5 text-secondary rotate-180"
           />
-        </span>
+        </button>
       </template>
     </Multiselect>
   </div>
 </template>
 
 <style scoped>
-.v-select :deep(.multiselect) {
-  @apply w-full text-primary;
+:deep(.multiselect) {
+  @apply text-primary;
+  width: fit-content;
 }
 
-.v-select :deep(.multiselect__input) {
+:deep(.multiselect__input) {
   @apply mb-0 p-0;
 }
 
-.v-select :deep(.multiselect__tags) {
+:deep(.multiselect__tags) {
   @apply min-h-8 border-2 border-default rounded-lg py-[0.5rem] pl-[0.625rem]
-  pr-[2.4rem] focus:outline-none transition-colors duration-300 ease-in-out text-primary;
+  pr-[2.4rem] focus:outline-none transition-colors duration-300
+  ease-in-out text-primary bg-secondaryBg;
 }
 
-.v-select :deep(.multiselect__tags:focus-within) {
-  @apply border-borderFocus;
+:deep(.multiselect__tags:focus-within) {
+  @apply border-borderFocus rounded-lg;
 }
 
-.v-select :deep(.multiselect__single),
-.v-select :deep(.multiselect__placeholder) {
+:deep(.multiselect__single),
+:deep(.multiselect__placeholder) {
   @apply m-0 p-0 bg-transparent placeholder-disabled;
 }
 
-.v-select :deep(.multiselect__content-wrapper) {
-  @apply mt-[4px] rounded-lg border-2 border-default bg-white shadow-lg;
+:deep(.multiselect__content-wrapper) {
+  @apply min-w-full w-auto mt-[4px] rounded-lg border-2 border-default bg-secondaryBg shadow-lg;
   border-top-style: solid;
   border-top-width: 2px;
 }
 
-.v-select :deep(.multiselect__select) {
+:deep(.multiselect__select) {
   @apply h-full top-0 flex items-center justify-center;
 }
-.v-select :deep(.multiselect__select::before) {
+
+:deep(.multiselect__select::before) {
   display: none;
 }
 
-.v-select :deep(.multiselect__option--highlight) {
+:deep(.multiselect__element) {
+  @apply w-full
+}
+:deep(.multiselect__option) {
+  @apply w-full
+}
+
+:deep(.multiselect__option--highlight) {
   @apply bg-default text-primary;
 }
 
-.v-select :deep(.multiselect__option--selected) {
-  @apply  text-primarySelected bg-white;
+:deep(.multiselect__option--selected.multiselect__option--highlight) {
+  @apply  bg-transparent text-primaryText;
 }
+
+:deep(.multiselect__option--selected) {
+  @apply  text-primaryText bg-secondaryBg;
+}
+
+:deep(.multiselect--active:not(.multiselect--above) .multiselect__tags) {
+  @apply rounded-lg;
+}
+
+
 </style>

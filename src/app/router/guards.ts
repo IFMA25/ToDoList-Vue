@@ -38,7 +38,7 @@ export const guards = async (to: RouteLocationNormalized) => {
 
       if (!hasAccess) {
         console.warn(`[Guard] Access denied. Required: ${routePermission}`);
-        // Если прав нет — редиректим на главную или на страницу 403
+        // Если прав нет — редиректим на главную или на страницу 404
         return { name: "home" };
       }
     }

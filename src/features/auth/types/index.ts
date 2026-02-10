@@ -1,5 +1,7 @@
 import { Ref } from "vue";
 
+export type AuthMode = "signin" | "signup";
+
 export interface RegisterRequest {
   email: string;
   password: string;

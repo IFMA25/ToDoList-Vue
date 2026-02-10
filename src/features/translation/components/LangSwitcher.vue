@@ -2,38 +2,40 @@
 import { computed } from "vue";
 
 import { useLanguageStore } from "@/features/translation/composables/useLanguageStore";
-import VButton from "@/shared/ui/common/VButton.vue";
-import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
+import VSelect from "@/shared/ui/common/VSelect.vue";
+
+interface Option {
+  label: string;
+  value: string;
+}
 
 const language = useLanguageStore();
 
-const languageText = computed(() => {
-  return language.currentLang.toUpperCase();
+const localeOptions = computed(
+  () => language.supportedLocales.map((locale: string) => ({
+    label: locale.toUpperCase(),
+    value: locale,
+  })));
+
+
+const currentLangDisplay = computed({
+  get: () => localeOptions.value.find((option: Option) => option.value === language.currentLang),
+  set: (option: Option) => {
+    language.setLanguage(option.value);
+  },
 });
-
-const supportedLocales = language.supportedLocales();
-
-const changeLang = (lang: string) => {
-  language.setLanguage(lang);
-};
 </script>
 
 <template>
-  <VDropdown placement="tf">
-    <template #trigger="{toggle}">
-      <VButton
-        :text="languageText"
-        @click="toggle"
-      />
-    </template>
-    <ul class="text-center cursor-pointer">
-      <li
-        v-for="locale in supportedLocales"
-        :key="locale"
-        @click="changeLang(locale)"
-      >
-        {{ locale.toUpperCase() }}
-      </li>
-    </ul>
-  </VDropdown>
+  <div data-theme="dark">
+    <VSelect
+      id="language-switcher"
+      v-model="currentLangDisplay"
+      :options="localeOptions"
+      label="label"
+      track-by="value"
+      :close-on-select="true"
+      class="min-w-[4.375rem]"
+    />
+  </div>
 </template>

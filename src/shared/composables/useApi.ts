@@ -13,6 +13,7 @@
  * - Type safety
  * - Full response access (headers, status, config)
  * - Auto cleanup on unmount (automatically detected for components vs stores)
+ * - Reactive data support (Ref, getter function, or plain value)
  *
  * @example Basic usage in components (most common)
  * ```ts
@@ -23,6 +24,26 @@
  *     console.log('Status:', response.status)
  *     console.log('Headers:', response.headers)
  *   }
+ * })
+ * ```
+ *
+ * @example Reactive data (resolved at execute time)
+ * ```ts
+ * const formData = ref({ name: '', email: '' })
+ *
+ * const { execute } = useApiPost<User, UserDto>('/users', {
+ *   data: formData, // Will use formData.value at execute() time
+ *   onSuccess: () => toast.success('User created!')
+ * })
+ *
+ * // Later, when user fills the form:
+ * formData.value.name = 'John'
+ * formData.value.email = 'john@example.com'
+ * await execute() // Sends { name: 'John', email: 'john@example.com' }
+ *
+ * // Also works with getter functions:
+ * const { execute } = useApiPut('/users/1', {
+ *   data: () => ({ ...formData.value, updatedAt: new Date() })
  * })
  * ```
  *
@@ -106,7 +127,7 @@
 
 import { useDebounceFn } from "@vueuse/core";
 import type { AxiosResponse } from "axios";
-import { ref, type Ref, getCurrentScope } from "vue";
+import { ref, type Ref, toValue } from "vue";
 
 import apiClient from "../api/client";
 import type {
@@ -148,7 +169,7 @@ export function useApi<T = unknown, D = unknown>(
   const startLoading = initialLoading ?? immediate;
   // Detect if we're inside a component scope (has lifecycle)
   // If true - cleanup automatically, if false (store/service) - skip cleanup
-  const hasActiveScope = getCurrentScope() !== undefined;
+  // const hasActiveScope = getCurrentScope() !== undefined;
 
   // State
   const state = useApiState<T>(initialData as T | null, {
@@ -214,9 +235,15 @@ export function useApi<T = unknown, D = unknown>(
       // 2. Global filter change (via globalAbortHandler)
       const signal = abortController.value.signal;
 
+      // Resolve reactive data at execute time
+      // Priority: config.data > axiosConfig.data (from options)
+      const rawData = config?.data !== undefined ? config.data : axiosConfig.data;
+      const resolvedData = toValue(rawData);
+
       const mergedConfig: ApiRequestConfig<D> = {
         ...axiosConfig,
         ...config,
+        data: resolvedData,
         signal,
         authMode: config?.authMode || authMode,
       };
@@ -311,13 +338,11 @@ export function useApi<T = unknown, D = unknown>(
   // Automatic cleanup on component unmount
   // Only register if we're inside a component scope (has active Vue instance)
   // Stores/services won't have active scope, so cleanup won't be registered
-
-  if (hasActiveScope) {
-    // onUnmounted(() => {
-
-    //   abort();
-    // });
-  }
+  // if (hasActiveScope) {
+  //   onUnmounted(() => {
+  //     abort();
+  //   });
+  // }
 
   // Immediate execution
   if (immediate) {
@@ -353,6 +378,7 @@ function shouldRetry(error: ApiError, retry: boolean | number): boolean {
  * Retry logic with exponential backoff
  */
 async function retryRequest<T, D>(
+  //eslint-disable-next-line
   requestFn: (config?: ApiRequestConfig<D>) => Promise<T | null>,
   maxRetries: number,
   delay: number,

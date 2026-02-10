@@ -1,39 +1,37 @@
 import useVuelidate from "@vuelidate/core";
 import { computed, reactive } from "vue";
+import { useI18n } from "vue-i18n";
 
-import { validationRules, confirmPassword } from "@/shared/utils/index";
+import { createValidationRules } from "@/shared/utils/index";
 
 export function useSignUpValidation() {
+  const { t } = useI18n();
+
   const formData = reactive({
     email: "",
     name: "",
     password: "",
-    confirmPassword: "",
-    agreeToTerms: false,
   });
 
-  const rules = computed(() => ({
-    email: {
-      required: validationRules.required,
-      email: validationRules.email,
-    },
-    name: {
-      requiredTrimmed: validationRules.requiredTrimmed,
-    },
-    password: {
-      required: validationRules.required,
-      minLength: validationRules.minLength(8),
-      hasUpperCase: validationRules.hasUpperCase,
-      hasNumber: validationRules.hasNumber,
-    },
-    confirmPassword: {
-      required: validationRules.required,
-      confirmPassword: confirmPassword(formData.password),
-    },
-    agreeToTerms: {
-      requiredCheckbox: validationRules.requiredCheckbox,
-    },
-  }));
+  const rules = computed(() => {
+    const validators = createValidationRules(t);
+    return {
+      email: {
+        required: validators.required,
+        email: validators.email,
+      },
+      name: {
+        requiredTrimmed: validators.requiredTrimmed,
+      },
+      password: {
+        required: validators.required,
+        minLength: validators.minLength(8),
+        hasUppeerCase: validators.hasUpperCase,
+        hasNumber: validators.hasNumber,
+      },
+    };
+
+  });
 
   const v$ = useVuelidate(rules, formData);
 

@@ -43,12 +43,19 @@ export interface DeleteResponse {
   message: string;
 }
 
-export interface RowData {
-  id: string;
-  member: {
-    name: string;
-    email: string;
-  };
-  role: UserRole;
-  createdAt: string;
+export interface RoleOption {
+  label: string;
+  value: string | undefined;
+  [key: string]: unknown;
 }
+
+export interface SortOption {
+  key: string;
+  label: string;
+  params: {
+    sort: string;
+    order: "asc" | "desc";
+  };
+  [key: string]: unknown;
+}
+

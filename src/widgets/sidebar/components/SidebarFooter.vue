@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import { useProfileStore } from "@/features/profile/store/useProfileStore";
 import  VButton  from "@/shared/ui/common/VButton.vue";
 
 defineProps<{
   collapsed?: boolean
 }>();
-const profileStore = useProfileStore();
 
+const emit = defineEmits<{
+  logout: [];
+}>();
 </script>
 
 <template>
   <VButton
     text="Logout"
-    variant="nav"
+    variant="navItem"
     icon="logout"
     :collapsed="collapsed"
-    @click="profileStore.handleLogout()"
+    @click="emit('logout')"
   />
 </template>

@@ -2,12 +2,13 @@
 import { computed } from "vue";
 import type { Component } from "vue";
 
-const props = withDefaults(defineProps<{
-  name: string
-  size?: number
-}>(), {
-  size: 20,
-});
+const {
+  type,
+  size = "w-5 h-5",
+} = defineProps<{
+  type: string;
+  size?: string;
+}>();
 
 const icons = import.meta.glob<Component>("@/shared/assets/icons/*.svg", {
   eager: true,
@@ -15,7 +16,7 @@ const icons = import.meta.glob<Component>("@/shared/assets/icons/*.svg", {
 });
 
 const icon = computed<Component | null>(() => {
-  const key = `/src/shared/assets/icons/${props.name}.svg`;
+  const key = `/src/shared/assets/icons/${type}.svg`;
   return icons[key] ?? null;
 });
 </script>
@@ -24,8 +25,8 @@ const icon = computed<Component | null>(() => {
   <component
     :is="icon"
     v-if="icon"
-    :style="{ width: `${props.size}px`, height: `${props.size}px` }"
-    class="shrink-0 fill-current"
+    :class="size"
+    class="shrink-0"
     aria-hidden="true"
   />
 </template>

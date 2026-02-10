@@ -1,7 +1,8 @@
 <script setup>
-import UserInfo from "@/features/adminPanel/components/UserInfo.vue";
+// import UserInfo from "@/features/adminPanel/components/UserInfo.vue";
 </script>
 
 <template>
-  <UserInfo />
+  <div />
+  <!-- <UserInfo /> -->
 </template>

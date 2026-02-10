@@ -1,8 +1,2 @@
-/**
- * 📘 Types
- *
- * TypeScript типи та інтерфейси
- */
-
-export {};
+export type Option = Record<string, unknown>;
 

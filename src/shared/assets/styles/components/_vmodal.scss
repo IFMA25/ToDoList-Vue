@@ -1,0 +1,121 @@
+@layer components {
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+    // @apply backdrop-blur-modal;
+
+    [data-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .modal-container {
+    border-radius: 0.75rem;
+    width: 100%;
+    max-height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
+    /* Glass effect on desktop, solid on mobile for performance */
+    @apply bg-base border border-default p-6 gap-4;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // @apply border-b-[1px] border-cardBorder;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    @apply text-primary text-2xl font-semibold;
+  }
+
+  .modal-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    // @apply text-secondaryText;
+
+    &:hover {
+      // @apply text-mainText bg-base-200
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  .modal-content {
+    overflow-y: auto;
+    flex: 1;
+    color: var(--color-mainText);
+     @apply text-primary text-base text-center
+  }
+
+  .modal-footer {
+    padding: 1rem 1.25rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    // @apply border-t-[1px] border-cardBorder;
+  }
+
+  /* Transitions */
+  .modal-enter-active,
+  .modal-leave-active {
+    transition: opacity 0.3s ease;
+
+    .modal-container {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+  }
+
+  .modal-enter-from,
+  .modal-leave-to {
+    opacity: 0;
+
+    .modal-container {
+      transform: scale(0.95) translateY(-20px);
+      opacity: 0;
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .modal-backdrop {
+      padding: 0;
+    }
+
+    .modal-container {
+      max-height: 100vh;
+      border-radius: 0;
+    }
+
+    .modal-header,
+    .modal-content,
+    .modal-footer {
+      padding: 1rem;
+    }
+  }
+}

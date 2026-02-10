@@ -24,15 +24,15 @@ const routes: RouteRecordRaw[] = [
       permission: "READ_USERS",
     },
   },
-  {
-    path: "/users/:id",
-    name: "usersInfo",
-    component: () => import("@/pages/Users/UserInfo.vue"),
-    meta: {
-      title: "Users",
-      role: "admin",
-    },
-  },
+  // {
+  //   path: "/users/:id",
+  //   name: "usersInfo",
+  //   component: () => import("@/pages/Users/UserInfo.vue"),
+  //   meta: {
+  //     title: "Users",
+  //     role: "admin",
+  //   },
+  // },
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",

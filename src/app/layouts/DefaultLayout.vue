@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useProfileStore } from "@/features/profile/store/useProfileStore";
 import VLoader from "@/shared/ui/common/VLoader.vue";
-import Sidebar from "@/widgets/Sidebar.vue";
+import VToaster from "@/shared/ui/toaster/VToaster.vue";
+import Sidebar from "@/widgets/sidebar/Sidebar.vue";
 
 const profileStore = useProfileStore();
 
-const menuItem = [
+const navItems = [
   {
     icon: "home",
     text: "dashboard",
@@ -33,6 +34,10 @@ const menuItem = [
   },
 ];
 
+// const route = useRoute();
+
+// const showHeader = computed(() => route.meta.showHeader === true);
+
 </script>
 
 <template>
@@ -46,8 +51,9 @@ const menuItem = [
       v-else
       class="flex w-full h-full"
     >
-      <Sidebar :menu-item="menuItem" />
-      <!-- <div class="w-[75%] flex flex-col border-2 border-yellow-400 gap-4 p-4"> -->
+      <Sidebar :nav-items="navItems" />
+      <VToaster />
+
       <!-- <div
           class="flex-none flex justify-between items-center
           bg-white border border-gray-300 rounded-lg p-4"
@@ -57,7 +63,6 @@ const menuItem = [
       <div class="flex-1 overflow-hidden px-12 py-6">
         <router-view />
       </div>
-      <!-- </div> -->
     </div>
   </div>
 </template>

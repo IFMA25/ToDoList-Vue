@@ -4,21 +4,30 @@ import { useRouter } from "vue-router";
 
 import { useLogin } from "../api/composables/useAuthRequests";
 import { useSignInValidation } from "../composables/useSignInValidation";
+import { AuthMode } from "../types";
 
 import { useProfileStore } from "@/features/profile/store/useProfileStore";
 import { tokenManager } from "@/shared/api/tokenManager";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
 
-const BTN_SIGNIN = "Sign in";
-const SIGN_UP = "Create account";
-const SIGNIN_TEXT = "Don't have an account?";
+type SigninFieldName = keyof typeof formData;
 
-const emit = defineEmits<{
-  (event: "switchMode", mode: "signup");
-}>();
+const signinFormFields: {
+  name: SigninFieldName;
+  label: string;
+  placeholder: string
+}[] = [
+  { name: "email", label: "labelEmail", placeholder: "placeholderEmail" },
+  { name: "password", label: "labelPassword", placeholder: "placeholderPassword" },
+];
 
 const router = useRouter();
+
+defineEmits<{
+  switchMode: [mode: AuthMode]
+}>();
+
 const profileStore = useProfileStore();
 
 const { formData, v$ } = useSignInValidation();
@@ -63,51 +72,33 @@ const handleSubmit = async() => {
 </script>
 
 <template>
-  <h2>{{ $t("signIn.title") }}</h2>
   <form
     action="#"
-    class="flex flex-col gap-5"
+    class="flex flex-col gap-4"
     @submit.prevent="handleSubmit"
   >
     <VInput
-      v-model="formData.email"
-      type="email"
-      placeholder="Email Address"
-      :validation="v$.email"
-      icon-left="mail"
-      icon-color="text-accent"
-      @blur="v$.email.$touch()"
-    />
-    <VInput
-      v-model="formData.password"
-      type="password"
-      placeholder="Password"
-      :validation="v$.password"
-      icon-left="lock"
-      icon-color="text-accent"
-      @blur="v$.password.$touch()"
+      v-for="field in signinFormFields"
+      :key="field.name"
+      v-model="formData[field.name]"
+      :type="field.name === 'password' ? 'password' : 'text'"
+      :label="$t(`auth.${field.label}`)"
+      :placeholder="$t(`auth.${field.placeholder}`)"
+      :validation="v$[field.name]"
+      @blur="v$[field.name].$touch()"
     />
     <p
       v-if="error"
-      class="text-sm text-red-600 font-medium"
+      class="text-sm text-danger font-medium mb-4"
     >
       {{ errorLogin }}
     </p>
     <VButton
       type="submit"
-      :text="BTN_SIGNIN"
+      class="mt-2"
+      variant="primary"
+      :text="$t('auth.signin')"
       :loading="loading"
     />
   </form>
-  <div class="flex gap-4 mt-4 items-center">
-    <p class="text-center text-sm text-base-content">
-      {{ SIGNIN_TEXT }}
-    </p>
-    <button
-      class="text-blue-700"
-      @click="emit('switchMode', 'signup')"
-    >
-      {{ SIGN_UP }}
-    </button>
-  </div>
 </template>
