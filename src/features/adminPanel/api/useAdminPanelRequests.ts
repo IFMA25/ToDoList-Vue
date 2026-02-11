@@ -1,4 +1,5 @@
 import { UseApiOptions, useApiGet, useApiPatch } from "@ametie/vue-muza-use";
+import { MaybeRefOrGetter, toValue } from "vue";
 
 import {
   UserResponse,
@@ -15,10 +16,10 @@ export const useUsersDataRequest = (options?: UseApiOptions<UsersResponse>) => {
 };
 
 export const useUserInfoRequest = (
-  userId: string,
+  userId: MaybeRefOrGetter<string>,
   options?: UseApiOptions<UserResponse>,
 ) => {
-  return useApiGet(`/users/${userId}`, {
+  return useApiGet(`/users/${toValue(userId)}`, {
     ...options,
   });
 };
@@ -40,11 +41,11 @@ export const usePermissionsRoleRequest = (
 };
 
 export const useUpdateUserPermissions = (
-  userId: string,
+  userId: MaybeRefOrGetter<string>,
   options?: UseApiOptions<UserResponse, { permissions: string[] }>,
 ) => {
   return useApiPatch<UserResponse, { permissions: string[] }>(
-    `/users/${userId}/permissions`,
+    `/users/${toValue(userId)}/permissions`,
     {
       ...options,
     },
@@ -52,10 +53,10 @@ export const useUpdateUserPermissions = (
 };
 
 export const useUpdateUserRole = (
-  userId: string,
+  userId: MaybeRefOrGetter<string>,
   options?: UseApiOptions<UserResponse, { role: string }>,
 ) => {
-  return useApiPatch<UserResponse, { role: string }>(`/users/${userId}/role`, {
+  return useApiPatch<UserResponse, { role: string }>(`/users/${toValue(userId)}/role`, {
     ...options,
   });
 };

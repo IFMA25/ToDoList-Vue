@@ -4,7 +4,7 @@ import SignUp from "./components/SignUp.vue";
 import { useAuthMode } from "./composables/useAuthMode";
 
 import ActionAuth from "@/features/auth/components/SwitchModeAuth.vue";
-import TitleAuth from "@/features/auth/components/TitleAuth.vue";
+import VTitle from "@/shared/ui/common/VTitle.vue";
 
 const { pageMode, switchMode } = useAuthMode();
 
@@ -20,7 +20,11 @@ const page = {
       :page-mode="pageMode || 'signin'"
       @switch-mode="switchMode"
     />
-    <TitleAuth :text="$t('auth.titleSignIn')" />
+    <VTitle
+      :text="$t('auth.titleSignIn')"
+      variant="auth"
+      class="mb-8"
+    />
     <component
       :is="page[pageMode]"
       :page-mode="pageMode"

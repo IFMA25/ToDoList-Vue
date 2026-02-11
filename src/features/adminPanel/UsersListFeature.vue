@@ -55,7 +55,7 @@ const SORT_OPTIONS = computed<SortOption[]>(() => [
 const DEFAULT_LIMIT = 20;
 
 const selectedUser = ref<User | null>(null);
-const selectedRole = ref<RoleOption | undefined>(undefined);
+const selectedRole = ref<RoleOption>(ROLE_OPTIONS.value[0]);
 const selectedSort = ref<SortOption>(SORT_OPTIONS.value[0]);
 
 const modelSearch = ref<string>("");

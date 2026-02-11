@@ -38,6 +38,15 @@ export default {
             btnHover: '0 0 7px #1F5AFF',
             tabHover: '0 0 4px #1F5AFF',
           },
+          keyframes: {
+            shimmer: {
+              '0%': { backgroundPosition: '-1000px 0' },
+              '100%': { backgroundPosition: '1000px 0' }
+            }
+          },
+          animation: {
+            'shimmer-pulse': 'shimmer 3s infinite linear, pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1)'
+          }
         },
     },
     plugins: [
@@ -70,6 +79,8 @@ export default {
         'subtle': '#F0F1F3',
         'toggle': '#283F78',
         'warning': '#F59E0B',
+        'skeletonBase': '#E2E8F0',
+        'skeletonShimmer': '#F1F5F9',
       },
       
       dark: {
@@ -96,6 +107,8 @@ export default {
         'subtle': '#1B2240',
         'toggle': '#C6D3F4',
         'warning': '#F59E0B',
+        'skeletonBase': '#1D2645',
+        'skeletonShimmer': '#2E3B63',
       },
     }),
     plugin(function({ matchUtilities, theme }) {
