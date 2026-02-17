@@ -3,16 +3,24 @@ import { useLanguageStore } from "@/features/translation/composables/useLanguage
 export const sameArray = (a: string[], b: string[]) =>
   a.length === b.length && a.every((x, i) => x === b[i]);
 
-export function formatDate(date: Date | string | number) {
-  const d = new Date(date);
-
-  const language = useLanguageStore().currentLang;
-
-  const locale = language === "ua" ? "uk-UA" : "en-GB";
-
-  return new Intl.DateTimeFormat(locale, {
+export function formatDate(
+  date: Date | string | number,
+  options: Intl.DateTimeFormatOptions = {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  }).format(d);
+  },
+) {
+  const d = new Date(date);
+  const language = useLanguageStore().currentLang;
+  const locale = language === "ua" ? "uk-UA" : "en-GB";
+
+  let result = new Intl.DateTimeFormat(locale, options).format(d);
+
+  if (language === "ua") {
+    result = result.replace(/\s*р\.?$/i, "");
+  }
+
+  return result;
 }
+

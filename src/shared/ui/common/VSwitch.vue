@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import VueFeather from "vue-feather";
+import { computed , useId } from "vue";
+
+import VIcon from "./VIcon.vue";
 
 const modelValue = defineModel<boolean>({ default: false });
 
@@ -19,60 +20,81 @@ const props = withDefaults(
   },
 );
 
-const variantStyle = computed(() => ({
-  themeSwitch: {
-    bodyThumb: "w-[22px] h-[22px] bg-thumb",
-    bodySwitch: "w-[64px] h-[26px] bg-switch bg-cover bg-center",
-  },
-  default: {
-    bodyThumb: "w-5 h-5 bg-white",
-    bodySwitch: modelValue.value
-      ? "w-11 h-6 bg-blue-700"
-      : "w-11 h-6 bg-blue-300",
-  },
-}));
+const inputId = useId();
 
-const switchClass = computed(() => {
-  return variantStyle.value[props.variant].bodySwitch;
+const variantStyles = computed(() => {
+  const isChecked = modelValue.value;
+  const defaultBaseThumb = "w-5 h-5 shadow-sm";
+  const defaultBaseSwitch = "w-11 h-6 border transition-colors";
+
+  const defaultThumbColor = isChecked ? "bg-elevated" : "bg-toggle";
+  const defaultSwitchColor = isChecked
+    ? "bg-primaryBg border-primaryBg"
+    : "bg-base border-toggle";
+
+  const themeBaseThumb = "w-[22px] h-[22px] bg-thumb";
+  const themeBaseSwitch = "w-[64px] h-[26px] bg-switch bg-cover bg-center";
+
+  return {
+    default: {
+      thumb: `${defaultBaseThumb} ${defaultThumbColor}`,
+      switch: `${defaultBaseSwitch} ${defaultSwitchColor}`,
+    },
+    themeSwitch: {
+      thumb: themeBaseThumb,
+      switch: themeBaseSwitch,
+    },
+  };
 });
 
-const thumbClass = computed(() => {
-  const translateThumb = modelValue.value
+const currentStyle = computed(() => variantStyles.value[props.variant]);
+
+const thumbPositionClass = computed(() => {
+  const position = modelValue.value
     ? "left-[calc(100%-2px)] -translate-x-full"
     : "left-[2px]";
-  return `${variantStyle.value[props.variant].bodyThumb} ${translateThumb}`;
+
+  return `${currentStyle.value.thumb} ${position}`;
 });
 </script>
 
 <template>
-  <label class="inline-block">
-    <div
-      class="relative rounded-full cursor-pointer transition-all duration-500"
-      :class="switchClass"
-    >
-      <div
-        class="absolute top-1/2 -translate-y-1/2 rounded-full
-        transition-all duration-300 flex items-center justify-center"
-        :class="thumbClass"
-      >
-        <slot />
-        <VueFeather
-          v-if="icon"
-          :type="props.icon"
-        />
-      </div>
-    </div>
-    <input
-      :id="id || `switch-${Math.random()}`"
-      v-model="modelValue"
-      type="checkbox"
-      class="absolute opacity-0 pointer-events-none"
-    >
+  <label
+    :for="inputId"
+    class="flex items-center justify-between gap-3 cursor-pointer w-full"
+  >
     <slot name="label">
       <span
         v-if="props.label"
-        class="text-sm"
-      >{{ props.label }}</span>
+        class="select-none"
+      >
+        {{ props.label }}
+      </span>
     </slot>
+    <div
+      class="relative rounded-full transition-all duration-300 shrink-0"
+      :class="currentStyle.switch"
+    >
+      <div
+        class="absolute top-1/2 -translate-y-1/2 rounded-full transition-all
+        duration-300 flex items-center justify-center"
+        :class="thumbPositionClass"
+      >
+        <slot name="thumb-icon">
+          <VIcon
+            v-if="icon"
+            :type="props.icon"
+            size="w-5 h-5"
+          />
+        </slot>
+      </div>
+    </div>
+    <input
+      :id="inputId"
+      v-model="modelValue"
+      type="checkbox"
+      class="hidden"
+    >
   </label>
 </template>
+

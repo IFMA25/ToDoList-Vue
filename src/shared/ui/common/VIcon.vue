@@ -26,7 +26,6 @@ const icon = computed<Component | null>(() => {
     :is="icon"
     v-if="icon"
     :class="size"
-    class="shrink-0"
     aria-hidden="true"
   />
 </template>

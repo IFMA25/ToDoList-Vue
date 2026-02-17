@@ -1,16 +1,15 @@
 <script setup lang="ts">
-
+import { refDebounced } from "@vueuse/core";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
-import { useUsersDataRequest } from "./api/useAdminPanelRequests";
-import FilterTable from "./components/FilterTable.vue";
+import { useUserDelete, useUsersDataRequest } from "./api/useAdminPanelRequests";
+import ToolbarTable from "./components/ToolbarTable.vue";
 import { RoleOption, SortOption, User } from "./types";
 import { formatDate } from "./utils";
 
-import { useApiDelete } from "@/shared/composables/useApi";
 import { useModal } from "@/shared/composables/useModal";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VTitle from "@/shared/ui/common/VTitle.vue";
@@ -21,64 +20,55 @@ import { capitalizeFirstLetter } from "@/shared/utils";
 
 const { t } = useI18n();
 
-const TABLE_HEADS = computed(() => [
+const tableHeads = computed(() => [
   { key: "member", label: t("table.tableHeads.member"), position: "text-left" },
   { key: "role", label: t("table.tableHeads.role"), position: "text-left", columnStyles: "text-toggle capitalize" },
   { key: "createdAt", label: t("table.tableHeads.createdAt"), position: "text-left" },
   { key: "action", label: t("table.tableHeads.action"), position: "text-center" },
 ]);
 
-const ACTIONS = computed(() => [
-  {
-    key: "edit",
-    label: t("usersList.userProfile"),
-  },
-  {
-    key: "delete",
-    label: t("usersList.removeUser"),
-  },
+const actions = computed(() => [
+  { key: "edit", label: t("usersList.userProfile") },
+  { key: "delete", label: t("usersList.removeUser") },
 ]);
 
-const ROLE_OPTIONS = computed<RoleOption[]>(() => [
+const roleOptions = computed<RoleOption[]>(() => [
   { label: t("table.filters.allRoles"), value: undefined },
   { label: t("table.filters.admins"), value: "admin" },
   { label: t("table.filters.users"), value: "user" },
 ]);
 
-const SORT_OPTIONS = computed<SortOption[]>(() => [
+const sortOptions = computed<SortOption[]>(() => [
   { key: "newestFirst", label: t("table.filters.newestFirst"), params: { sort: "createdAt", order: "desc" } },
   { key: "oldestFirst", label: t("table.filters.oldestFirst"), params: { sort: "createdAt", order: "asc" } },
   { key: "nameAsc", label: t("table.filters.nameAsc"), params: { sort: "name", order: "asc" } },
   { key: "nameDesc", label: t("table.filters.nameDesc"), params: { sort: "name", order: "desc" } },
 ]);
 
-const DEFAULT_LIMIT = 20;
-
 const selectedUser = ref<User | null>(null);
-const selectedRole = ref<RoleOption>(ROLE_OPTIONS.value[0]);
-const selectedSort = ref<SortOption>(SORT_OPTIONS.value[0]);
-
+const selectedRole = ref<RoleOption>(roleOptions.value[0]);
+const selectedSort = ref<SortOption>(sortOptions.value[0]);
 const modelSearch = ref<string>("");
+const debouncedSearch = refDebounced(modelSearch, 800);
+const currentLimit = ref<number>(20);
 
 const router = useRouter();
 const { open: openDeleteModal, close: closeDeleteModal } = useModal("userDeleteModal");
 
 const { execute, loading, data: usersData } = useUsersDataRequest({
   immediate: true,
-  watch: [selectedRole, selectedSort, modelSearch],
+  watch: [selectedRole, selectedSort, debouncedSearch],
   params: () => ({
-    limit: usersData.value?.pagination.limit ?? DEFAULT_LIMIT,
+    limit: currentLimit.value,
     q: modelSearch.value.trim() || undefined,
     role: selectedRole.value?.value,
     sort: selectedSort.value.params.sort,
     order: selectedSort.value.params.order,
   }),
-  debounce: 600,
 });
 
-const url = computed(() => `/users/${selectedUser.value?.id}`);
-
-const { execute: deleteUser, loading: deletingLoading } = useApiDelete(url, {
+const { execute: deleteUser, loading: deletingLoading  }
+= useUserDelete(() => selectedUser.value.id, {
   onSuccess: () => {
     execute();
     closeDeleteModal();
@@ -86,16 +76,16 @@ const { execute: deleteUser, loading: deletingLoading } = useApiDelete(url, {
   },
 });
 
-const loadMore = () => {
-  const currentLimit = usersData.value.pagination.limit + DEFAULT_LIMIT;
-  execute({ params: { limit: currentLimit } });
+const loadMore = (limit: number) => {
+  currentLimit.value += limit;
+  execute();
 };
 
-const handelAction = (user: User, action: { key: string }) => {
-  if (action.key === "edit") {
+const handelAction = (user: User, action: string) => {
+  if (action === "edit") {
     router.push({ name: "usersInfo", params: { id: user.id } });
   }
-  if (action.key === "delete") {
+  if (action === "delete") {
     selectedUser.value = user;
     openDeleteModal();
   }
@@ -105,7 +95,6 @@ const handelAction = (user: User, action: { key: string }) => {
 <template>
   <VModal
     id="userDeleteModal"
-    :show-close-button="false"
     title="Remove user"
     max-width="md"
   >
@@ -135,19 +124,19 @@ const handelAction = (user: User, action: { key: string }) => {
     <VTitle :text="$t('usersList.title')" />
     <VTable
       :rows="usersData?.data ?? []"
-      :heads="TABLE_HEADS"
+      :heads="tableHeads"
       :loading="loading"
       :pagination="usersData?.pagination"
       @load-more="loadMore"
     >
       <template #toolbar>
-        <FilterTable
+        <ToolbarTable
           v-model:search="modelSearch"
           v-model:role="selectedRole"
           v-model:sort="selectedSort"
           :options="{
-            roleOptions: ROLE_OPTIONS,
-            sortOptions: SORT_OPTIONS
+            roleOptions: roleOptions,
+            sortOptions: sortOptions
           }"
         />
       </template>
@@ -159,7 +148,7 @@ const handelAction = (user: User, action: { key: string }) => {
       </template>
       <template #cell-role="{ row }">
         <span :class="{ 'font-medium': row.role === 'admin' }">
-          {{ t(`table.tableRoles.${row.role}`) }}
+          {{ t(`roles.${row.role}`) }}
         </span>
       </template>
       <template #cell-createdAt="{ row }">
@@ -179,10 +168,10 @@ const handelAction = (user: User, action: { key: string }) => {
           </template>
           <ul class="cursor-pointer flex flex-col gap-2">
             <li
-              v-for="action in ACTIONS"
+              v-for="action in actions"
               :key="action.key"
               :class="action.key === 'delete' && 'text-danger hover:text-dangerHover'"
-              @click="handelAction(row, action)"
+              @click="handelAction(row, action.key)"
             >
               {{ capitalizeFirstLetter(action.label) }}
             </li>

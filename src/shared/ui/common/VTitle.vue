@@ -16,6 +16,5 @@ const variantStyle: Record<ButtonVariant, string> = {
 <template>
   <h2 :class="variantStyle[variant]">
     {{ text }}
-    <slot />
   </h2>
 </template>

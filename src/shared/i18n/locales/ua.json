@@ -31,7 +31,11 @@
         "confirmRemove": "Видалити",
         "cancel": "Скасувати",
         "msgDeleteSuccess": "Користувач успішно видалений"
-    },
+    }, 
+    "roles": {
+            "admin": "Адміністратор",
+            "user": "Користувач"
+        },
     "table": {
         "tableHeads": {
             "member": "Користувач",
@@ -39,10 +43,7 @@
             "createdAt": "Створено",
             "action": "Дія"
         },
-        "tableRoles": {
-            "admin": "Адміністратор",
-            "user": "Користувач"
-        },
+       
         "filters": {
         "allRoles": "Всі",
         "admins": "Адміністратори",
@@ -53,7 +54,18 @@
         "nameDesc": "Ім'я Z-A"
         },
         "loadMore": "Завантажити ще"
+    },
+    "userInfo": {
+        "title": "Роль та права доступу",
+        "clear": "Очистити обрані права доступу",
+        "selectAll": "Обрати всі права доступа",
+        "backAllUsers": "Всі користувачі",
+        "categoryList": "Дозволи списків",
+        "categoryTasks": "Дозволи завдань",
+        "categoryUser": "Керування користувачами",
+        "categoryAnalytics": "Аналітика та дашборд",
+        "saveBtnText": "Зберігти зміни",
+        "since": "Зареєстрований"
     }
-    
     
 }

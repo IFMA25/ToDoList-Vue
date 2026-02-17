@@ -29,6 +29,7 @@
   }
 
   .modal-header {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -43,6 +44,9 @@
   }
 
   .modal-close-btn {
+    position: absolute;
+    top: -18px;
+    right: -18px;
     display: flex;
     align-items: center;
     justify-content: center;

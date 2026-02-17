@@ -20,16 +20,14 @@ const props = defineProps<{
 
 }>();
 
-const colorCheck = "text-white";
+const colorCheck = "text-base";
 
 const variantClass = {
   checked: {
-    gray: "border-gray-400 bg-gray-300",
-    blue: "border-blue-600 bg-blue-400 ",
+    default: "border-2 border-primaryBg bg-primaryBg",
   },
   notChecked: {
-    gray: "border-gray-300 bg-gray-100",
-    blue: "border-blue-300 bg-blue-100 ",
+    default: "border-2 border-default",
   },
 };
 
@@ -39,7 +37,7 @@ const checkboxClass = computed(() => {
     ? variantClass.checked[props.variant]
     : variantClass.notChecked[props.variant];
 
-  const errorClass = props.validation?.error ? "border-red-500" : "";
+  const errorClass = props.validation?.error ? "border-danger" : "";
 
   return [colorCheckbox, sizeCheckbox, colorCheck, errorClass];
 });
@@ -47,7 +45,7 @@ const checkboxClass = computed(() => {
 
 <template>
   <label
-    class="relative flex items-end gap-3 cursor-pointer select-none"
+    class="relative flex gap-3 cursor-pointer select-none"
     v-bind="$attrs"
   >
     <div
@@ -68,7 +66,7 @@ const checkboxClass = computed(() => {
     <slot name="label">
       <p
         v-if="props.label"
-        class="inline-block text-[12px]"
+        class="inline-block leading-[1.3]"
       >{{ props.label }}</p>
       <p
         v-if="props.validation?.error"

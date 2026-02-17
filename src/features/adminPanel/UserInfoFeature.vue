@@ -1,71 +1,86 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
+import { toast } from "vue-sonner";
 
 import {
   usePermissionsRequest,
   usePermissionsRoleRequest,
   useUpdateUserPermissions,
-  // useUpdateUserRole,
+  useUpdateUserRole,
   useUserInfoRequest,
 } from "./api/useAdminPanelRequests";
-// import { Permission, PermissionRole, UserResponse, UserRole } from "./types";
-import { UserRole } from "./types";
-// import { sameArray } from "./utils";
+import ToolbarPermissions from "./components/ToolbarPermissions.vue";
+import UserCard from "./components/UserCard.vue";
+import UserPermissions from "./components/UserPermissions.vue";
+import { Category, RoleOption } from "./types";
+import { formatDate, sameArray } from "./utils";
 
 import VButton from "@/shared/ui/common/VButton.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
-import VSwitch from "@/shared/ui/common/VSwitch.vue";
 import VTitle from "@/shared/ui/common/VTitle.vue";
-import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
-import { capitalizeFirstLetter } from "@/shared/utils";
 
+const { t } = useI18n();
 
-// type SubmitMode = "none" | "permissions" | "role";
+const USER_ROLES = computed<RoleOption[]>(() => [
+  { label: t("roles.admin"), value: "admin" },
+  { label: t("roles.user"), value: "user" },
+]);
 
-// const USER_ERROR_MSG = "User not found!";
-// const ROLE_ERROR_MSG = "Cannot change your own role!";
-// const REQUEST_ERROR = "Request failed!";
-// const UPDATE_SUCCESS_MSG = "User updated successfully!";
-const USER_ROLES: UserRole[] = ["admin", "user"]; //label value
+const CATEGORY = computed<Category[]> (() => [
+  {
+    key: "list",
+    value: ["list", "all-lists"],
+    label: t("userInfo.categoryList"),
+  },
+  {
+    key: "tasks",
+    value: ["task", "all-tasks"],
+    label: t("userInfo.categoryTasks"),
+  },
+  {
+    key: "user",
+    value: ["users", "user", "roles", "permissions"],
+    label: t("userInfo.categoryUser"),
+  },
+  {
+    key: "analytics",
+    value: ["analytics", "dashboard"],
+    label: t("userInfo.categoryAnalytics"),
+  },
+]);
 
 const route = useRoute();
 const userId = String(route.params.id);
 
 const userPermissions = ref<Record<string, boolean>>({});
+const userRole = ref<RoleOption | null>(null);
 
-// const submitMode = ref<SubmitMode>("none");
-
-const selectedAllPermissions = ref<boolean>(false);
-
-// const isUpdating = ref<boolean>(false);
-
-const { loading: permissionsLoad, data: permissionsData } = usePermissionsRequest({
-  immediate: true,
-  onSuccess: () => { console.log(permissionsData);},
-});
+const { execute: permissionExecute, loading: permissionsLoad, data: permissionsData }
+= usePermissionsRequest();
 
 const {
+  execute: roleExecute,
   loading: permissionsRoleLoad,
-  // data: permissionsRoleData
-} = usePermissionsRoleRequest({
-  immediate: true,
-});
+  data: permissionsRoleData,
+} = usePermissionsRoleRequest();
 
 const { loading: userInfoLoad, data: userInfoData } = useUserInfoRequest(() => userId, {
   immediate: true,
-  onSuccess: () => {
-    setPermissions(userInfoData.value.permissions);
+  onSuccess: async() => {
+    try{
+      await Promise.all([permissionExecute(), roleExecute()]);
+      setPermissions(userInfoData.value.permissions);
+      userRole.value = {
+        label: t(`roles.${userInfoData.value.role}`),
+        value: userInfoData.value.role,
+      };
+    } catch (error) {
+      toast(error);
+    }
   },
 });
-
-// const updatedRole = useUpdateUserRole(userId);
-
-const getActivePermissions = () =>
-  Object.entries(userPermissions.value)
-    .filter(([_, isActive]) => isActive)
-    .map(([key]) => key)
-    .sort();
 
 const {
   execute: updateUserPermissions,
@@ -75,98 +90,33 @@ const {
   data: () => ({ permissions: getActivePermissions() }),
   onSuccess: () => {
     setPermissions(updateUserPermissionsData.value.permissions);
+    userInfoData.value = updateUserPermissionsData.value;
   },
 });
 
+const {
+  execute: updateUserRole,
+  loading: updateUserRoleLoad,
+  data: updateUserRoleData,
+} = useUpdateUserRole(() => userId, {
+  data: () => ({ role: (userRole.value.value) }),
+  onSuccess: () => {
+    userRole.value.value = updateUserRoleData.value.role;
+    userInfoData.value = updateUserRoleData.value;
+  },
+});
 
+const handleSubmit = () => {
+  if(isRoleChanged.value){
+    updateUserRole();
+  }
+  updateUserPermissions();
+};
 
-// const updatedUserData = async () => {
-//   if (!userData.value) return;
-
-//   setSubmitMode();
-
-//   if (submitMode.value === "none") return;
-
-//   const activePermissions = getActivePermissions();
-
-//   isUpdating.value = true;
-//   try {
-//     if (submitMode.value === "permissions") {
-//       const updateUserData = await updatePermissions.execute({
-//         data: { permissions: activePermissions },
-//       });
-
-//       responseData(updateUserData);
-//     }
-
-//     if (submitMode.value === "role") {
-//       const updateWithRole = await updatedRole.execute({
-//         data: { role: userData.value.role },
-//       });
-
-//       responseData(updateWithRole);
-
-//       const updateWithPermissions = await updatePermissions.execute({
-//         data: { permissions: activePermissions },
-//       });
-
-//       responseData(updateWithPermissions);
-//     }
-//     submitMode.value = "none";
-//     // toast.success(UPDATE_SUCCESS_MSG);
-//     return;
-//   } catch (err) {
-//     // toast.error(REQUEST_ERROR);
-//     console.error("Update failed:", err);
-//   } finally{
-//     isUpdating.value = false;
-//   }
-// };
-
-// const handleChangeRole = (role: UserRole) => {
-//   userData.value.role = role; // нельзя, все с бека
-
-//   const rolePermissions =
-//     role === "admin"
-//       ? permissionRole.value.ADMIN
-//       : permissionRole.value.USER;
-
-//   setPermissions(rolePermissions);
-//   setSubmitMode();
-// };
-
-// const handleSelectedPermissions = () => {
-//   if (!permissionRole.value) return;
-
-//   if (selectedAllPermissions.value) {
-//     selectedAllPermissions.value = false;
-//     setPermissions([]);
-//   } else {
-//     selectedAllPermissions.value = true;
-//     setPermissions(permissionRole.value.ADMIN || []);
-//   }
-
-//   setSubmitMode();
-// };
-
-// const setSubmitMode = () => {
-//   if (!userData.value || !responseUserData.value) {
-//     submitMode.value = "none";
-//     return;
-//   }
-
-//   const roleChanged = userData.value.role !== responseUserData.value.role;
-
-//   const currentPermissions = getActivePermissions();
-//   const basePermissions = [...(responseUserData.value.permissions ?? [])].sort();
-//   const permissionsChanged = !sameArray(currentPermissions, basePermissions);
-
-//   if (roleChanged) submitMode.value = "role";
-//   else if (permissionsChanged) submitMode.value = "permissions";
-//   else submitMode.value = "none";
-// };
-
-
+const handleChangeAllSelected = () => {
+  const allPermissions = permissionsData.value.map(p => p.value);
+  areAllSelected.value ? setPermissions([]) : setPermissions(allPermissions);
+};
 
 const setPermissions = (permissions: string[]) => {
   const permissionsMap: Record<string, boolean> = {};
@@ -176,30 +126,40 @@ const setPermissions = (permissions: string[]) => {
   userPermissions.value = permissionsMap;
 };
 
-
-
-// const responseData = (data: UserResponse) => {
-//   userData.value = data;
-//   responseUserData.value = structuredClone(data);
-//   setPermissions(data.permissions ?? []);
-// };
+const getActivePermissions = () =>
+  Object.entries(userPermissions.value)
+    .filter(([_, isActive]) => isActive)
+    .map(([key]) => key)
+    .sort();
 
 const isLoading = computed(
   () =>
     userInfoLoad.value ||
     permissionsRoleLoad.value ||
     permissionsLoad.value ||
-    updateUserPermissionsLoad.value,
+    updateUserPermissionsLoad.value ||
+    updateUserRoleLoad.value,
 );
 
-// const currentRole = computed(() => userData.value?.role ?? "");
+const areAllSelected = computed(() => {
+  const activeCount = Object.values(userPermissions.value).filter(v => v).length;
+  return activeCount === permissionsData.value.length;
+});
 
-// watch(
-//   userPermissions,
-//   () => setSubmitMode(),
-//   { deep: true },
-// );
+const isRoleChanged = computed (() => userRole.value?.value !== userInfoData.value?.role);
 
+const isDataChanged = computed(() => {
+
+  const currentPermissions = getActivePermissions();
+  const initialPermissions = [...userInfoData.value.permissions].sort();
+  const isPermissionsChanged = !sameArray(currentPermissions, initialPermissions);
+
+  return isRoleChanged.value || isPermissionsChanged;
+});
+
+const labelCheckbox = computed(() =>
+  areAllSelected.value ? t("userInfo.clear") : t("userInfo.selectAll"),
+);
 </script>
 
 <template>
@@ -213,68 +173,41 @@ const isLoading = computed(
     />
   </div>
   <div v-else>
-    <div class="flex justify-between items-center">
-      <VTitle
-        text="Permissions for"
-        class="mb-4"
-      >
-        <template #default>
-          <span class="text-blue-600 font-extrabold">
-            {{ userInfoData?.name || userInfoData?.email }}
-          </span>
-        </template>
-      </VTitle>
-      <div class="flex justify-end gap-8">
-        <VButton
-          :text="selectedAllPermissions ? 'Clear selection' : 'Select all'"
-          variant="default"
-        />
-        <VButton
-          variant="default"
-          :to="'/users'"
-          text="Back to all users"
-        />
-      </div>
-    </div>
-
+    <!-- телепорт есть всегда -->
+    <Teleport to="#header-content">
+      <UserCard
+        :title="userInfoData.name"
+        :subtitle="userInfoData.email"
+        :date="formatDate(userInfoData.createdAt, { month: 'long', year: 'numeric' })"
+      />
+    </Teleport>
+    <VTitle
+      :text="$t('userInfo.title')"
+      class="mb-6"
+    />
     <form
-      class="flex flex-col gap-6"
-      @submit.prevent="updateUserPermissions()"
+      class="flex flex-col gap-6 p-6 border border-surface rounded-xl"
+      @submit.prevent="handleSubmit()"
     >
-      <VDropdown placement="tf">
-        <template #trigger="{ toggle }">
-          <VButton
-            type="button"
-            :text="userInfoData.role"
-            @click="toggle"
-          />
-        </template>
-
-        <ul class="text-center cursor-pointer">
-          <li
-            v-for="role in USER_ROLES"
-            :key="role"
-            class="hover:bg-gray-100 py-1"
-          >
-            {{ capitalizeFirstLetter(role) }}
-          </li>
-        </ul>
-      </VDropdown>
-      <div class="grid grid-cols-3 gap-4">
-        <VSwitch
-          v-for="permission in permissionsData"
-          :id="`permission-${permission.key}`"
-          :key="permission.key"
-          v-model="userPermissions[permission.value]"
-          variant="default"
-          :label="permission.description"
-        />
-      </div>
-      <div class="mx-auto">
+      <ToolbarPermissions
+        v-model:role="userRole"
+        :role-options="USER_ROLES"
+        :label-checkbox="labelCheckbox"
+        :all-selected="areAllSelected"
+        @update:all-selected="handleChangeAllSelected"
+        @update:role="setPermissions(permissionsRoleData[userRole.value.toUpperCase()])"
+      />
+      <UserPermissions
+        v-model="userPermissions"
+        :categories="CATEGORY"
+        :all-permissions="permissionsData"
+      />
+      <div class="ml-auto">
         <VButton
-          variant="default"
           type="submit"
-          text="Save"
+          variant="primary"
+          :text="$t('userInfo.saveBtnText')"
+          :disabled="!isDataChanged"
         />
       </div>
     </form>

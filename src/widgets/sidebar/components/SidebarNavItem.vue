@@ -12,8 +12,7 @@ defineProps<{
 
 <template>
   <li
-    class="py-2.5 transition-all duration-300"
-    :class="collapsed ?'px-0' : 'px-4'"
+    class="transition-all duration-300"
   >
     <VButton
       :text="capitalizeFirstLetter(item.text)"

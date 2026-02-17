@@ -1,4 +1,4 @@
-import { createApi, createApiClient } from "@ametie/vue-muza-use";
+import { createApi, createApiClient, tokenManager } from "@ametie/vue-muza-use";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 import VueFeather from "vue-feather";
@@ -33,6 +33,18 @@ await router.isReady();
 const api = createApiClient({
   baseURL: import.meta.env.VITE_API_URL,
   withAuth: true,
+  authOptions: {
+    refreshUrl: "/auth/refresh",
+    refreshPayload: () => ({
+      refreshToken: tokenManager.getRefreshToken(),
+    }),
+    onTokenRefreshed: (response) => (
+      tokenManager.setTokens({
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken,
+      })),
+    onTokenRefreshFailed: () => router.push("/login"),
+  },
 });
 
 // 2. Install Plugin

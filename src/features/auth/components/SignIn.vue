@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { toast } from "vue-sonner";
 
 import { useLogin } from "../api/composables/useAuthRequests";
 import { useSignInValidation } from "../composables/useSignInValidation";
@@ -35,20 +36,20 @@ const { formData, v$ } = useSignInValidation();
 const errorLogin = ref<string | null>(null);
 
 const { execute, loading, error } = useLogin({
-  onSuccess: async (response) => {
-
+  onSuccess: (response) => {
     tokenManager.setTokens({
       accessToken: response.data.accessToken,
       refreshToken: response.data.refreshToken,
     });
-
-    await profileStore.fetchProfile();
+    // profileStore.fetchProfile();
+    toast.warning("usersList.msgDeleteSuccess");
 
     if (profileStore.profileData?.role === "admin") {
       router.replace({ name: "users" });
     } else {
       router.replace({ name: "home" });
     }
+
   },
   onError: () => {
     errorLogin.value = error.value.message;

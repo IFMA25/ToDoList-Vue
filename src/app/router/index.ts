@@ -3,7 +3,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import authRoutes from "./auth";
 import { guards } from "./guards";
 
-
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
@@ -22,6 +21,7 @@ const routes: RouteRecordRaw[] = [
       title: "Admin",
       role: "admin",
       permission: "READ_USERS",
+      showHeader: false,
     },
   },
   {
@@ -31,6 +31,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: "Users",
       role: "admin",
+      titleHeader: "",
     },
   },
   {

@@ -70,6 +70,7 @@ const closeOnSelectComputed = computed(() =>
     >
       <template #caret="{ toggle }">
         <button
+          type="button"
           class="multiselect__select"
           @mousedown.prevent.stop="toggle"
         >

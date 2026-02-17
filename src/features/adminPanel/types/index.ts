@@ -59,3 +59,8 @@ export interface SortOption {
   [key: string]: unknown;
 }
 
+export interface Category {
+  key: string;
+  value: string[];
+  label: string;
+}

@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
 import { RoleOption, SortOption } from "../types";
 
 import VInput from "@/shared/ui/common/VInput.vue";
 import VSelect from "@/shared/ui/common/VSelect.vue";
-
-const { t } = useI18n();
 
 defineProps<{
   options: {
@@ -24,7 +20,7 @@ const sort = defineModel<SortOption>("sort");
   <div class="flex items-center gap-4 mb-6">
     <VInput
       v-model="search"
-      :placeholder="t('search.placeholder')"
+      :placeholder="$t('search.placeholder')"
       type="search"
       variant="search"
       icon-left="icon-search"

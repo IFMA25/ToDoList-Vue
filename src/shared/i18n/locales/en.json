@@ -32,16 +32,16 @@
         "cancel": "Cancel",
         "msgDeleteSuccess": "User successfully deleted"
     },
+    "roles": {
+            "admin": "Admin",
+            "user": "User"
+        },
     "table": {
          "tableHeads": {
             "member": "Member",
             "role": "Role",
             "createdAt": "Created At",
             "action": "Action"
-        },
-        "tableRoles": {
-            "admin": "Admin",
-            "user": "User"
         },
         "loadMore": "Load More",
         "filters": {
@@ -53,5 +53,17 @@
             "nameAsc": "Name A-Z",
             "nameDesc": "Name Z-A"
         }
+    },
+    "userInfo": {
+        "title": "Role & Permissions",
+        "clear": "Clear selection permissions",
+        "selectAll": "Select all permissions",
+        "backAllUsers": "All members",
+        "categoryList": "Lists permissions",
+        "categoryTasks": "Tasks permissions",
+        "categoryUser": "User management",
+        "categoryAnalytics": "Analytics & dashboard",
+        "saveBtnText": "Save changes",
+        "since": "Member since"
     }
 }
