@@ -1,9 +1,13 @@
-import {defineConfig, loadEnv} from 'vite'
-import vue from '@vitejs/plugin-vue'
-import svgLoader from 'vite-svg-loader'
-import {fileURLToPath} from "url";
-import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
-import path from "path";
+import path from 'path';
+import { fileURLToPath } from 'url';
+import {
+  defineConfig,
+  loadEnv,
+} from 'vite';
+import svgLoader from 'vite-svg-loader';
+
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import vue from '@vitejs/plugin-vue';
 
 export default ({mode}: any) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};

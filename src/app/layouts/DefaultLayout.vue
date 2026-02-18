@@ -9,8 +9,6 @@ import VToaster from "@/shared/ui/toaster/VToaster.vue";
 import Header from "@/widgets/Header.vue";
 import Sidebar from "@/widgets/sidebar/Sidebar.vue";
 
-
-
 const profileStore = useProfileStore();
 const route = useRoute();
 

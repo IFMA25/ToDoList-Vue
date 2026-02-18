@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import {
+  computed,
+  ref,
+} from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { toast } from "vue-sonner";
+
 
 import {
   usePermissionsRequest,
@@ -14,16 +18,22 @@ import {
 import ToolbarPermissions from "./components/ToolbarPermissions.vue";
 import UserCard from "./components/UserCard.vue";
 import UserPermissions from "./components/UserPermissions.vue";
-import { Category, RoleOption } from "./types";
-import { formatDate, sameArray } from "./utils";
+import {
+  Category,
+  RoleOption,
+} from "./types";
+import {
+  formatDate,
+  sameArray,
+} from "./utils";
 
 import VButton from "@/shared/ui/common/VButton.vue";
-import VLoader from "@/shared/ui/common/VLoader.vue";
+import VSkeleton from "@/shared/ui/common/VSkeleton.vue";
 import VTitle from "@/shared/ui/common/VTitle.vue";
 
 const { t } = useI18n();
 
-const USER_ROLES = computed<RoleOption[]>(() => [
+const userRolesList = computed<RoleOption[]>(() => [
   { label: t("roles.admin"), value: "admin" },
   { label: t("roles.user"), value: "user" },
 ]);
@@ -149,7 +159,7 @@ const areAllSelected = computed(() => {
 const isRoleChanged = computed (() => userRole.value?.value !== userInfoData.value?.role);
 
 const isDataChanged = computed(() => {
-
+  if (!userInfoData.value) return;
   const currentPermissions = getActivePermissions();
   const initialPermissions = [...userInfoData.value.permissions].sort();
   const isPermissionsChanged = !sameArray(currentPermissions, initialPermissions);
@@ -163,53 +173,59 @@ const labelCheckbox = computed(() =>
 </script>
 
 <template>
-  <div
-    v-if="isLoading"
-    class="absolute inset-0 z-20 flex items-center justify-center bg-white/60 backdrop-blur-sm"
+  <Teleport
+    to="#header-content"
+    defer
   >
-    <VLoader
-      color="primaryDark"
-      size="h-[100px]"
+    <VSkeleton
+      v-if="isLoading || !userInfoData"
+      :count="3"
     />
-  </div>
-  <div v-else>
-    <!-- телепорт есть всегда -->
-    <Teleport to="#header-content">
-      <UserCard
-        :title="userInfoData.name"
-        :subtitle="userInfoData.email"
-        :date="formatDate(userInfoData.createdAt, { month: 'long', year: 'numeric' })"
-      />
-    </Teleport>
-    <VTitle
-      :text="$t('userInfo.title')"
-      class="mb-6"
+    <UserCard
+      v-else
+      :title="userInfoData.name"
+      :subtitle="userInfoData.email"
+      :date="formatDate(userInfoData.createdAt, { month: 'long', year: 'numeric' })"
     />
-    <form
-      class="flex flex-col gap-6 p-6 border border-surface rounded-xl"
-      @submit.prevent="handleSubmit()"
-    >
-      <ToolbarPermissions
-        v-model:role="userRole"
-        :role-options="USER_ROLES"
-        :label-checkbox="labelCheckbox"
-        :all-selected="areAllSelected"
-        @update:all-selected="handleChangeAllSelected"
-        @update:role="setPermissions(permissionsRoleData[userRole.value.toUpperCase()])"
+  </Teleport>
+  <VTitle
+    :text="$t('userInfo.title')"
+    class="mb-6"
+  />
+  <form
+    class="flex flex-col gap-6 p-6 border border-surface rounded-xl"
+    @submit.prevent="handleSubmit()"
+  >
+    <VSkeleton
+      v-if="isLoading || !userInfoData"
+      :count="3"
+    />
+    <ToolbarPermissions
+      v-else
+      v-model:role="userRole"
+      :role-options="userRolesList"
+      :label-checkbox="labelCheckbox"
+      :all-selected="areAllSelected"
+      @update:all-selected="handleChangeAllSelected"
+      @update:role="setPermissions(permissionsRoleData[userRole.value.toUpperCase()])"
+    />
+    <VSkeleton
+      v-if="isLoading || !userInfoData"
+      :count="17"
+    />
+    <UserPermissions
+      v-else
+      v-model="userPermissions"
+      :categories="CATEGORY"
+      :all-permissions="permissionsData"
+    />
+    <div class="ml-auto">
+      <VButton
+        type="submit"
+        variant="primary"
+        :text="$t('userInfo.saveBtnText')"
+        :disabled="!isDataChanged"
       />
-      <UserPermissions
-        v-model="userPermissions"
-        :categories="CATEGORY"
-        :all-permissions="permissionsData"
-      />
-      <div class="ml-auto">
-        <VButton
-          type="submit"
-          variant="primary"
-          :text="$t('userInfo.saveBtnText')"
-          :disabled="!isDataChanged"
-        />
-      </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </template>
