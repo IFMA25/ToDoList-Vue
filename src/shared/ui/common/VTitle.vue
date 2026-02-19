@@ -1,13 +1,11 @@
 <script setup lang="ts">
 
-type ButtonVariant = "auth" | "base";
-
 const { text, variant = "base" } = defineProps<{
   text: string;
-  variant?: ButtonVariant;
+  variant?: "auth" | "base";
 }>();
 
-const variantStyle: Record<ButtonVariant, string> = {
+const variantStyle = {
   auth: "text-5xl text-primaryTextDark font-semibold font-rubik text-center",
   base: "text-left font-semibold text-[2rem]",
 };

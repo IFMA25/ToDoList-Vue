@@ -11,6 +11,8 @@ export function formatDate(
     year: "numeric",
   },
 ) {
+  if (!date) return "";
+
   const d = new Date(date);
   const language = useLanguageStore().currentLang;
   const locale = language === "ua" ? "uk-UA" : "en-GB";

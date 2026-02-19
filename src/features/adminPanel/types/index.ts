@@ -25,8 +25,6 @@ export interface UsersResponse {
   pagination: Pagination;
 }
 
-export type UserResponse = Omit<User, "updatedAt">;
-
 export interface Permission {
   key: string;
   value: string;

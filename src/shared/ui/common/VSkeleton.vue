@@ -2,15 +2,14 @@
 import { computed } from "vue";
 
 const {
+  width,
+  height,
   variant = "base",
-  width = "even:w-3/4",
-  height = "h-6",
   rounded = "lg",
-  count = 1,
 } = defineProps<{
+  width: string;
+  height: string;
   variant?: string;
-  width?: string;
-  height?: string;
   rounded?: "none" | "sm" | "md" | "lg" | "full";
   count?: number;
 }>();
@@ -36,11 +35,5 @@ const computedClasses = computed(() => [
 </script>
 
 <template>
-  <div class="flex flex-col gap-2">
-    <div
-      v-for="i in count"
-      :key="i"
-      :class="computedClasses"
-    />
-  </div>
+  <div :class="computedClasses" />
 </template>

@@ -17,7 +17,7 @@ const props = defineProps<{
   label?: string
   icon?: string
   iconSize?: string
-
+  disabled?: boolean
 }>();
 
 const colorCheck = "text-base";
@@ -38,14 +38,17 @@ const checkboxClass = computed(() => {
     : variantClass.notChecked[props.variant];
 
   const errorClass = props.validation?.error ? "border-danger" : "";
+  const disabledClass = props.disabled ? "border-subtle bg-subtle" : "";
 
-  return [colorCheckbox, sizeCheckbox, colorCheck, errorClass];
+  return [colorCheckbox, sizeCheckbox, colorCheck, errorClass, disabledClass];
 });
+
 </script>
 
 <template>
   <label
     class="relative flex gap-3 cursor-pointer select-none"
+    :class="{ 'cursor-pointer': !disabled, 'cursor-not-allowed opacity-60': disabled }"
     v-bind="$attrs"
   >
     <div
@@ -60,6 +63,7 @@ const checkboxClass = computed(() => {
     </div>
     <input
       v-model="modelValue"
+      :disabled="disabled"
       type="checkbox"
       class="absolute opacity-0 pointer-events-none"
     >

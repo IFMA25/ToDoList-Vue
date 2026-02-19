@@ -1,3 +1,4 @@
+import { tokenManager } from "@ametie/vue-muza-use";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -6,7 +7,6 @@ import { toast } from "vue-sonner";
 import { useProfileRequest } from "../api/composables/useProfileRequest";
 
 import { Profile } from "@/features/profile/types";
-import { tokenManager } from "@/shared/api";
 
 const ERROR_MSG = "You are not authorized. Please log in.";
 
@@ -21,6 +21,7 @@ export const useProfileStore = defineStore("profile", () => {
         email: data.value.email,
         name: data.value.name,
         role: data.value.role,
+        createdAt: data.value.createdAt,
       };
     },
     onError: () => {

@@ -11,12 +11,14 @@ const props = withDefaults(
     label?: string;
     icon?: string;
     id?: string;
+    disabled?: boolean;
   }>(),
   {
     variant: "",
     label: "",
     icon: "",
     id: "",
+    disabled: false,
   },
 );
 
@@ -27,10 +29,15 @@ const variantStyles = computed(() => {
   const defaultBaseThumb = "w-5 h-5 shadow-sm";
   const defaultBaseSwitch = "w-11 h-6 border transition-colors";
 
-  const defaultThumbColor = isChecked ? "bg-elevated" : "bg-toggle";
-  const defaultSwitchColor = isChecked
+  let defaultThumbColor = isChecked ? "bg-elevated" : "bg-toggle";
+  let defaultSwitchColor = isChecked
     ? "bg-primaryBg border-primaryBg"
     : "bg-base border-toggle";
+
+  if (props.disabled) {
+    defaultThumbColor = "bg-subtle";
+    defaultSwitchColor = "bg-elevated border-subtle";
+  }
 
   const themeBaseThumb = "w-[22px] h-[22px] bg-thumb";
   const themeBaseSwitch = "w-[64px] h-[26px] bg-switch bg-cover bg-center";
@@ -62,11 +69,13 @@ const thumbPositionClass = computed(() => {
   <label
     :for="inputId"
     class="flex items-center justify-between gap-3 cursor-pointer w-full"
+    :class="{ 'cursor-pointer': !disabled, 'cursor-not-allowed': disabled }"
   >
     <slot name="label">
       <span
         v-if="props.label"
         class="select-none"
+        :class="{ 'text-gray-400': disabled }"
       >
         {{ props.label }}
       </span>
@@ -94,6 +103,7 @@ const thumbPositionClass = computed(() => {
       v-model="modelValue"
       type="checkbox"
       class="hidden"
+      :disabled="disabled"
     >
   </label>
 </template>

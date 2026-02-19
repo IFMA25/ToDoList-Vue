@@ -19,6 +19,7 @@ interface Props {
   searchable?: boolean;
   label?: string;
   trackBy?: string;
+  disabled?: boolean;
 }
 
 const {
@@ -35,6 +36,7 @@ const {
   searchable = false,
   label,
   trackBy,
+  disabled = false,
 } = defineProps<Props>();
 
 const model = defineModel<Option | null>();
@@ -67,6 +69,7 @@ const closeOnSelectComputed = computed(() =>
       aria-label="pick a value"
       :label="label"
       :track-by="trackBy"
+      :disabled="disabled"
     >
       <template #caret="{ toggle }">
         <button
@@ -146,5 +149,12 @@ const closeOnSelectComputed = computed(() =>
   @apply rounded-lg;
 }
 
+:deep(.multiselect--disabled) {
+  @apply border-subtle text-disabled;
+  pointer-events: none;
+}
 
+:deep(.multiselect--disabled .multiselect__select) {
+  @apply bg-transparent;
+}
 </style>

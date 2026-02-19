@@ -83,7 +83,7 @@ const loadMore = (limit: number) => {
 
 const handelAction = (user: User, action: string) => {
   if (action === "edit") {
-    router.push({ name: "usersInfo", params: { id: user.id } });
+    router.push({ name: "userProfile", query: { id: user.id } });
   }
   if (action === "delete") {
     selectedUser.value = user;
@@ -120,7 +120,7 @@ const handelAction = (user: User, action: string) => {
       />
     </template>
   </VModal>
-  <div class="h-full flex items-center justify-center flex-col gap-6">
+  <div class="h-full flex flex-col gap-6">
     <VTitle :text="$t('usersList.title')" />
     <VTable
       :rows="usersData?.data ?? []"

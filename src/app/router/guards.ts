@@ -1,7 +1,8 @@
+import { tokenManager } from "@ametie/vue-muza-use";
 import { RouteLocationNormalized } from "vue-router";
 
 import { useProfileStore } from "@/features/profile/store/useProfileStore";
-import { tokenManager } from "@/shared/api";
+
 
 export const guards = async (to: RouteLocationNormalized) => {
   const token = !!tokenManager.getAccessToken();

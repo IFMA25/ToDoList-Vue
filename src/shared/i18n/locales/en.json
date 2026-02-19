@@ -31,6 +31,7 @@
         "confirmRemove": "Remove user",
         "cancel": "Cancel",
         "msgDeleteSuccess": "User successfully deleted"
+
     },
     "roles": {
             "admin": "Admin",
@@ -52,6 +53,10 @@
             "oldestFirst": "Oldest first",
             "nameAsc": "Name A-Z",
             "nameDesc": "Name Z-A"
+        },
+        "emptyState": {
+            "title": "No records found",
+            "subtitle": "There is no data to display at the moment."
         }
     },
     "userInfo": {
@@ -64,6 +69,7 @@
         "categoryUser": "User management",
         "categoryAnalytics": "Analytics & dashboard",
         "saveBtnText": "Save changes",
-        "since": "Member since"
+        "since": "Member since",
+        "saveSuccess": "User data successfully updated!"
     }
 }

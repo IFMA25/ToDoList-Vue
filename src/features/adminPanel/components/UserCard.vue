@@ -1,24 +1,47 @@
 <script setup lang="ts">
+import VSkeleton from "@/shared/ui/common/VSkeleton.vue";
 
 defineProps<{
-  title: string;
+  title?: string;
   subtitle?: string;
   date?: string;
+  loading?: boolean;
 }>();
-
 </script>
 
 <template>
-  <div class="flex justify-between">
+  <div class="flex justify-between items-start">
     <div>
-      <h3 class="text-xl font-medium leading=[1.2] mb-2">
-        {{ title }}
-      </h3>
-      <p class="text-secondary text-sm leading=[1.3]">
-        {{ subtitle }}
-      </p>
+      <template v-if="loading">
+        <VSkeleton
+          height="h-6"
+          width="w-3/4"
+          class="mb-2"
+          rounded="md"
+        />
+        <VSkeleton
+          height="h-5"
+          width="w-[12rem]"
+        />
+      </template>
+      <template v-else>
+        <h3 class="text-xl font-medium leading-[1.2] mb-2">
+          {{ title }}
+        </h3>
+        <p class="text-secondary text-sm leading-[1.3]">
+          {{ subtitle }}
+        </p>
+      </template>
     </div>
-    <p class="text-secondary text-xs leading=[1.1]">
+    <VSkeleton
+      v-if="loading"
+      height="h-4"
+      width="w-[10rem]"
+    />
+    <p
+      v-else
+      class="text-secondary text-xs leading=[1.1]"
+    >
       {{ $t('userInfo.since') }} <span class="capitalize">{{ date }}</span>
     </p>
   </div>

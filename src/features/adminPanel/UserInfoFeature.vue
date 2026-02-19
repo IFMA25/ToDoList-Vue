@@ -1,175 +1,33 @@
 <script setup lang="ts">
-import {
-  computed,
-  ref,
-} from "vue";
-import { useI18n } from "vue-i18n";
+import { computed, defineAsyncComponent } from "vue";
 import { useRoute } from "vue-router";
-import { toast } from "vue-sonner";
-
 
 import {
-  usePermissionsRequest,
-  usePermissionsRoleRequest,
-  useUpdateUserPermissions,
-  useUpdateUserRole,
   useUserInfoRequest,
 } from "./api/useAdminPanelRequests";
-import ToolbarPermissions from "./components/ToolbarPermissions.vue";
 import UserCard from "./components/UserCard.vue";
-import UserPermissions from "./components/UserPermissions.vue";
-import {
-  Category,
-  RoleOption,
-} from "./types";
 import {
   formatDate,
-  sameArray,
 } from "./utils";
+import { useProfileStore } from "../profile/store/useProfileStore";
 
-import VButton from "@/shared/ui/common/VButton.vue";
-import VSkeleton from "@/shared/ui/common/VSkeleton.vue";
 import VTitle from "@/shared/ui/common/VTitle.vue";
 
-const { t } = useI18n();
-
-const userRolesList = computed<RoleOption[]>(() => [
-  { label: t("roles.admin"), value: "admin" },
-  { label: t("roles.user"), value: "user" },
-]);
-
-const CATEGORY = computed<Category[]> (() => [
-  {
-    key: "list",
-    value: ["list", "all-lists"],
-    label: t("userInfo.categoryList"),
-  },
-  {
-    key: "tasks",
-    value: ["task", "all-tasks"],
-    label: t("userInfo.categoryTasks"),
-  },
-  {
-    key: "user",
-    value: ["users", "user", "roles", "permissions"],
-    label: t("userInfo.categoryUser"),
-  },
-  {
-    key: "analytics",
-    value: ["analytics", "dashboard"],
-    label: t("userInfo.categoryAnalytics"),
-  },
-]);
+const AdminUserForm = defineAsyncComponent(() => import("./components/AdminUserForm.vue"));
+const MeUserForm = defineAsyncComponent(() => import("./components/MeUserForm.vue"));
 
 const route = useRoute();
-const userId = String(route.params.id);
+const profileStore = useProfileStore();
+const userId = computed(() => route.query.id as string | undefined);
+const isAdminMode = computed(() => !!userId.value);
 
-const userPermissions = ref<Record<string, boolean>>({});
-const userRole = ref<RoleOption | null>(null);
-
-const { execute: permissionExecute, loading: permissionsLoad, data: permissionsData }
-= usePermissionsRequest();
-
-const {
-  execute: roleExecute,
-  loading: permissionsRoleLoad,
-  data: permissionsRoleData,
-} = usePermissionsRoleRequest();
-
-const { loading: userInfoLoad, data: userInfoData } = useUserInfoRequest(() => userId, {
-  immediate: true,
-  onSuccess: async() => {
-    try{
-      await Promise.all([permissionExecute(), roleExecute()]);
-      setPermissions(userInfoData.value.permissions);
-      userRole.value = {
-        label: t(`roles.${userInfoData.value.role}`),
-        value: userInfoData.value.role,
-      };
-    } catch (error) {
-      toast(error);
-    }
-  },
+const { execute: refetchUser, loading: userInfoLoad, data: userInfoData } = useUserInfoRequest(() => userId.value || "", {
+  immediate: !!userId.value,
+  watch: [userId],
 });
 
-const {
-  execute: updateUserPermissions,
-  loading: updateUserPermissionsLoad,
-  data: updateUserPermissionsData,
-} = useUpdateUserPermissions(() => userId, {
-  data: () => ({ permissions: getActivePermissions() }),
-  onSuccess: () => {
-    setPermissions(updateUserPermissionsData.value.permissions);
-    userInfoData.value = updateUserPermissionsData.value;
-  },
-});
-
-const {
-  execute: updateUserRole,
-  loading: updateUserRoleLoad,
-  data: updateUserRoleData,
-} = useUpdateUserRole(() => userId, {
-  data: () => ({ role: (userRole.value.value) }),
-  onSuccess: () => {
-    userRole.value.value = updateUserRoleData.value.role;
-    userInfoData.value = updateUserRoleData.value;
-  },
-});
-
-const handleSubmit = () => {
-  if(isRoleChanged.value){
-    updateUserRole();
-  }
-  updateUserPermissions();
-};
-
-const handleChangeAllSelected = () => {
-  const allPermissions = permissionsData.value.map(p => p.value);
-  areAllSelected.value ? setPermissions([]) : setPermissions(allPermissions);
-};
-
-const setPermissions = (permissions: string[]) => {
-  const permissionsMap: Record<string, boolean> = {};
-  permissionsData.value.forEach((permission) => {
-    permissionsMap[permission.value] = permissions.includes(permission.value);
-  });
-  userPermissions.value = permissionsMap;
-};
-
-const getActivePermissions = () =>
-  Object.entries(userPermissions.value)
-    .filter(([_, isActive]) => isActive)
-    .map(([key]) => key)
-    .sort();
-
-const isLoading = computed(
-  () =>
-    userInfoLoad.value ||
-    permissionsRoleLoad.value ||
-    permissionsLoad.value ||
-    updateUserPermissionsLoad.value ||
-    updateUserRoleLoad.value,
-);
-
-const areAllSelected = computed(() => {
-  const activeCount = Object.values(userPermissions.value).filter(v => v).length;
-  return activeCount === permissionsData.value.length;
-});
-
-const isRoleChanged = computed (() => userRole.value?.value !== userInfoData.value?.role);
-
-const isDataChanged = computed(() => {
-  if (!userInfoData.value) return;
-  const currentPermissions = getActivePermissions();
-  const initialPermissions = [...userInfoData.value.permissions].sort();
-  const isPermissionsChanged = !sameArray(currentPermissions, initialPermissions);
-
-  return isRoleChanged.value || isPermissionsChanged;
-});
-
-const labelCheckbox = computed(() =>
-  areAllSelected.value ? t("userInfo.clear") : t("userInfo.selectAll"),
-);
+const userData = computed(() => isAdminMode.value ? userInfoData.value : profileStore.profileData);
+const isLoading = computed(() => isAdminMode.value ? userInfoLoad.value : profileStore.loading);
 </script>
 
 <template>
@@ -177,55 +35,21 @@ const labelCheckbox = computed(() =>
     to="#header-content"
     defer
   >
-    <VSkeleton
-      v-if="isLoading || !userInfoData"
-      :count="3"
-    />
     <UserCard
-      v-else
-      :title="userInfoData.name"
-      :subtitle="userInfoData.email"
-      :date="formatDate(userInfoData.createdAt, { month: 'long', year: 'numeric' })"
+      :loading="isLoading || !userInfoData"
+      :title="userData?.name"
+      :subtitle="userData?.email"
+      :date="formatDate(userData?.createdAt, { month: 'long', year: 'numeric' })"
     />
   </Teleport>
   <VTitle
     :text="$t('userInfo.title')"
     class="mb-6"
   />
-  <form
-    class="flex flex-col gap-6 p-6 border border-surface rounded-xl"
-    @submit.prevent="handleSubmit()"
-  >
-    <VSkeleton
-      v-if="isLoading || !userInfoData"
-      :count="3"
-    />
-    <ToolbarPermissions
-      v-else
-      v-model:role="userRole"
-      :role-options="userRolesList"
-      :label-checkbox="labelCheckbox"
-      :all-selected="areAllSelected"
-      @update:all-selected="handleChangeAllSelected"
-      @update:role="setPermissions(permissionsRoleData[userRole.value.toUpperCase()])"
-    />
-    <VSkeleton
-      v-if="isLoading || !userInfoData"
-      :count="17"
-    />
-    <UserPermissions
-      v-else
-      v-model="userPermissions"
-      :categories="CATEGORY"
-      :all-permissions="permissionsData"
-    />
-    <div class="ml-auto">
-      <VButton
-        type="submit"
-        variant="primary"
-        :text="$t('userInfo.saveBtnText')"
-        :disabled="!isDataChanged"
-      />
-    </div>
-  </form>
+  <component
+    :is="isAdminMode ? AdminUserForm : MeUserForm"
+    :user-id="userId"
+    :user-data="userData"
+    @update-success="refetchUser"
+  />
 </template>

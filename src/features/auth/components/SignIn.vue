@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { tokenManager } from "@ametie/vue-muza-use";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
@@ -8,7 +9,6 @@ import { useSignInValidation } from "../composables/useSignInValidation";
 import { AuthMode } from "../types";
 
 import { useProfileStore } from "@/features/profile/store/useProfileStore";
-import { tokenManager } from "@/shared/api/tokenManager";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
 
@@ -41,7 +41,6 @@ const { execute, loading, error } = useLogin({
       accessToken: response.data.accessToken,
       refreshToken: response.data.refreshToken,
     });
-    // profileStore.fetchProfile();
     toast.warning("usersList.msgDeleteSuccess");
 
     if (profileStore.profileData?.role === "admin") {
