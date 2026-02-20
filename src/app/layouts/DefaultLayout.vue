@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import {
+  useRoute,
+  useRouter,
+} from "vue-router";
 
 import { useProfileStore } from "@/features/profile/store/useProfileStore";
 import VButton from "@/shared/ui/common/VButton.vue";
@@ -41,14 +44,6 @@ const parentLink = computed(() => route.meta.parent);
     >
       <Sidebar :nav-items="navItems" />
       <VToaster />
-
-
-      <!-- <div
-          class="flex-none flex justify-between items-center
-          bg-white border border-gray-300 rounded-lg p-4"
-        >
-          <Profile :data-profile="profileStore.profileData" />
-        </div> -->
       <div
         id="actions"
         class="mb-6 min-h-[40px]"

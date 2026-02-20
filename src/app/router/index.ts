@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  RouteRecordRaw,
+} from "vue-router";
 
 import authRoutes from "./auth";
 import { guards } from "./guards";
@@ -44,7 +48,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/profile",
     name: "userProfile",
-    component: () => import("@/pages/Users/UserInfo.vue"),
+    component: () => import("@/pages/Profile/index.vue"),
     meta: {
       title: "Profile",
       menu: {

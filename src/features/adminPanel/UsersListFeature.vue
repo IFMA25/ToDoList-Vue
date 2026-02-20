@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { refDebounced } from "@vueuse/core";
-import { computed, ref } from "vue";
+import {
+  computed,
+  ref,
+} from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
-import { useUserDelete, useUsersDataRequest } from "./api/useAdminPanelRequests";
+import {
+  useUserDelete,
+  useUsersDataRequest,
+} from "./api/useAdminPanelRequests";
 import ToolbarTable from "./components/ToolbarTable.vue";
-import { RoleOption, SortOption, User } from "./types";
+import {
+  RoleOption,
+  SortOption,
+  User,
+} from "./types";
 import { formatDate } from "./utils";
 
 import { useModal } from "@/shared/composables/useModal";
@@ -17,6 +27,7 @@ import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
 import VModal from "@/shared/ui/modal/VModal.vue";
 import VTable from "@/shared/ui/table/VTable.vue";
 import { capitalizeFirstLetter } from "@/shared/utils";
+
 
 const { t } = useI18n();
 
