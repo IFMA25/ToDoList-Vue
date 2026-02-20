@@ -5,7 +5,7 @@ import {
   useRouter,
 } from "vue-router";
 
-import { useProfileStore } from "@/features/profile/store/useProfileStore";
+import { useProfileStore } from "@/shared/stores/useProfileStore";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 import VToaster from "@/shared/ui/toaster/VToaster.vue";

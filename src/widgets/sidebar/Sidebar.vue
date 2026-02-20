@@ -7,7 +7,7 @@ import SidebarHeader from "./components/SidebarHeader.vue";
 import SidebarNavItem from "./components/SidebarNavItem.vue";
 import type { NavItem } from "./types/index";
 
-import { useProfileStore } from "@/features/profile/store/useProfileStore";
+import { useProfileStore } from "@/shared/stores/useProfileStore";
 
 interface Props {
   navItems: NavItem[];

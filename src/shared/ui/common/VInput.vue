@@ -2,6 +2,7 @@
 import { ref, computed, useSlots } from "vue";
 
 import VIcon from "./VIcon.vue";
+import VSkeleton from "./VSkeleton.vue";
 
 import { ValidationState } from "@/features/auth/types";
 
@@ -14,6 +15,8 @@ const props = withDefaults(defineProps<{
   validation?: ValidationState;
   iconLeft?: string;
   iconRight?: string;
+  readonly?: boolean;
+  loading?:boolean;
 }>(), {
   type: "text",
   variant: "main",
@@ -23,6 +26,8 @@ const props = withDefaults(defineProps<{
   validation: undefined,
   iconLeft: "",
   iconRight: "",
+  readonly: false,
+  loading: false,
 });
 
 const model = defineModel<string>();
@@ -39,7 +44,8 @@ const slots = useSlots();
 const inputStyles = {
   main: "bg-base rounded-lg border-2 border-default focus:border-2 focus:border-primaryText placeholder:text-muted text-primary leading-[1.3]",
   error: "bg-base rounded-lg border-2 border-danger placeholder:text-muted text-primary leading-[1.3]",
-  search: "max-w-[20rem] border-2 border-default rounded-lg placeholder-disabled focus:border-borderFocus focus:outline-none ",
+  search: "max-w-[20rem] border-2 border-default rounded-lg placeholder-disabled focus:border-borderFocus focus:outline-none",
+  readonly: "bg-base rounded-lg border-2 border-subtle placeholder:text-subtle text-primary leading-[1.3] cursor-default",
 };
 
 const hasError = computed(() => props.validation?.$error ?? false);
@@ -47,7 +53,6 @@ const hasError = computed(() => props.validation?.$error ?? false);
 const errorMessage = computed(() => {
   return props.validation?.$errors?.[0]?.$message ?? "";
 });
-
 
 
 const inputClass = computed(() => {
@@ -61,7 +66,10 @@ const inputClass = computed(() => {
   const colorClass = hasError.value ?
     inputStyles.error
     : inputStyles[props.variant];
-  return `${paddingClass} ${colorClass}`;
+
+  const disabledClass = props.readonly ? inputStyles.readonly : inputStyles[props.variant];
+  return `${paddingClass} ${colorClass} ${disabledClass}`;
+
 });
 </script>
 
@@ -73,7 +81,7 @@ const inputClass = computed(() => {
     <p
       v-if="props.label"
       class="text-sm leading-[1.2] font-medium mb-1.5"
-      :class="hasError ? 'text-danger' : 'text-secondaryText'"
+      :class="hasError ? 'text-danger' : ''"
     >{{ props.label }}</p>
     <div class="relative">
       <div
@@ -90,8 +98,13 @@ const inputClass = computed(() => {
           name="icon-left"
         />
       </div>
-
+      <VSkeleton
+        v-if="props.loading"
+        height="h-12"
+        width="w-full"
+      />
       <input
+        v-else
         v-model.trim="model"
         :type="props.type === 'password'
           ? (visible ? 'text' : 'password')
@@ -101,6 +114,7 @@ const inputClass = computed(() => {
         :class="inputClass"
         :placeholder="props.placeholder"
         name="input"
+        :readonly="props.readonly"
         @blur="emit('blur', $event)"
       >
       <button

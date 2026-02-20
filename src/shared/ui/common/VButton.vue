@@ -54,7 +54,7 @@ const btnClass = computed(() => {
   return btnStyles[props.variant] ?? "";
 });
 
-const isDisabled = computed(() => props.disabled || props.loading || isActive.value);
+const isDisabled = computed(() => props.disabled || props.loading);
 
 const disabledClass = computed(() =>
   isDisabled.value

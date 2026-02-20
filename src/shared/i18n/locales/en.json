@@ -60,7 +60,8 @@
         }
     },
     "userInfo": {
-        "title": "Role & Permissions",
+        "titleUserAcc": "Role & Permissions",
+        "titleOwnAcc": "Account Details",
         "clear": "Clear selection permissions",
         "selectAll": "Select all permissions",
         "backAllUsers": "All members",
@@ -70,6 +71,7 @@
         "categoryAnalytics": "Analytics & dashboard",
         "saveBtnText": "Save changes",
         "since": "Member since",
-        "saveSuccess": "User data successfully updated!"
+        "saveSuccess": "User data successfully updated!",
+        "userName": "Full name"
     }
 }

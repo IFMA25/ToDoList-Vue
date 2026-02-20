@@ -1,7 +1,7 @@
 import { tokenManager } from "@ametie/vue-muza-use";
 import { RouteLocationNormalized } from "vue-router";
 
-import { useProfileStore } from "@/features/profile/store/useProfileStore";
+import { useProfileStore } from "@/shared/stores/useProfileStore";
 
 
 export const guards = async (to: RouteLocationNormalized) => {
@@ -19,7 +19,7 @@ export const guards = async (to: RouteLocationNormalized) => {
     const profileStore = useProfileStore();
 
     if (!profileStore.profileData) {
-      await profileStore.fetchProfile();
+      await profileStore.execute();
     }
 
     const userRole = profileStore.profileData?.role;

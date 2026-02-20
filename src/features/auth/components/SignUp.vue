@@ -60,7 +60,7 @@ const handleSubmit = async () => {
 
 <template>
   <form
-    class="flex flex-col gap-4"
+    class="flex flex-col gap-4 text-secondaryText"
     @submit.prevent="handleSubmit"
   >
     <VInput

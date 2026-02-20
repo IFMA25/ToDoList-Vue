@@ -2,7 +2,7 @@
 import VEmptyState from "./EmptyState.vue";
 import LoadMoreButton from "./LoadMoreButton.vue";
 
-import { Pagination } from "@/features/adminPanel/types";
+import { Pagination } from "@/shared/types";
 import VLoader from "@/shared/ui/common/VLoader.vue";
 
 export interface TableColumn<T> {

@@ -1,7 +1,8 @@
 import { UseApiOptions, useApiDelete, useApiGet, useApiPatch } from "@ametie/vue-muza-use";
 import { MaybeRefOrGetter, toValue } from "vue";
 
-import {  UsersResponse, Permission, PermissionRole, User } from "@/features/adminPanel/types";
+import { Permission, PermissionRole } from "@/features/adminPanel/types";
+import { User, UsersResponse } from "@/shared/types";
 
 export const useUsersDataRequest = (options?: UseApiOptions<UsersResponse>) => {
   return useApiGet("/users", {
@@ -60,4 +61,13 @@ export const useUserDelete = (
   options?: UseApiOptions<User>,
 ) => {
   return useApiDelete<User>(() => `/users/${toValue(userId)}`, options);
+};
+
+
+export const useUpdateOwnProfile = (
+  options?: UseApiOptions<User>,
+) => {
+  return useApiPatch("/me", {
+    ...options,
+  });
 };

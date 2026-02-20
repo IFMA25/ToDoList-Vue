@@ -8,7 +8,7 @@ import { useLogin } from "../api/composables/useAuthRequests";
 import { useSignInValidation } from "../composables/useSignInValidation";
 import { AuthMode } from "../types";
 
-import { useProfileStore } from "@/features/profile/store/useProfileStore";
+import { useProfileStore } from "@/shared/stores/useProfileStore";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
 
@@ -74,7 +74,7 @@ const handleSubmit = async() => {
 <template>
   <form
     action="#"
-    class="flex flex-col gap-4"
+    class="flex flex-col gap-4 text-secondaryText"
     @submit.prevent="handleSubmit"
   >
     <VInput

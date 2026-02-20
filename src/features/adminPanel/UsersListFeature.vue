@@ -16,11 +16,11 @@ import ToolbarTable from "./components/ToolbarTable.vue";
 import {
   RoleOption,
   SortOption,
-  User,
 } from "./types";
 import { formatDate } from "./utils";
 
 import { useModal } from "@/shared/composables/useModal";
+import { User } from "@/shared/types";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VTitle from "@/shared/ui/common/VTitle.vue";
 import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";

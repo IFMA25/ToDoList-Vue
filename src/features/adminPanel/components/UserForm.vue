@@ -7,9 +7,10 @@ import PermissionsControl from "./PermissionsControl.vue";
 import UserPermissions from "./UserPermissions.vue";
 import { usePermissionsRequest, usePermissionsRoleRequest, useUpdateUserPermissions, useUpdateUserRole } from "../api/useAdminPanelRequests";
 import { usePermissionsManager } from "../composables/usePermissionsManager";
-import { Category, RoleOption, User } from "../types";
+import { Category, RoleOption } from "../types";
 import { sameArray } from "../utils";
 
+import { User } from "@/shared/types";
 import VButton from "@/shared/ui/common/VButton.vue";
 
 const { t } = useI18n();
@@ -151,6 +152,7 @@ watch(() => userData, async (newUser) => {
 
 <template>
   <form
+    id="userInfoForm"
     class="flex flex-col gap-6 p-6 border border-surface rounded-xl"
     @submit.prevent="handleSubmit()"
   >
