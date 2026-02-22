@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { toast } from "vue-sonner";
 
 import { useUpdateOwnProfile } from "../api/useAdminPanelRequests";
 
@@ -7,7 +9,9 @@ import { useProfileStore } from "@/shared/stores/useProfileStore";
 import VButton from "@/shared/ui/common/VButton.vue";
 import VInput from "@/shared/ui/common/VInput.vue";
 
+
 const profileStore = useProfileStore();
+const { t } = useI18n();
 
 const userName = ref<string>("");
 
@@ -15,6 +19,7 @@ const { execute, loading, data } = useUpdateOwnProfile({
   data: () => ({ name: userName.value }),
   onSuccess: () => {
     profileStore.profileData = data.value;
+    toast.success(t("userInfo.saveSuccess"));
   },
 });
 
@@ -29,7 +34,6 @@ watch(
   (newVal) => {
     if (newVal?.name) {
       userName.value = newVal.name;
-      console.log(userName.value);
     }
   },
   { immediate: true },

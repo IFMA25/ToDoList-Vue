@@ -83,7 +83,7 @@ const { execute: deleteUser, loading: deletingLoading  }
   onSuccess: () => {
     execute();
     closeDeleteModal();
-    toast.warning(t("usersList.msgDeleteSuccess"));
+    toast.warning(t("usersList.removeUserModal.msgDeleteSuccess"));
   },
 });
 
@@ -106,25 +106,26 @@ const handelAction = (user: User, action: string) => {
 <template>
   <VModal
     id="userDeleteModal"
-    title="Remove user"
+    :title="$t('usersList.removeUserModal.title')"
     max-width="md"
   >
     <template #default>
       <p class="font-semibold mb-2">
-        Are you sure you want to remove {{ selectedUser?.name }} ({{ selectedUser?.email }})?
+        {{ $t('usersList.removeUserModal.titleContent') }}
+        {{ selectedUser?.name }} ({{ selectedUser?.email }})?
       </p>
       <p class="text-xs">
-        This action can’t be undone
+        {{ $t('usersList.removeUserModal.subtitleContent') }}
       </p>
     </template>
     <template #footer>
       <VButton
-        :text="$t('usersList.cancel')"
+        :text="$t('usersList.removeUserModal.cancel')"
         variant="outline"
         @click="closeDeleteModal"
       />
       <VButton
-        :text="$t('usersList.confirmRemove')"
+        :text="$t('usersList.removeUserModal.confirmRemove')"
         variant="danger"
         :loading="deletingLoading"
         @click="deleteUser()"

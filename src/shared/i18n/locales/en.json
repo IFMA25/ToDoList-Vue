@@ -11,7 +11,14 @@
         "placeholderCreatePassword": "Create your password",
         "signin": "Log In",
         "signup": "Sign Up",
-        "supportTextPassword": "Use at least 8 characters"
+        "supportTextPassword": "Use at least 8 characters",
+        "logout": {
+            "modalTitle": "Log out",
+            "modalContentTitle": "Are you sure you want to log out?",
+            "modalContentSubtitle": "You’ll need to sign in again to access your account",
+            "modalCancel": "Cancel",
+            "modalLogout": "Log out"
+        } 
     },
     "validation": {
         "required": "This field is required",
@@ -28,10 +35,14 @@
         "title": "User management",
         "userProfile": "User profile",
         "removeUser": "Remove user",
-        "confirmRemove": "Remove user",
-        "cancel": "Cancel",
-        "msgDeleteSuccess": "User successfully deleted"
-
+        "removeUserModal": {
+            "title": "Remove user",
+            "titleContent": "Are you sure you want to remove",
+            "subtitleContent": "This action can’t be undone",
+            "confirmRemove": "Remove user",
+            "cancel": "Cancel",
+            "msgDeleteSuccess": "User successfully deleted"
+        }
     },
     "roles": {
             "admin": "Admin",

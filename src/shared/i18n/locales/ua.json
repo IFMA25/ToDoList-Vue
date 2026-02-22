@@ -11,7 +11,14 @@
         "placeholderCreatePassword": "Створіть свій пароль",
         "signin": "Вхід",
         "signup": "Реєстрація",
-        "supportTextPassword": "Використовуйте мінімум 8 символів"
+        "supportTextPassword": "Використовуйте мінімум 8 символів",
+        "logout": {
+            "modalTitle": "Вийти з акаунта",
+            "modalContentTitle": "Ви впевнені, що хочете вийти?",
+            "modalContentSubtitle": "Щоб отримати доступ до акаунта, вам потрібно буде увійти знову",
+            "modalCancel": "Скасувати",
+            "modalLogout": "Вийти"
+        } 
     },
     "validation": {
         "required": "Це поле обов'язкове",
@@ -28,9 +35,14 @@
         "title": "Керування користувачами",
         "userProfile": "Профіль користувача",
         "removeUser": "Видалити користувача",
-        "confirmRemove": "Видалити",
-        "cancel": "Скасувати",
-        "msgDeleteSuccess": "Користувач успішно видалений"
+        "removeUserModal": {
+            "title": "Видалити користувача",
+            "titleContent": "Ви впевнені, що хочете видалити",
+            "subtitleContent": "Цю дію неможливо скасувати",
+            "confirmRemove": "Видалити",
+            "cancel": "Скасувати",
+            "msgDeleteSuccess": "Користувач успішно видалений"
+        }
     }, 
     "roles": {
             "admin": "Адміністратор",

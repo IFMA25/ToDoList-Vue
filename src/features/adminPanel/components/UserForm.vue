@@ -5,9 +5,9 @@ import { toast } from "vue-sonner";
 
 import PermissionsControl from "./PermissionsControl.vue";
 import UserPermissions from "./UserPermissions.vue";
-import { usePermissionsRequest, usePermissionsRoleRequest, useUpdateUserPermissions, useUpdateUserRole } from "../api/useAdminPanelRequests";
+import { useUpdateUserPermissions, useUpdateUserRole } from "../api/useAdminPanelRequests";
 import { usePermissionsManager } from "../composables/usePermissionsManager";
-import { Category, RoleOption } from "../types";
+import { Category, Permission, PermissionRole, RoleOption } from "../types";
 import { sameArray } from "../utils";
 
 import { User } from "@/shared/types";
@@ -16,13 +16,17 @@ import VButton from "@/shared/ui/common/VButton.vue";
 const { t } = useI18n();
 
 const {
+  loading,
   userId,
   userData,
-  isLoadingParent,
+  permissions,
+  permissionsRole,
 }= defineProps<{
-  userId: string;
-  userData: User | null | undefined;
-  isLoadingParent?: boolean;
+  userId:string;
+  userData: User | null;
+  permissions: Permission[] | null;
+  permissionsRole: PermissionRole | null;
+  loading?: boolean;
 }>();
 
 const emit = defineEmits(["update-success"]);
@@ -57,26 +61,13 @@ const category = computed<Category[]> (() => [
 
 const userRole = ref<RoleOption | null>(null);
 
-const { execute: permissionExecute, loading: permissionsLoad, data: permissionsData }
-= usePermissionsRequest({
-  immediate:true,
-});
-
-const {
-  execute: roleExecute,
-  loading: permissionsRoleLoad,
-  data: permissionsRoleData,
-} = usePermissionsRoleRequest({
-  immediate:true,
-});
-
 const {
   userPermissions,
   setPermissions,
   getActivePermissions,
   areAllSelected,
   toggleAllPermissions,
-} = usePermissionsManager(permissionsData);
+} = usePermissionsManager(() => permissions);
 
 
 const {
@@ -117,15 +108,9 @@ const handleSubmit = async () => {
   }
 };
 
-const isLoading = computed(() =>
-  isLoadingParent ||
-  permissionsRoleLoad.value ||
-  permissionsLoad.value,
-);
-
 const isUpdating = computed(() => updateUserPermissionsLoad.value || updateUserRoleLoad.value);
 
-const isRoleChanged = computed (() => userRole.value?.value !== userData.role);
+const isRoleChanged = computed (() => userRole.value?.value !== userData?.role);
 
 const isDataChanged = computed(() => {
   if (!userData) return false;
@@ -136,17 +121,13 @@ const isDataChanged = computed(() => {
   return isRoleChanged.value || isPermissionsChanged;
 });
 
-watch(() => userData, async (newUser) => {
-  if (newUser) {
-    if (!permissionsData.value) await permissionExecute();
-    if (!permissionsRoleData.value) await roleExecute();
-
-    setPermissions(newUser.permissions);
-    userRole.value = {
-      label: t(`roles.${newUser.role}`),
-      value: newUser.role,
-    };
-  }
+watch(() => userData, (newUser) => {
+  if (!newUser) return;
+  setPermissions(newUser.permissions);
+  userRole.value = {
+    label: t(`roles.${newUser.role}`),
+    value: newUser.role,
+  };
 }, { immediate: true });
 </script>
 
@@ -160,16 +141,16 @@ watch(() => userData, async (newUser) => {
       v-model:role="userRole"
       :role-options="userRolesList"
       :all-selected="areAllSelected"
-      :loading="isLoading"
+      :loading="loading"
       :disabled="isUpdating"
       @update:all-selected="toggleAllPermissions"
-      @update:role="setPermissions(permissionsRoleData[userRole.value.toUpperCase()])"
+      @update:role="setPermissions(permissionsRole[userRole.value.toUpperCase()])"
     />
     <UserPermissions
       v-model="userPermissions"
       :categories="category"
-      :all-permissions="permissionsData"
-      :loading="isLoading"
+      :all-permissions="permissions"
+      :loading="loading"
       :disabled="isUpdating"
     />
     <div class="ml-auto">
@@ -178,7 +159,7 @@ watch(() => userData, async (newUser) => {
         variant="primary"
         :text="$t('userInfo.saveBtnText')"
         :loading="isUpdating"
-        :disabled="!isDataChanged || isUpdating || isLoading"
+        :disabled="!isDataChanged || isUpdating || loading"
       />
     </div>
   </form>

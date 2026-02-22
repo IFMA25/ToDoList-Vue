@@ -3,10 +3,9 @@ import {
   computed,
   defineAsyncComponent,
 } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
-
-import { useUserInfoRequest } from "./api/useAdminPanelRequests";
+import { usePermissionsRequest, usePermissionsRoleRequest, useUserInfoRequest } from "./api/useAdminPanelRequests";
 import UserCard from "./components/UserCard.vue";
 import { formatDate } from "./utils";
 import { useProfileStore } from "../../shared/stores/useProfileStore";
@@ -17,6 +16,7 @@ const UserForm = defineAsyncComponent(() => import("./components/UserForm.vue"))
 const OwnUserForm = defineAsyncComponent(() => import("./components/OwnUserForm.vue"));
 
 const route = useRoute();
+const router = useRouter();
 const profileStore = useProfileStore();
 const userId = computed(() => {
   const id = route.query.id;
@@ -25,14 +25,31 @@ const userId = computed(() => {
 
 const isAdminMode = computed(() => !!userId.value);
 
-const { execute: refetchUser, loading: userInfoLoad, data: userInfoData }
+const { loading: permissionsLoad, data: permissionsData }
+= usePermissionsRequest({ immediate: true });
+
+const {
+  loading: permissionsRoleLoad,
+  data: permissionsRole,
+} = usePermissionsRoleRequest({ immediate: true });
+
+const { execute: fetchUser, loading: loadingInfoUser, data: dataInfoUser }
 = useUserInfoRequest(() => userId.value, {
   immediate: !!userId.value,
   watch: [userId],
+  onError: () => {
+    router.push({ name: "NotFound" });
+  },
 });
 
-const userData = computed(() => isAdminMode.value ? userInfoData.value : profileStore.profileData);
-const isLoading = computed(() => isAdminMode.value ? userInfoLoad.value : profileStore.loading);
+const isLoadingPage = computed(() =>
+  loadingInfoUser.value ||
+  permissionsRoleLoad.value ||
+  permissionsLoad.value,
+);
+
+const userData = computed(() => isAdminMode.value ? dataInfoUser.value : profileStore.profileData);
+const isLoading = computed(() => isAdminMode.value ? isLoadingPage.value : profileStore.loading);
 </script>
 
 <template>
@@ -55,6 +72,9 @@ const isLoading = computed(() => isAdminMode.value ? userInfoLoad.value : profil
     :is="isAdminMode ? UserForm : OwnUserForm"
     :user-id="userId"
     :user-data="userData"
-    @update-success="refetchUser"
+    :permissions-role="permissionsRole"
+    :permissions="permissionsData"
+    :loading="isLoading"
+    @update-success="fetchUser"
   />
 </template>

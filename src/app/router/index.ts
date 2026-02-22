@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: "Home",
       role: "user",
+      showHeader: false,
       menu: {
         icon: "home",
         textKey: "dashboard",
@@ -72,26 +73,13 @@ const routes: RouteRecordRaw[] = [
       },
     },
   },
-  // {
-  //   path: "/users/:id",
-  //   name: "usersInfo",
-  //   component: () => import("@/pages/Users/UserInfo.vue"),
-  //   meta: {
-  //     title: "Users",
-  //     role: "admin",
-  //     titleHeader: "",
-  //     parent: {
-  //       textKey: 'userInfo.backAllUsers',
-  //       to: '/users'
-  //     }
-  //   },
-  // },
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: () => import("@/pages/NotFound/index.vue"),
     meta: {
       title: "404 - Page not found",
+      showHeader: false,
     },
   },
   ...authRoutes,

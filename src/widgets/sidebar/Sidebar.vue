@@ -7,8 +7,6 @@ import SidebarHeader from "./components/SidebarHeader.vue";
 import SidebarNavItem from "./components/SidebarNavItem.vue";
 import type { NavItem } from "./types/index";
 
-import { useProfileStore } from "@/shared/stores/useProfileStore";
-
 interface Props {
   navItems: NavItem[];
 }
@@ -16,8 +14,6 @@ interface Props {
 defineProps<Props>();
 
 const isOpen = ref(true);
-
-const profileStore = useProfileStore();
 
 const toggle = () => { isOpen.value = !isOpen.value; };
 </script>
@@ -55,7 +51,6 @@ const toggle = () => { isOpen.value = !isOpen.value; };
       >
         <SidebarFooter
           :collapsed="!isOpen"
-          @logout="profileStore.handleLogout()"
         />
       </div>
     </div>

@@ -1,14 +1,14 @@
-import { ref, computed, Ref } from "vue";
+import { ref, computed, MaybeRefOrGetter, toValue } from "vue";
 
 import type { Permission } from "../types/index";
 
-export function usePermissionsManager(allAvailablePermissions: Ref<Permission[]>) {
+export function usePermissionsManager(allAvailablePermissions: MaybeRefOrGetter<Permission[]>) {
   const userPermissions = ref<Record<string, boolean>>({});
 
   const setPermissions = (activePermissions: string[]) => {
     const permissionsMap: Record<string, boolean> = {};
 
-    allAvailablePermissions.value?.forEach((permission) => {
+    toValue(allAvailablePermissions)?.forEach((permission) => {
       permissionsMap[permission.value] = activePermissions.includes(permission.value);
     });
 
@@ -24,11 +24,11 @@ export function usePermissionsManager(allAvailablePermissions: Ref<Permission[]>
 
   const areAllSelected = computed(() => {
     const currentActiveCount = Object.values(userPermissions.value).filter((v) => v).length;
-    return currentActiveCount === allAvailablePermissions.value?.length;
+    return currentActiveCount === toValue(allAvailablePermissions)?.length;
   });
 
   const toggleAllPermissions = () => {
-    const allPermissions = allAvailablePermissions.value?.map((p) => p.value);
+    const allPermissions = toValue(allAvailablePermissions)?.map((p) => p.value);
     if (areAllSelected.value) {
       setPermissions([]);
     } else {
