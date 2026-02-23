@@ -84,5 +84,17 @@
         "since": "Member since",
         "saveSuccess": "User data successfully updated!",
         "userName": "Full name"
+    },
+    "lists": {
+        "title": "Manage all your task groups in one place",
+        "createListBtn": "Create new list",
+        "createListModal": {
+            "title": "Create new list",
+            "labelName": "List name",
+            "placeholder": "e.g. Work, Personal, Learning",
+            "labelColor": "List color",
+            "cancel": "Cancel",
+            "createBtn": "Create list"
+        }
     }
 }
