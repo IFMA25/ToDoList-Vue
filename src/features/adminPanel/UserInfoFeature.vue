@@ -6,14 +6,15 @@ import {
 import { useRoute, useRouter } from "vue-router";
 
 import { usePermissionsRequest, usePermissionsRoleRequest, useUserInfoRequest } from "./api/useAdminPanelRequests";
-import UserCard from "./components/UserCard.vue";
+import UserProfileHeader from "./components/UserProfileHeader.vue";
 import { formatDate } from "./utils";
 import { useProfileStore } from "../../shared/stores/useProfileStore";
 
+import { RouteNames } from "@/shared/config/routeNames";
 import VTitle from "@/shared/ui/common/VTitle.vue";
 
-const UserForm = defineAsyncComponent(() => import("./components/UserForm.vue"));
-const OwnUserForm = defineAsyncComponent(() => import("./components/OwnUserForm.vue"));
+const UserPermissionsForm = defineAsyncComponent(() => import("./components/UserPermissionsForm.vue"));
+const UserProfileForm = defineAsyncComponent(() => import("./components/UserProfileForm.vue"));
 
 const route = useRoute();
 const router = useRouter();
@@ -38,7 +39,7 @@ const { execute: fetchUser, loading: loadingInfoUser, data: dataInfoUser }
   immediate: !!userId.value,
   watch: [userId],
   onError: () => {
-    router.push({ name: "NotFound" });
+    router.push({ name: RouteNames.notFound });
   },
 });
 
@@ -57,7 +58,7 @@ const isLoading = computed(() => isAdminMode.value ? isLoadingPage.value : profi
     to="#header-content"
     defer
   >
-    <UserCard
+    <UserProfileHeader
       :loading="isLoading"
       :title="userData?.name"
       :subtitle="userData?.email"
@@ -69,7 +70,7 @@ const isLoading = computed(() => isAdminMode.value ? isLoadingPage.value : profi
     class="mb-6"
   />
   <component
-    :is="isAdminMode ? UserForm : OwnUserForm"
+    :is="isAdminMode ? UserPermissionsForm : UserProfileForm"
     :user-id="userId"
     :user-data="userData"
     :permissions-role="permissionsRole"

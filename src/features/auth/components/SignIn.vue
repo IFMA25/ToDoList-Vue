@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
-import { useLogin } from "../api/composables/useAuthRequests";
+import { useAuth } from "../api/composables/useAuthRequests";
 import { useSignInValidation } from "../composables/useSignInValidation";
 import { AuthMode } from "../types";
 
@@ -35,7 +35,9 @@ const { formData, v$ } = useSignInValidation();
 
 const errorLogin = ref<string | null>(null);
 
-const { execute, loading, error } = useLogin({
+const { login } = useAuth();
+
+const { execute, loading, error } = login({
   onSuccess: (response) => {
     tokenManager.setTokens({
       accessToken: response.data.accessToken,

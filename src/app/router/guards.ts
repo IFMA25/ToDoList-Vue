@@ -1,6 +1,7 @@
 import { tokenManager } from "@ametie/vue-muza-use";
 import { RouteLocationNormalized } from "vue-router";
 
+import { RouteNames } from "@/shared/config/routeNames";
 import { useProfileStore } from "@/shared/stores/useProfileStore";
 
 
@@ -22,25 +23,19 @@ export const guards = async (to: RouteLocationNormalized) => {
       await profileStore.execute();
     }
 
-    const userRole = profileStore.profileData?.role;
     const userPermissions = profileStore.profileData?.permissions || [];
-
-    if (userRole === "admin") {
-      return;
-    }
 
     const routePermission = to.meta.permission;
 
     if (routePermission) {
 
       const hasAccess = userPermissions.some(
-        (p) => p.value === routePermission,
-      );
+        (p) => p.toLowerCase() === routePermission.toLowerCase());
 
       if (!hasAccess) {
         console.warn(`[Guard] Access denied. Required: ${routePermission}`);
-        // Если прав нет — редиректим на главную или на страницу 404
-        return { name: "home" };
+
+        return { name: RouteNames.notFound };
       }
     }
   }

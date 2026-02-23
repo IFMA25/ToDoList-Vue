@@ -6,6 +6,8 @@ import { useRouter } from "vue-router";
 import { useProfileRequest } from "../composables/api/useProfileRequest";
 import { User } from "../types";
 
+import { RouteNames } from "@/shared/config/routeNames";
+
 export const useProfileStore = defineStore("profile", () => {
   const profileData = ref<User | null>(null);
 
@@ -20,7 +22,7 @@ export const useProfileStore = defineStore("profile", () => {
   const handleLogout = () => {
     profileData.value = null;
     tokenManager.clearTokens();
-    router.push({ name: "auth", query: { mode: "signin" } });
+    router.push({ name: RouteNames.auth, query: { mode: "signin" } });
   };
 
   return {

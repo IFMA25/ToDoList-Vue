@@ -1,33 +1,35 @@
 <script setup lang="ts">
+import { refDebounced } from "@vueuse/core";
 import {
   computed,
   ref,
-} from 'vue';
-
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { toast } from 'vue-sonner';
-
-import { useModal } from '@/shared/composables/useModal';
-import { User } from '@/shared/types';
-import VDropdown from '@/shared/ui/common/dropdown/VDropdown.vue';
-import VButton from '@/shared/ui/common/VButton.vue';
-import VTitle from '@/shared/ui/common/VTitle.vue';
-import VModal from '@/shared/ui/modal/VModal.vue';
-import VTable from '@/shared/ui/table/VTable.vue';
-import { capitalizeFirstLetter } from '@/shared/utils';
-import { refDebounced } from '@vueuse/core';
+} from "vue";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { toast } from "vue-sonner";
 
 import {
   useUserDelete,
   useUsersDataRequest,
-} from './api/useAdminPanelRequests';
-import ToolbarTable from './components/ToolbarTable.vue';
+} from "./api/useAdminPanelRequests";
+import ToolbarTable from "./components/ToolbarTable.vue";
 import {
   RoleOption,
   SortOption,
-} from './types';
-import { formatDate } from './utils';
+} from "./types";
+import { formatDate } from "./utils";
+
+import { useModal } from "@/shared/composables/useModal";
+import { RouteNames } from "@/shared/config/routeNames";
+import { User } from "@/shared/types";
+import VButton from "@/shared/ui/common/VButton.vue";
+import VTitle from "@/shared/ui/common/VTitle.vue";
+import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
+import VModal from "@/shared/ui/modal/VModal.vue";
+import VTable from "@/shared/ui/table/VTable.vue";
+import { capitalizeFirstLetter } from "@/shared/utils";
+
+
 
 const { t } = useI18n();
 
@@ -94,7 +96,7 @@ const loadMore = (limit: number) => {
 
 const handelAction = (user: User, action: string) => {
   if (action === "edit") {
-    router.push({ name: "userProfile", query: { id: user.id } });
+    router.push({ name: RouteNames.profile, query: { id: user.id } });
   }
   if (action === "delete") {
     selectedUser.value = user;

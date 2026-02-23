@@ -6,80 +6,67 @@ import {
 
 import authRoutes from "./auth";
 import { guards } from "./guards";
+import { RouteNames } from "../../shared/config/routeNames";
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    name: "home",
+    name: RouteNames.home,
     component: () => import("@/pages/Home/index.vue"),
     meta: {
-      title: "Home",
       role: "user",
       showHeader: false,
-      menu: {
-        icon: "home",
-        textKey: "dashboard",
-      },
+      titleMenu: "home",
+      iconMenu: "home",
     },
   },
   {
     path: "/lists",
-    name: "lists",
+    name: RouteNames.lists,
     component: () => import("@/pages/Lists/index.vue"),
     meta: {
-      title: "Lists",
-      menu: {
-        icon: "lists",
-        textKey: "lists",
-      },
+      titleMenu: "lists",
+      iconMenu: "lists",
     },
   },
   {
     path: "/analytics",
-    name: "analytics",
+    name: RouteNames.analytics,
     component: () => import("@/pages/Analytics/index.vue"),
     meta: {
-      title: "Analytics",
-      menu: {
-        icon: "chart",
-        textKey: "analytics",
-      },
+      titleMenu: "analytics",
+      iconMenu: "chart",
     },
   },
   {
     path: "/profile",
-    name: "userProfile",
+    name: RouteNames.profile,
     component: () => import("@/pages/Profile/index.vue"),
     meta: {
-      title: "Profile",
-      menu: {
-        icon: "profile",
-        textKey: "profile",
-      },
+      titleMenu: "profile",
+      iconMenu: "profile",
     },
   },
   {
     path: "/users",
-    name: "users",
+    name: RouteNames.users,
     component: () => import("@/pages/Users/index.vue"),
     meta: {
-      title: "Admin",
       role: "admin",
-      permission: "READ_USERS",
+      permission: "READ:USERS",
       showHeader: false,
-      menu: {
-        icon: "tools",
-        textKey: "admin panel",
-      },
+      titleMenu: "admin panel",
+      iconMenu: "tools",
     },
   },
   {
     path: "/:pathMatch(.*)*",
-    name: "NotFound",
+    name: RouteNames.notFound,
     component: () => import("@/pages/NotFound/index.vue"),
     meta: {
       title: "404 - Page not found",
       showHeader: false,
+      showInMenu: false,
     },
   },
   ...authRoutes,

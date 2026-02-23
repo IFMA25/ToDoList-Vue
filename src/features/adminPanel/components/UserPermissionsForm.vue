@@ -4,11 +4,11 @@ import { useI18n } from "vue-i18n";
 import { toast } from "vue-sonner";
 
 import PermissionsControl from "./PermissionsControl.vue";
-import UserPermissions from "./UserPermissions.vue";
 import { useUpdateUserPermissions, useUpdateUserRole } from "../api/useAdminPanelRequests";
 import { usePermissionsManager } from "../composables/usePermissionsManager";
 import { Category, Permission, PermissionRole, RoleOption } from "../types";
 import { sameArray } from "../utils";
+import PermissionsList from "./PermissionsList.vue";
 
 import { User } from "@/shared/types";
 import VButton from "@/shared/ui/common/VButton.vue";
@@ -146,7 +146,7 @@ watch(() => userData, (newUser) => {
       @update:all-selected="toggleAllPermissions"
       @update:role="setPermissions(permissionsRole[userRole.value.toUpperCase()])"
     />
-    <UserPermissions
+    <PermissionsList
       v-model="userPermissions"
       :categories="category"
       :all-permissions="permissions"

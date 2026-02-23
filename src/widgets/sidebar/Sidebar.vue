@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-
 import SidebarFooter from "./components/SidebarFooter.vue";
 import SidebarHeader from "./components/SidebarHeader.vue";
 import SidebarNavItem from "./components/SidebarNavItem.vue";

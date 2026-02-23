@@ -64,7 +64,7 @@ export const useUserDelete = (
 };
 
 
-export const useUpdateOwnProfile = (
+export const useUpdateUserProfile = (
   options?: UseApiOptions<User>,
 ) => {
   return useApiPatch("/me", {

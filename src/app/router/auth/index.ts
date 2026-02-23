@@ -1,13 +1,16 @@
 import { RouteRecordRaw } from "vue-router";
 
+import { RouteNames } from "../../../shared/config/routeNames";
+
 const authRoutes: RouteRecordRaw[] = [
   {
     path: "/auth",
-    name: "auth",
+    name: RouteNames.auth,
     component: () => import("@/pages/Auth/index.vue"),
     meta: {
       title: "Authentication",
       layout: "auth",
+      showInMenu: false,
     },
   },
 ];

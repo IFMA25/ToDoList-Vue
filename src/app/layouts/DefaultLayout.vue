@@ -18,10 +18,10 @@ const route = useRoute();
 
 const navItems = computed(() => {
   return router.getRoutes()
-    .filter(route => route.meta.menu)
+    .filter(route => route.meta.showInMenu !== false)
     .map(route => ({
-      icon: route.meta.menu.icon,
-      text: route.meta.menu.textKey,
+      icon: route.meta.iconMenu,
+      text: route.meta.titleMenu,
       to: route.path,
     }));
 });

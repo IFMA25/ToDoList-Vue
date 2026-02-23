@@ -12,6 +12,7 @@
         "signin": "Log In",
         "signup": "Sign Up",
         "supportTextPassword": "Use at least 8 characters",
+        "registrationMsg": "Registration successful!",
         "logout": {
             "modalTitle": "Log out",
             "modalContentTitle": "Are you sure you want to log out?",
