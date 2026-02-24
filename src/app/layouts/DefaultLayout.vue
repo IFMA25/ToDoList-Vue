@@ -18,13 +18,21 @@ const route = useRoute();
 
 const navItems = computed(() => {
   return router.getRoutes()
-    .filter(route => route.meta.showInMenu !== false)
+    .filter(route => {
+      const isVisibleInMenu = route.meta.showInMenu !== false;
+      const hasPermission = route.meta.permission
+        ? profileStore.hasAccess(route.meta.permission)
+        : true;
+      return isVisibleInMenu && hasPermission;
+    })
     .map(route => ({
       icon: route.meta.iconMenu,
       text: route.meta.titleMenu,
       to: route.path,
     }));
 });
+
+
 
 const showHeader = computed(() => route.meta.showHeader !== false);
 const parentLink = computed(() => route.meta.parent);
@@ -48,10 +56,12 @@ const parentLink = computed(() => route.meta.parent);
         id="actions"
         class="mb-6 min-h-[40px]"
       />
-      <div class="flex-1 overflow-hidden px-12 py-6">
-        <div class="inline-block mb-6">
+      <div class="flex-1 px-12 py-6">
+        <div
+          v-if="parentLink"
+          class="inline-block mb-6"
+        >
           <VButton
-            v-if="parentLink"
             variant="navItem"
             :to="parentLink.to"
             :text="$t(parentLink.textKey)"

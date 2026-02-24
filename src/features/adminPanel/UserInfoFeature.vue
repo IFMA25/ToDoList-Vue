@@ -3,9 +3,17 @@ import {
   computed,
   defineAsyncComponent,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import {
+  useRoute,
+  useRouter,
+} from "vue-router";
 
-import { usePermissionsRequest, usePermissionsRoleRequest, useUserInfoRequest } from "./api/useAdminPanelRequests";
+
+import {
+  usePermissionsRequest,
+  usePermissionsRoleRequest,
+  useUserInfoRequest,
+} from "./api/useAdminPanelRequests";
 import UserProfileHeader from "./components/UserProfileHeader.vue";
 import { formatDate } from "./utils";
 import { useProfileStore } from "../../shared/stores/useProfileStore";
@@ -27,16 +35,16 @@ const userId = computed(() => {
 const isAdminMode = computed(() => !!userId.value);
 
 const { loading: permissionsLoad, data: permissionsData }
-= usePermissionsRequest({ immediate: true });
+= usePermissionsRequest({ immediate: isAdminMode.value });
 
 const {
   loading: permissionsRoleLoad,
   data: permissionsRole,
-} = usePermissionsRoleRequest({ immediate: true });
+} = usePermissionsRoleRequest({ immediate: isAdminMode.value });
 
 const { execute: fetchUser, loading: loadingInfoUser, data: dataInfoUser }
 = useUserInfoRequest(() => userId.value, {
-  immediate: !!userId.value,
+  immediate: isAdminMode.value,
   watch: [userId],
   onError: () => {
     router.push({ name: RouteNames.notFound });

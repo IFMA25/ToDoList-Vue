@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
     name: RouteNames.home,
     component: () => import("@/pages/Home/index.vue"),
     meta: {
-      role: "user",
+      permission: "read:dashboard",
       showHeader: false,
       titleMenu: "home",
       iconMenu: "home",
@@ -25,6 +25,7 @@ const routes: RouteRecordRaw[] = [
     name: RouteNames.lists,
     component: () => import("@/pages/Lists/index.vue"),
     meta: {
+      permission: "read:list",
       titleMenu: "lists",
       iconMenu: "lists",
     },
@@ -34,6 +35,7 @@ const routes: RouteRecordRaw[] = [
     name: RouteNames.analytics,
     component: () => import("@/pages/Analytics/index.vue"),
     meta: {
+      permission: "read:analytics",
       titleMenu: "analytics",
       iconMenu: "chart",
     },
@@ -53,7 +55,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/pages/Users/index.vue"),
     meta: {
       role: "admin",
-      permission: "READ:USERS",
+      permission: "read:users",
       showHeader: false,
       titleMenu: "admin panel",
       iconMenu: "tools",

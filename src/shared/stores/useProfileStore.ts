@@ -8,6 +8,7 @@ import { User } from "../types";
 
 import { RouteNames } from "@/shared/config/routeNames";
 
+
 export const useProfileStore = defineStore("profile", () => {
   const profileData = ref<User | null>(null);
 
@@ -18,6 +19,12 @@ export const useProfileStore = defineStore("profile", () => {
       profileData.value = data.value;
     },
   });
+
+  const hasAccess = (routePermission: string) => {
+    if (!profileData.value?.permissions) return false;
+    return profileData.value.permissions.some(
+      (p: string) => p?.toLowerCase() === routePermission?.toLowerCase());
+  };
 
   const handleLogout = () => {
     profileData.value = null;
@@ -30,5 +37,6 @@ export const useProfileStore = defineStore("profile", () => {
     loading,
     execute,
     handleLogout,
+    hasAccess,
   };
 });
