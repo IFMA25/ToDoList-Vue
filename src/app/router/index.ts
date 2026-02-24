@@ -1,27 +1,84 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import {
+  createRouter,
+  createWebHistory,
+  RouteRecordRaw,
+} from "vue-router";
+
+import authRoutes from "./auth";
+import { guards } from "./guards";
+import { RouteNames } from "../../shared/config/routeNames";
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    name: "Home",
+    name: RouteNames.home,
     component: () => import("@/pages/Home/index.vue"),
     meta: {
-      title: "Home - Vue 3 Starter",
+      permission: "read:dashboard",
+      showHeader: false,
+      titleMenu: "home",
+      iconMenu: "home",
+    },
+  },
+  {
+    path: "/lists",
+    name: RouteNames.lists,
+    component: () => import("@/pages/Lists/index.vue"),
+    meta: {
+      permission: "read:list",
+      titleMenu: "lists",
+      iconMenu: "lists",
+    },
+  },
+  {
+    path: "/analytics",
+    name: RouteNames.analytics,
+    component: () => import("@/pages/Analytics/index.vue"),
+    meta: {
+      permission: "read:analytics",
+      titleMenu: "analytics",
+      iconMenu: "chart",
+    },
+  },
+  {
+    path: "/profile",
+    name: RouteNames.profile,
+    component: () => import("@/pages/Profile/index.vue"),
+    meta: {
+      titleMenu: "profile",
+      iconMenu: "profile",
+    },
+  },
+  {
+    path: "/users",
+    name: RouteNames.users,
+    component: () => import("@/pages/Users/index.vue"),
+    meta: {
+      role: "admin",
+      permission: "read:users",
+      showHeader: false,
+      titleMenu: "admin panel",
+      iconMenu: "tools",
     },
   },
   {
     path: "/:pathMatch(.*)*",
-    name: "NotFound",
+    name: RouteNames.notFound,
     component: () => import("@/pages/NotFound/index.vue"),
     meta: {
-      title: "404 - Сторінку не знайдено",
+      title: "404 - Page not found",
+      showHeader: false,
+      showInMenu: false,
     },
   },
+  ...authRoutes,
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+router.beforeEach(guards);
 
 export default router;

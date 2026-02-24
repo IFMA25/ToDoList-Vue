@@ -81,7 +81,8 @@ export default [
       'style/eol-last': ['error', 'always'],
 
       // TypeScript specific rules
-      '@typescript-eslint/no-unused-vars': ['warn', {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
         ignoreRestSiblings: true
@@ -206,7 +207,8 @@ export default [
       'style/eol-last': ['error', 'always'],
 
       // TypeScript rules for Vue files
-      '@typescript-eslint/no-unused-vars': ['warn', {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
         ignoreRestSiblings: true

@@ -1,0 +1,101 @@
+{
+    "auth": {
+        "titleSignIn": "Welcome back",
+        "titleSignup": "Create your account",
+        "placeholderEmail": "Enter your email",
+        "placeholderPassword": "Enter your password",
+        "labelName": "Full name",
+        "placeholderName": "Enter your name",
+        "labelEmail": "Email",
+        "labelPassword": "Password",
+        "placeholderCreatePassword": "Create your password",
+        "signin": "Log In",
+        "signup": "Sign Up",
+        "supportTextPassword": "Use at least 8 characters",
+        "registrationMsg": "Registration successful!",
+        "logout": {
+            "modalTitle": "Log out",
+            "modalContentTitle": "Are you sure you want to log out?",
+            "modalContentSubtitle": "You’ll need to sign in again to access your account",
+            "modalCancel": "Cancel",
+            "modalLogout": "Log out"
+        } 
+    },
+    "validation": {
+        "required": "This field is required",
+        "email": "Invalid email address",
+        "minLength": "Minimum {min} characters required",
+        "hasUpperCase": "Must contain min 1 uppercase letter",
+        "hasNumber": "Must contain min 1 number",
+        "requiredTrimmed": "The field must not be empty"
+    },
+    "search": {
+        "placeholder": "Search by name or email…"
+    },
+    "usersList": {
+        "title": "User management",
+        "userProfile": "User profile",
+        "removeUser": "Remove user",
+        "removeUserModal": {
+            "title": "Remove user",
+            "titleContent": "Are you sure you want to remove",
+            "subtitleContent": "This action can’t be undone",
+            "confirmRemove": "Remove user",
+            "cancel": "Cancel",
+            "msgDeleteSuccess": "User successfully deleted"
+        }
+    },
+    "roles": {
+            "admin": "Admin",
+            "user": "User"
+        },
+    "table": {
+         "tableHeads": {
+            "member": "Member",
+            "role": "Role",
+            "createdAt": "Created At",
+            "action": "Action"
+        },
+        "loadMore": "Load More",
+        "filters": {
+            "allRoles": "All roles",
+            "admins": "Admins",
+            "users": "Users",
+            "newestFirst": "Newest first",
+            "oldestFirst": "Oldest first",
+            "nameAsc": "Name A-Z",
+            "nameDesc": "Name Z-A"
+        },
+        "emptyState": {
+            "title": "No records found",
+            "subtitle": "There is no data to display at the moment."
+        }
+    },
+    "userInfo": {
+        "titleUserAcc": "Role & Permissions",
+        "titleOwnAcc": "Account Details",
+        "clear": "Clear selection permissions",
+        "selectAll": "Select all permissions",
+        "backAllUsers": "All members",
+        "categoryList": "Lists permissions",
+        "categoryTasks": "Tasks permissions",
+        "categoryUser": "User management",
+        "categoryAnalytics": "Analytics & dashboard",
+        "saveBtnText": "Save changes",
+        "since": "Member since",
+        "saveSuccess": "User data successfully updated!",
+        "userName": "Full name"
+    },
+    "lists": {
+        "title": "Manage all your task groups in one place",
+        "createListBtn": "Create new list",
+        "createListModal": {
+            "title": "Create new list",
+            "labelName": "List name",
+            "placeholder": "e.g. Work, Personal, Learning",
+            "labelColor": "List color",
+            "cancel": "Cancel",
+            "createBtn": "Create list"
+        }
+    }
+}

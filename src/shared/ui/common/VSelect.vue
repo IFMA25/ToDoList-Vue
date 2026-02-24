@@ -1,0 +1,160 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import Multiselect from "vue-multiselect";
+
+import { Option } from "@/shared/types";
+import VIcon from "@/shared/ui/common/VIcon.vue";
+
+interface Props {
+  id:string;
+  options: Option[];
+  labelText?: string;
+  multiple?: boolean;
+  closeOnSelect?: boolean;
+  openDirection?: "top" | "bottom";
+  placeholder?: string;
+  showLabels?: boolean;
+  allowEmpty?: boolean;
+  multiselectProps?: Record<string, unknown>;
+  searchable?: boolean;
+  label?: string;
+  trackBy?: string;
+  disabled?: boolean;
+}
+
+const {
+  id = "select",
+  labelText="",
+  options = [],
+  multiple = false,
+  closeOnSelect: closeOnSelectProp,
+  openDirection = "bottom",
+  placeholder = "",
+  showLabels = false,
+  allowEmpty = false,
+  multiselectProps = {},
+  searchable = false,
+  label,
+  trackBy,
+  disabled = false,
+} = defineProps<Props>();
+
+const model = defineModel<Option | null>();
+
+const closeOnSelectComputed = computed(() =>
+  closeOnSelectProp ?? !multiple,
+);
+
+
+</script>
+
+<template>
+  <div class="flex gap-2 items-center text-[1rem] leading-6 text-primary">
+    <label
+      :for="id"
+      class="whitespace-nowrap"
+    >{{ labelText }}</label>
+    <Multiselect
+      :id="id"
+      v-model="model"
+      v-bind="multiselectProps"
+      :options="options"
+      :multiple="multiple"
+      :close-on-select="closeOnSelectComputed"
+      :open-direction="openDirection"
+      :placeholder="placeholder"
+      :show-labels="showLabels"
+      :allow-empty="allowEmpty"
+      :searchable="searchable"
+      aria-label="pick a value"
+      :label="label"
+      :track-by="trackBy"
+      :disabled="disabled"
+    >
+      <template #caret="{ toggle }">
+        <button
+          type="button"
+          class="multiselect__select"
+          @mousedown.prevent.stop="toggle"
+        >
+          <VIcon
+            type="icon-chevron-up"
+            class="h-5 w-5 text-secondary rotate-180"
+          />
+        </button>
+      </template>
+    </Multiselect>
+  </div>
+</template>
+
+<style scoped>
+:deep(.multiselect) {
+  @apply text-primary;
+  width: fit-content;
+}
+
+:deep(.multiselect__input) {
+  @apply mb-0 p-0;
+}
+
+:deep(.multiselect__tags) {
+  @apply min-h-8 border-2 border-default rounded-lg py-[0.5rem] pl-[0.625rem]
+  pr-[2.4rem] focus:outline-none transition-colors duration-300
+  ease-in-out text-primary bg-secondaryBg;
+}
+
+:deep(.multiselect__tags:focus-within) {
+  @apply border-borderFocus rounded-lg;
+}
+
+:deep(.multiselect__single),
+:deep(.multiselect__placeholder) {
+  @apply m-0 p-0 bg-transparent placeholder-disabled;
+}
+
+:deep(.multiselect__content-wrapper) {
+  @apply min-w-full w-auto mt-[4px] rounded-lg border-2 border-default bg-secondaryBg shadow-lg;
+  border-top-style: solid;
+  border-top-width: 2px;
+}
+
+:deep(.multiselect__select) {
+  @apply h-full top-0 flex items-center justify-center;
+}
+
+:deep(.multiselect__select::before) {
+  display: none;
+}
+
+:deep(.multiselect__element) {
+  @apply w-full
+}
+:deep(.multiselect__option) {
+  @apply w-full
+}
+
+:deep(.multiselect__option--highlight) {
+  @apply bg-default text-primary;
+}
+
+:deep(.multiselect__option--selected.multiselect__option--highlight) {
+  @apply  bg-transparent text-primaryText;
+}
+
+:deep(.multiselect__option--selected) {
+  @apply  text-primaryText bg-secondaryBg;
+}
+
+:deep(.multiselect--active:not(.multiselect--above) .multiselect__tags) {
+  @apply rounded-lg;
+}
+
+:deep(.multiselect--disabled) {
+  @apply border-subtle text-disabled;
+  pointer-events: none;
+}
+
+:deep(.multiselect--disabled .multiselect__select) {
+  @apply bg-transparent;
+}
+</style>

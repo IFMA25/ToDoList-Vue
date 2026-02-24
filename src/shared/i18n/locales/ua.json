@@ -1,0 +1,99 @@
+{
+    "auth": {
+        "titleSignIn": "З поверненням",
+        "titleSignup": "Створіть свій аккаунт",
+        "placeholderEmail": "Введіть email",
+        "placeholderPassword": "Введіть пароль",
+        "labelName": "Повне ім'я",
+        "placeholderName": "Введіть ваше ім'я",
+        "labelEmail": "Email",
+        "labelPassword": "Пароль",
+        "placeholderCreatePassword": "Створіть свій пароль",
+        "signin": "Вхід",
+        "signup": "Реєстрація",
+        "supportTextPassword": "Використовуйте мінімум 8 символів",
+        "registrationMsg": "Реєстрація успішна",
+        "logout": {
+            "modalTitle": "Вийти з акаунта",
+            "modalContentTitle": "Ви впевнені, що хочете вийти?",
+            "modalContentSubtitle": "Щоб отримати доступ до акаунта, вам потрібно буде увійти знову",
+            "modalCancel": "Скасувати",
+            "modalLogout": "Вийти"
+        } 
+    },
+    "validation": {
+        "required": "Це поле обов'язкове",
+        "email": "Неправильна адреса email",
+        "minLength": "Мінімум {min} символів",
+        "hasUpperCase": "Повинно містити мінімум 1 велику літеру",
+        "hasNumber": "Повинно містити мінімум 1 цифру",
+        "requiredTrimmed": "Поле не може бути порожнім"
+    },
+    "search": {
+        "placeholder": "Пошук по імені або email…"
+    },
+    "usersList": {
+        "title": "Керування користувачами",
+        "userProfile": "Профіль користувача",
+        "removeUser": "Видалити користувача",
+        "removeUserModal": {
+            "title": "Видалити користувача",
+            "titleContent": "Ви впевнені, що хочете видалити",
+            "subtitleContent": "Цю дію неможливо скасувати",
+            "confirmRemove": "Видалити",
+            "cancel": "Скасувати",
+            "msgDeleteSuccess": "Користувач успішно видалений"
+        }
+    }, 
+    "roles": {
+            "admin": "Адміністратор",
+            "user": "Користувач"
+        },
+    "table": {
+        "tableHeads": {
+            "member": "Користувач",
+            "role": "Роль",
+            "createdAt": "Створено",
+            "action": "Дія"
+        },
+        "filters": {
+        "allRoles": "Всі",
+        "admins": "Адміністратори",
+        "users": "Користувачі",
+        "newestFirst": "Новіші спочатку",
+        "oldestFirst": "Старіші спочатку",
+        "nameAsc": "Ім'я A-Z",
+        "nameDesc": "Ім'я Z-A"
+        },
+        "loadMore": "Завантажити ще",
+        "emptyState": {
+            "title": "Записів не знайдено",
+            "subtitle": "На даний момент немає даних для відображення"
+        }
+    },
+    "userInfo": {
+        "titleUserAcc": "Роль та права доступу",
+        "titleOwnAcc": "Дані профілю",
+        "clear": "Очистити обрані права доступу",
+        "selectAll": "Обрати всі права доступа",
+        "backAllUsers": "Всі користувачі",
+        "categoryList": "Дозволи списків",
+        "categoryTasks": "Дозволи завдань",
+        "categoryUser": "Керування користувачами",
+        "categoryAnalytics": "Аналітика та дашборд",
+        "saveBtnText": "Зберігти зміни",
+        "since": "Зареєстрований",
+        "saveSuccess": "Данні користувача успішно оновлені!",
+        "userName": "Повне ім'я"
+    },
+    "title": "Керуйте всіма своїми групами завдань в одному місці",
+    "createListBtn": "Створити список",
+    "createListModal": {
+            "title": "Створити новий список",
+            "labelName": "Назва списку",
+            "placeholder": "наприклад: Робота, Особисте, Навчання",
+            "labelColor": "Колір списку",
+            "cancel": "Cancel",
+            "createBtn": "Create list"
+        }
+}

@@ -14,7 +14,7 @@
  * ```
  */
 
-export { default as ThemeToggle } from "./components/ThemeToggle.vue";
-export { useThemeStore } from "./composables/useTheme";
+
+export { useThemeStore } from "./store/useThemeStore";
 export { createThemes } from "./utils/createThemes";
 

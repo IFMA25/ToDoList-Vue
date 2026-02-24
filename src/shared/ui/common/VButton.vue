@@ -1,0 +1,122 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import { RouterLink, useLink } from "vue-router";
+
+
+import VIcon from "./VIcon.vue";
+import VLoader from "./VLoader.vue";
+
+
+const props = withDefaults(
+  defineProps<{
+    text?: string;
+    loading?: boolean;
+    loadColor?: string;
+    type?: string;
+    variant?: string;
+    disabled?: boolean;
+    to?: string | null;
+    icon?: string;
+    iconSize?: string;
+    collapsed?: boolean;
+    activeClass?: string;
+  }>(),
+  {
+    type: "button",
+    loadColor: "white",
+    variant: "",
+    text: "",
+    to: null,
+    icon: "",
+    iconSize: "w-5 h-5",
+    collapsed: false,
+    activeClass: "navItem-active",
+  },
+);
+
+const btnStyles = {
+  primary: "justify-center bg-primaryBg py-3 text-base font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
+  outline: "bg-secondaryBg py-3 text-primaryBg font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover hover:text-shadow-btnHover disabled:border-disabled disabled:text-disabled",
+  navItem: "py-3 text-secondaryText font-medium leading=[1.3]  hover:text-shadow-btnHover hover:text-primaryBg hover:drop-shadow-btnHover disabled:text-disabled ",
+  "navItem-active": "py-3 text-primaryTextDark font-medium",
+  authMode: "text-primaryTextDark font-medium hover:text-shadow-tabHover hover:text-primaryBg leading=[1.1]",
+  danger: "bg-danger py-3 text-base font-medium border-2 border-danger rounded-xl hover:bg-dangerHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
+};
+
+const { isActive } = (props.to && props.to !== "")
+  ? useLink(props)
+  : { isActive: computed(() => false) };
+
+const btnClass = computed(() => {
+  if (isActive.value && props.variant === "navItem") {
+    return btnStyles["navItem-active"];
+  }
+  return btnStyles[props.variant] ?? "";
+});
+
+const isDisabled = computed(() => props.disabled || props.loading);
+
+const disabledClass = computed(() =>
+  isDisabled.value
+    ? "cursor-default shadow-none [text-shadow:none] pointer-events-none"
+    : "cursor-pointer",
+);
+
+const isRouterLink = computed(() => !!props.to);
+</script>
+
+<template>
+  <component
+    :is="isRouterLink ? RouterLink : 'button'"
+    :to="isRouterLink ? props.to : undefined"
+    :disabled="!isRouterLink ? isDisabled : undefined"
+    :aria-disabled="String(isDisabled)"
+    class="flex gap-2 items-center overflow-hidden transition-all duration-300"
+    :class="[
+      btnClass,
+      disabledClass,
+      (isActive && props.activeClass) ? props.activeClass : '',
+      props.collapsed
+        ? 'px'
+        : 'px-4'
+    ]"
+  >
+    <span
+      v-if="props.icon || props.loading"
+      :class="props.iconSize"
+    >
+      <VLoader
+        v-if="props.loading && !$slots['icon-start'] && !props.icon"
+        :color="props.loadColor"
+      />
+      <slot
+        v-else-if="$slots['icon-start']"
+        name="icon-start"
+      />
+      <VIcon
+        v-else
+        :type="props.icon"
+        :size="props.iconSize"
+      />
+    </span>
+
+    <div
+      v-if="props.text"
+      class="transition-all duration-300 ease-in-out"
+      :class="props.collapsed
+        ? 'opacity-0'
+        : 'opacity-100'"
+    >
+      <span class="overflow-hidden whitespace-nowrap">
+        {{ props.text }}
+      </span>
+    </div>
+
+    <span
+      v-if="$slots['icon-end']"
+      class="w-5 h-5"
+    >
+      <slot name="icon-end" />
+    </span>
+  </component>
+</template>
