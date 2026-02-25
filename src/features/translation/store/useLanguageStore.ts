@@ -1,12 +1,8 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
+import { defaultLocale, supportedLocales } from "@/shared/config/locale";
 import i18n from "@/shared/i18n";
-
-const defaultLocale = import.meta.env.VITE_DEFAULT_LOCALE || "en";
-const supportedLocales = (import.meta.env.VITE_SUPPORTED_LOCALE || "en,ua")
-  .split(",")
-  .map((l: string) => l.trim().toLowerCase());
 
 const normalizeLocale = (raw: string) => raw.toLowerCase().split("-")[0];
 
@@ -39,5 +35,5 @@ export const useLanguageStore = defineStore("language", () => {
     setLanguage(defaultLocale);
   };
 
-  return { currentLang, supportedLocales: supportedLocales, setLanguage, initLanguage };
+  return { currentLang, setLanguage, initLanguage };
 });
