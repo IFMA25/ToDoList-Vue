@@ -1,5 +1,6 @@
+import plugin from 'tailwindcss/plugin';
+
 import { createThemes } from './src/features/theme';
-import plugin from 'tailwindcss/plugin'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -23,6 +24,7 @@ export default {
             sidebarOverlay: "var(--color-sidebarOverlay)",
             bgGradient: "var(--color-bgGradient)",
             authBg: "url('@/shared/assets/bg/bg-1.png')",
+            'border-gradient': 'linear-gradient(to right, #3E0DA8, #5F86EF)',
           },
           boxShadow: {
             dropdown: "0px 1px 6px 0px rgba(0,0,0,0.15)",
@@ -63,6 +65,7 @@ export default {
         'default': '#D3E0FC',
         'disabled': '#CBD5E1',
         'elevated': '#FFFFFF',
+        'intro': '#2C345A',
         'muted': '#94A3B8',
         'mutedText': '#6E76A3',
         'negative': '#F08A8A',
@@ -94,6 +97,7 @@ export default {
         'default': '#2B3D8A',
         'disabled': '#767D9B', 
         'elevated': '#1D2645',
+        'intro': '#B7C7F8',
         'muted': '#94A3B8',
         'negative': '#F08A8A',
         'placeholder': '#6E6E6E',
