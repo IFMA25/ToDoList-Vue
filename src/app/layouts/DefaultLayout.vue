@@ -35,7 +35,13 @@ const navItems = computed(() => {
 
 
 const showHeader = computed(() => route.meta.showHeader !== false);
-const parentLink = computed(() => route.meta.parent);
+const parentLink = computed(() => {
+  if (route.meta.parent && route.query.id) {
+    return route.meta.parent;
+  }
+  return null;
+});
+
 
 </script>
 

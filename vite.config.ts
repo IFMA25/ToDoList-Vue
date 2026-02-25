@@ -13,12 +13,13 @@ export default ({mode}: any) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};
 
     return defineConfig({
-        base: "/TodoList-Vue/",
+        base: "/ToDoList-Vue/",
         plugins: [
             vue(),
             svgLoader(),
             VueI18nPlugin({
-                include: path.resolve(__dirname, "src/shared/i18n/locales/**"),
+                include: fileURLToPath(new URL('./src/shared/i18n/locales/**\/*.json', import.meta.url)),
+                runtimeOnly: false,
             }),
         ],
         resolve: {
@@ -26,7 +27,6 @@ export default ({mode}: any) => {
                 "@": fileURLToPath(new URL("./src", import.meta.url)),
             },
         },
-        define: {"process.env": {}},
         server: {
             port: 3000,
             open: true,

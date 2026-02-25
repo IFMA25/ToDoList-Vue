@@ -1,6 +1,6 @@
 import {
   createRouter,
-  createWebHistory,
+  createWebHashHistory,
   RouteRecordRaw,
 } from "vue-router";
 
@@ -47,6 +47,10 @@ const routes: RouteRecordRaw[] = [
     meta: {
       titleMenu: "profile",
       iconMenu: "profile",
+      parent: {
+        textKey: "userInfo.backAllUsers",
+        to: "/users",
+      },
     },
   },
   {
@@ -75,7 +79,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 });
 

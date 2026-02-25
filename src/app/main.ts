@@ -14,6 +14,9 @@ import "vue-multiselect/dist/vue-multiselect.min.css";
 
 const app = createApp(App);
 
+app.use(createPinia());
+app.use(i18n);
+
 const api = createApiClient({
   baseURL: import.meta.env.VITE_API_URL,
   withAuth: true,
@@ -34,11 +37,10 @@ app.use(createApi({
   onError: (error) => toast.error(error.message),
 }));
 
-app.use(createPinia());
 app.use(router);
-app.use(i18n);
 
 app.component("VueFeather", VueFeather);
 
-await router.isReady();
-app.mount("#app");
+router.isReady().then(() => {
+  app.mount("#app");
+});

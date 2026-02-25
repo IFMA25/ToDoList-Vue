@@ -6,7 +6,7 @@ import AuthLayout from "@/app/layouts/AuthLayout.vue";
 import DefaultLayout from "@/app/layouts/DefaultLayout.vue";
 import { useThemeStore } from "@/features/theme/store/useThemeStore";
 import "vue-sonner/style.css";
-import { useLanguageStore } from "@/features/translation/composables/useLanguageStore";
+import { useLanguageStore } from "@/features/translation/store/useLanguageStore";
 
 const themeStore = useThemeStore();
 const languageStore = useLanguageStore();
