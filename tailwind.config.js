@@ -66,6 +66,7 @@ export default {
         'default': '#D3E0FC',
         'disabled': '#CBD5E1',
         'elevated': '#FFFFFF',
+        'hover': '#A9BEFE',
         'intro': '#2C345A',
         'muted': '#94A3B8',
         'mutedText': '#6E76A3',
@@ -86,6 +87,14 @@ export default {
         'warning': '#F59E0B',
         'skeletonBase': '#E2E8F0',
         'skeletonShimmer': '#F1F5F9',
+        'listsBlue': '#3B82F6',
+        'listsPurple': '#8B5CF6',
+        'listsCyan': '#14B8A6',
+        'listsGreen': '#22C55E',
+        'listsYellow': '#FACC15',
+        'listsOrange': '#FB923C',
+        'listsRed': '#EF4444',
+        'listsPink': '#EC4899'
       },
       
       dark: {
@@ -99,6 +108,7 @@ export default {
         'default': '#2B3D8A',
         'disabled': '#767D9B', 
         'elevated': '#1D2645',
+        'hover': '#A9BEFE',
         'intro': '#B7C7F8',
         'muted': '#94A3B8',
         'negative': '#F08A8A',

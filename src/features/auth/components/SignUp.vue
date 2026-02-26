@@ -59,6 +59,7 @@ const handleSubmit = async () => {
       v-for="field in signupFormFields"
       :key="field.name"
       v-model="formData[field.name]"
+      :kemodal-contenty="field.name"
       :type="field.name === 'password' ? 'password' : 'text'"
       :label="$t(`auth.${field.label}`)"
       :placeholder="$t(`auth.${field.placeholder}`)"

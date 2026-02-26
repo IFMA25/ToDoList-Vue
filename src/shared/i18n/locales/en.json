@@ -94,8 +94,18 @@
             "labelName": "List name",
             "placeholder": "e.g. Work, Personal, Learning",
             "labelColor": "List color",
-            "cancel": "Cancel",
             "createBtn": "Create list"
-        }
+        },
+        "editListModal": {
+            "title": "Edit list",
+            "labelName": "List name",
+            "labelColor": "List color",
+            "saveBtn": "Save changes"
+        },
+        "cancel": "Cancel",
+        "tasks": "tasks",
+        "completed": "completed",
+        "editList": "Edit list",
+        "deleteList": "Delete list"
     }
 }

@@ -35,12 +35,12 @@ const props = withDefaults(
 );
 
 const btnStyles = {
-  primary: "justify-center bg-primaryBg py-3 text-base font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
-  outline: "bg-secondaryBg py-3 text-primaryBg font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover hover:text-shadow-btnHover disabled:border-disabled disabled:text-disabled",
+  primary: "justify-center bg-primaryBg py-3 px-4 text-base font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
+  outline: "bg-secondaryBg py-3 px-4 text-primaryBg font-medium border-2 border-primaryBg rounded-xl hover:shadow-btnHover hover:text-shadow-btnHover disabled:border-disabled disabled:text-disabled",
   navItem: "py-3 text-secondaryText font-medium leading=[1.3]  hover:text-shadow-btnHover hover:text-primaryBg hover:drop-shadow-btnHover disabled:text-disabled ",
   "navItem-active": "py-3 text-primaryTextDark font-medium",
   authMode: "text-primaryTextDark font-medium hover:text-shadow-tabHover hover:text-primaryBg leading=[1.1]",
-  danger: "bg-danger py-3 text-base font-medium border-2 border-danger rounded-xl hover:bg-dangerHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
+  danger: "bg-danger py-3 px-4 text-base font-medium border-2 border-danger rounded-xl hover:bg-dangerHover disabled:bg-disabled disabled:text-muted disabled:border-disabled",
 };
 
 const { isActive } = (props.to && props.to !== "")
@@ -76,9 +76,9 @@ const isRouterLink = computed(() => !!props.to);
       btnClass,
       disabledClass,
       (isActive && props.activeClass) ? props.activeClass : '',
-      props.collapsed
-        ? 'px'
-        : 'px-4'
+      // props.collapsed
+      //   ? ''
+      //   : 'px-4'
     ]"
   >
     <span

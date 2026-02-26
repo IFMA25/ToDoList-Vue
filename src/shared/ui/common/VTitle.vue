@@ -8,7 +8,7 @@ const variantStyle = {
   auth: "text-5xl text-primaryTextDark font-semibold font-rubik text-center",
   base: "text-left font-semibold text-[2rem]",
   headerTitle: "text-2xl text-intro font-medium leading-[1.2] ",
-  containerTitle: "text-xl font-semibold leading-[1.3] text-center mb-4"
+  containerTitle: "text-left text-xl font-semibold leading-[1.3]",
 };
 </script>
 

@@ -63,12 +63,12 @@ const inputClass = computed(() => {
     hasRight ? "pr-11" : "",
   ].join(" ");
 
-  const colorClass = hasError.value ?
+  const stylesClass = hasError.value ?
     inputStyles.error
     : inputStyles[props.variant];
 
   const disabledClass = props.readonly ? inputStyles.readonly : inputStyles[props.variant];
-  return `${paddingClass} ${colorClass} ${disabledClass}`;
+  return `${paddingClass} ${stylesClass} ${disabledClass}`;
 
 });
 </script>

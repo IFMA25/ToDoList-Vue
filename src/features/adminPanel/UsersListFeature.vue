@@ -184,7 +184,9 @@ const handelAction = (user: User, action: string) => {
             <li
               v-for="action in actions"
               :key="action.key"
-              :class="action.key === 'delete' && 'text-danger hover:text-dangerHover'"
+              :class="action.key === 'delete'
+                ? 'text-danger hover:text-dangerHover'
+                : 'hover:text-primaryBg'"
               @click="handelAction(row, action.key)"
             >
               {{ capitalizeFirstLetter(action.label) }}

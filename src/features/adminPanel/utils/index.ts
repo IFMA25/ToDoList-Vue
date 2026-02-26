@@ -1,6 +1,6 @@
 import {
   useLanguageStore,
-} from '@/features/translation/store/useLanguageStore';
+} from "@/features/translation/store/useLanguageStore";
 
 export const sameArray = (a: string[], b: string[]) =>
   a.length === b.length && a.every((x, i) => x === b[i]);

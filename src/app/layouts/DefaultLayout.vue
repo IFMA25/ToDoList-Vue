@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-
+import { computed } from "vue";
 import {
   useRoute,
   useRouter,
-} from 'vue-router';
+} from "vue-router";
 
-import { useProfileStore } from '@/shared/stores/useProfileStore';
-import VButton from '@/shared/ui/common/VButton.vue';
-import VLoader from '@/shared/ui/common/VLoader.vue';
-import VToaster from '@/shared/ui/toaster/VToaster.vue';
-import Header from '@/widgets/Header.vue';
-import Sidebar from '@/widgets/sidebar/Sidebar.vue';
+import { useProfileStore } from "@/shared/stores/useProfileStore";
+import VButton from "@/shared/ui/common/VButton.vue";
+import VLoader from "@/shared/ui/common/VLoader.vue";
+import VToaster from "@/shared/ui/toaster/VToaster.vue";
+import Header from "@/widgets/Header.vue";
+import Sidebar from "@/widgets/sidebar/Sidebar.vue";
 
 const profileStore = useProfileStore();
 const router = useRouter();

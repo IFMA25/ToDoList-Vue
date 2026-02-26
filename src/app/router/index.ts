@@ -2,11 +2,11 @@ import {
   createRouter,
   createWebHashHistory,
   RouteRecordRaw,
-} from 'vue-router';
+} from "vue-router";
 
-import { RouteNames } from '../../shared/config/routeNames';
-import authRoutes from './auth';
-import { guards } from './guards';
+import authRoutes from "./auth";
+import { guards } from "./guards";
+import { RouteNames } from "../../shared/config/routeNames";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -25,7 +25,7 @@ const routes: RouteRecordRaw[] = [
     name: RouteNames.lists,
     component: () => import("@/pages/Lists/index.vue"),
     meta: {
-      titleHeader: 'lists.title',
+      titleHeader: "lists.title",
       permission: "read:list",
       titleMenu: "lists",
       iconMenu: "lists",

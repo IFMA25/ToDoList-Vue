@@ -86,14 +86,28 @@
         "saveSuccess": "Данні користувача успішно оновлені!",
         "userName": "Повне ім'я"
     },
-    "title": "Керуйте всіма своїми групами завдань в одному місці",
-    "createListBtn": "Створити список",
-    "createListModal": {
+    "lists": {
+        "title": "Керуйте всіма своїми групами завдань в одному місці",
+        "createListBtn": "Створити список",
+        "createListModal": {
             "title": "Створити новий список",
             "labelName": "Назва списку",
             "placeholder": "наприклад: Робота, Особисте, Навчання",
             "labelColor": "Колір списку",
-            "cancel": "Cancel",
-            "createBtn": "Create list"
-        }
+            "createBtn": "Створити"
+        },
+         "editListModal": {
+            "title": "Змінити список",
+            "labelName": "Назва списку",
+            "labelColor": "Колір списку",
+            "saveBtn": "Зберігти"
+        },
+        "cancel": "Cancel",
+        "tasks": "завдань",
+        "completed": "виконано",
+        "editList": "Редагувати список",
+        "deleteList": "Видалити список"
+    }
+    
+
 }

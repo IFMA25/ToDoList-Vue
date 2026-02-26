@@ -27,9 +27,9 @@ const propContentClass = computed(() => {
   <Transition name="dropdown">
     <div
       v-if="props.isOpen"
-      class="absolute text-nowrap min-w-40 border border-default bg-secondaryBg
+      class="absolute text-nowrap min-w-40 border border-default bg-bgBase
         shadow-dropdown rounded py-3 px-5 text-primary text-base z-10
-        hover:text-primaryBg translate-all duration-300"
+        translate-all duration-300"
       :class="propContentClass"
       v-bind="$attrs"
       @click="emit('close')"

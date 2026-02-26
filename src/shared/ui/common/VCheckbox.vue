@@ -74,7 +74,7 @@ const checkboxClass = computed(() => {
       >{{ props.label }}</p>
       <p
         v-if="props.validation?.error"
-        class="text-sm absolute top-[100%] left-0 text-red-600 font-medium"
+        class="text-sm absolute top-[100%] left-0 text-danger font-medium"
       >
         {{ props.validation.message }}
       </p>

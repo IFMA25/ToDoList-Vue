@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import VIcon from './VIcon.vue';
-import VTitle from './VTitle.vue';
+import VIcon from "./VIcon.vue";
+import VTitle from "./VTitle.vue";
 
 const {
   titleText,
@@ -19,16 +19,24 @@ const {
 <template>
   <component
     :is="as"
-
+    v-bind="$attrs"
     class="relative rounded-xl border border-surface shadow bg-base transition hover:shadow-md p-6"
   >
-    <div>
-      <VIcon
+    <div class="flex gap-2 items-center">
+      <slot
         v-if="icon"
-        type="icon"
-        :class="colorIcon"
+        name="icon"
+      >
+        <VIcon
+          :type="icon"
+          size="w-2.5 h-2.5"
+          :style="{ color: colorIcon }"
+        />
+      </slot>
+      <VTitle
+        :text="titleText"
+        variant="containerTitle"
       />
-      <VTitle :text="titleText" variant="containerTitle"/>
     </div>
     <div
       v-if="$slots.default"
@@ -38,7 +46,6 @@ const {
     </div>
     <div
       v-if="$slots['container-actions']"
-      v-bind="$attrs"
     >
       <slot name="container-actions" />
     </div>

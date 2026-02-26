@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import VButton from '@/shared/ui/common/VButton.vue';
+import VButton from "@/shared/ui/common/VButton.vue";
 </script>
 <template>
   <Teleport
@@ -7,11 +7,9 @@ import VButton from '@/shared/ui/common/VButton.vue';
     defer
   >
     <VButton
-        icon="icon-plus"
-        variant="primary"
-        :text="$t('lists.createListBtn')"
-      />
+      icon="icon-plus"
+      variant="primary"
+      :text="$t('lists.createListBtn')"
+    />
   </Teleport>
-      
-      
 </template>
