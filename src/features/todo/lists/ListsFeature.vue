@@ -1,5 +1,18 @@
 <script setup lang="ts">
-import HeaderPageLists from "./components/HeaderPageLists.vue";
+import { ref } from 'vue';
+
+import { useListsDataRequest } from './api/useListsRequest';
+import ContainerLists from './components/ContainerLists.vue';
+import HeaderPageLists from './components/HeaderPageLists.vue';
+
+const listData = ref([]);
+const {data} = useListsDataRequest({
+  immediate: true,
+  onSuccess: () => {
+    listData.value = data.value.data
+    console.log(data.value.data)
+  }
+})
 </script>
 <template>
   <Teleport
@@ -7,5 +20,6 @@ import HeaderPageLists from "./components/HeaderPageLists.vue";
     defer
   >
     <HeaderPageLists />
-  </Teleport>
+  </Teleport> 
+  <ContainerLists :data="listData"/>
 </template>

@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import VIcon from "./VIcon.vue";
+import VIcon from './VIcon.vue';
+import VTitle from './VTitle.vue';
 
 const {
   titleText,
-  // colorSubTitle,
   as="div",
   icon,
   colorIcon,
-  subtitleText,
 } = defineProps<{
   titleText: string;
-  subtitleText?: string;
-  // colorSubTitle?: string;
   as?: string;
   icon?: string;
   colorIcon?: string;
@@ -31,18 +28,8 @@ const {
         type="icon"
         :class="colorIcon"
       />
-      <h2 class="text-xl font-semibold leading-[1.3] text-center mb-4">
-        {{ titleText }}
-      </h2>
-      <p
-        v-if="subtitleText"
-        class="text-xs text-muted leading-[1.1]"
-      >
-        {{ subtitleText }}
-      </p>
+      <VTitle :text="titleText" variant="containerTitle"/>
     </div>
-
-
     <div
       v-if="$slots.default"
       class="flex flex-col gap-8 p-4"
