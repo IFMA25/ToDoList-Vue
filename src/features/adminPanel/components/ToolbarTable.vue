@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { RoleOption, SortOption } from "../types";
+import { useI18n } from 'vue-i18n';
 
-import VInput from "@/shared/ui/common/VInput.vue";
-import VSelect from "@/shared/ui/common/VSelect.vue";
+import LangSwitcher from '@/features/translation/components/LangSwitcher.vue';
+import VInput from '@/shared/ui/common/VInput.vue';
+import VSelect from '@/shared/ui/common/VSelect.vue';
 
+import {
+  RoleOption,
+  SortOption,
+} from '../types';
+
+const { t } = useI18n();
 defineProps<{
   options: {
     roleOptions: RoleOption[];
@@ -28,12 +35,13 @@ const sort = defineModel<SortOption>("sort");
     <VSelect
       id="role-select"
       v-model="role"
-      label-text="Role"
+      :label-text="t('table.filters.allRoles')"
       :options="options.roleOptions"
       label="label"
       track-by="value"
       :close-on-select="true"
       class="min-w-[9.6rem]"
+      :placeholder="t('table.filters.allRoles')"
     />
     <VSelect
       id="sort-select"

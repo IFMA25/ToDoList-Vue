@@ -1,35 +1,34 @@
 <script setup lang="ts">
-import { refDebounced } from "@vueuse/core";
 import {
   computed,
   ref,
-} from "vue";
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-import { toast } from "vue-sonner";
+} from 'vue';
+
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue-sonner';
+
+import { useModal } from '@/shared/composables/useModal';
+import { RouteNames } from '@/shared/config/routeNames';
+import { User } from '@/shared/types';
+import VDropdown from '@/shared/ui/common/dropdown/VDropdown.vue';
+import VButton from '@/shared/ui/common/VButton.vue';
+import VTitle from '@/shared/ui/common/VTitle.vue';
+import VModal from '@/shared/ui/modal/VModal.vue';
+import VTable from '@/shared/ui/table/VTable.vue';
+import { capitalizeFirstLetter } from '@/shared/utils';
+import { refDebounced } from '@vueuse/core';
 
 import {
   useUserDelete,
   useUsersDataRequest,
-} from "./api/useAdminPanelRequests";
-import ToolbarTable from "./components/ToolbarTable.vue";
+} from './api/useAdminPanelRequests';
+import ToolbarTable from './components/ToolbarTable.vue';
 import {
   RoleOption,
   SortOption,
-} from "./types";
-import { formatDate } from "./utils";
-
-import { useModal } from "@/shared/composables/useModal";
-import { RouteNames } from "@/shared/config/routeNames";
-import { User } from "@/shared/types";
-import VButton from "@/shared/ui/common/VButton.vue";
-import VTitle from "@/shared/ui/common/VTitle.vue";
-import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
-import VModal from "@/shared/ui/modal/VModal.vue";
-import VTable from "@/shared/ui/table/VTable.vue";
-import { capitalizeFirstLetter } from "@/shared/utils";
-
-
+} from './types';
+import { formatDate } from './utils';
 
 const { t } = useI18n();
 
@@ -59,8 +58,16 @@ const sortOptions = computed<SortOption[]>(() => [
 ]);
 
 const selectedUser = ref<User | null>(null);
-const selectedRole = ref<RoleOption>(roleOptions.value[0]);
-const selectedSort = ref<SortOption>(sortOptions.value[0]);
+
+const selectedRole = computed({
+  get: () => roleOptions.value[0],
+  set: (option: RoleOption) => option,
+});
+
+const selectedSort = computed({
+  get: () => sortOptions.value[0],
+  set: (option: SortOption) => option,
+});
 const modelSearch = ref<string>("");
 const debouncedSearch = refDebounced(modelSearch, 800);
 const currentLimit = ref<number>(20);

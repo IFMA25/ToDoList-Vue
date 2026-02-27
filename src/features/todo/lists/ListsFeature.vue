@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue';
 
-import { useListsDataRequest } from "./api/useListsRequest";
-import ContainerLists from "./components/ContainerLists.vue";
-import HeaderPageLists from "./components/HeaderPageLists.vue";
+import { useListsDataRequest } from './api/useListsRequest';
+import ContainerLists from './components/ContainerLists.vue';
+import HeaderPageLists from './components/HeaderPageLists.vue';
 
 const listData = ref([]);
 const { data } = useListsDataRequest({
@@ -14,6 +14,7 @@ const { data } = useListsDataRequest({
   },
 });
 </script>
+
 <template>
   <Teleport
     to="#header-content"
@@ -21,5 +22,5 @@ const { data } = useListsDataRequest({
   >
     <HeaderPageLists />
   </Teleport>
-  <ContainerLists :data="listData" />
+  <ContainerLists :listsData="listData" />
 </template>

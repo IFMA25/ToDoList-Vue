@@ -1,17 +1,19 @@
 <script setup lang="ts">
+import {
+  computed,
+  ref,
+} from 'vue';
 
-import { computed, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 
-import { ListData } from "../types";
-import EditListModal from "./EditListModal.vue";
+import { useModal } from '@/shared/composables/useModal';
+import VDropdown from '@/shared/ui/common/dropdown/VDropdown.vue';
+import VButton from '@/shared/ui/common/VButton.vue';
+import VContainer from '@/shared/ui/common/VContainer.vue';
+import { capitalizeFirstLetter } from '@/shared/utils';
 
-import { useModal } from "@/shared/composables/useModal";
-import VButton from "@/shared/ui/common/VButton.vue";
-import VContainer from "@/shared/ui/common/VContainer.vue";
-import VDropdown from "@/shared/ui/common/dropdown/VDropdown.vue";
-import { capitalizeFirstLetter } from "@/shared/utils";
-
+import { ListData } from '../types';
+import EditListModal from './EditListModal.vue';
 
 const { t } = useI18n();
 
@@ -43,14 +45,14 @@ const handelAction = (list: ListData, action: string) => {
 <template>
   <EditListModal />
 
-  <div class="flex flex-wrap mr-[-12px] ml-[-12px] gap-y-6">
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6">
     <VContainer
       v-for="data in listsData"
       :key="data.id"
       :title-text="data.title"
       icon="circle"
       :color-icon="data.hexColor"
-      class="relative w-[calc(100%/3-24px)] mx-3"
+      class="relative relative w-full"
     >
       <template #default>
         <div class="flex gap-4">
