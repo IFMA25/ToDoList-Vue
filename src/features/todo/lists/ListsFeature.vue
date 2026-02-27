@@ -1,18 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import ContainerLists from "./components/ContainerLists.vue";
+import HeaderPageLists from "./components/HeaderPageLists.vue";
 
-import { useListsDataRequest } from './api/useListsRequest';
-import ContainerLists from './components/ContainerLists.vue';
-import HeaderPageLists from './components/HeaderPageLists.vue';
 
-const listData = ref([]);
-const { data } = useListsDataRequest({
-  immediate: true,
-  onSuccess: () => {
-    listData.value = data.value.data;
-    console.log(data.value.data);
-  },
-});
 </script>
 
 <template>
@@ -22,5 +12,5 @@ const { data } = useListsDataRequest({
   >
     <HeaderPageLists />
   </Teleport>
-  <ContainerLists :listsData="listData" />
+  <ContainerLists />
 </template>

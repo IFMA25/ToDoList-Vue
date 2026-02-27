@@ -36,3 +36,9 @@ interface TasksData {
   status: string;
   isWeeklyGoal: boolean;
 }
+
+export interface UpdateListData {
+  title: string;
+  deadline: string;
+  hexColor: string;
+}

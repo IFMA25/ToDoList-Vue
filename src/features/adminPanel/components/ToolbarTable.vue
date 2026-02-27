@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-
-import LangSwitcher from '@/features/translation/components/LangSwitcher.vue';
-import VInput from '@/shared/ui/common/VInput.vue';
-import VSelect from '@/shared/ui/common/VSelect.vue';
+import { useI18n } from "vue-i18n";
 
 import {
   RoleOption,
   SortOption,
-} from '../types';
+} from "../types";
+
+import VInput from "@/shared/ui/common/VInput.vue";
+import VSelect from "@/shared/ui/common/VSelect.vue";
+
 
 const { t } = useI18n();
 defineProps<{

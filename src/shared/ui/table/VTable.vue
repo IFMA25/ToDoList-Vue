@@ -1,9 +1,10 @@
 <script setup lang="ts" generic="T extends { id: string }">
-import { Pagination } from '@/shared/types';
-import VLoader from '@/shared/ui/common/VLoader.vue';
-import VEmptyState from '@/shared/ui/EmptyState.vue';
+import LoadMoreButton from "./LoadMoreButton.vue";
 
-import LoadMoreButton from './LoadMoreButton.vue';
+import { Pagination } from "@/shared/types";
+import VEmptyState from "@/shared/ui/EmptyState.vue";
+import VLoader from "@/shared/ui/common/VLoader.vue";
+
 
 export interface TableColumn<T> {
   key: keyof T | string;

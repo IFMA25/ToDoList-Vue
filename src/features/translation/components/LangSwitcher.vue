@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from "vue";
 
 import {
   useLanguageStore,
-} from '@/features/translation/store/useLanguageStore';
-import { supportedLocales } from '@/shared/config/locale';
-import VSelect from '@/shared/ui/common/VSelect.vue';
+} from "@/features/translation/store/useLanguageStore";
+import { supportedLocales } from "@/shared/config/locale";
+import VSelect from "@/shared/ui/common/VSelect.vue";
 
 interface Option {
   label: string;

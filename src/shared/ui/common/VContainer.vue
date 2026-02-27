@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import VIcon from './VIcon.vue';
-import VTitle from './VTitle.vue';
+import VIcon from "./VIcon.vue";
+import VTitle from "./VTitle.vue";
 
 const {
   titleText,

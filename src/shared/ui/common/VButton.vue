@@ -76,9 +76,6 @@ const isRouterLink = computed(() => !!props.to);
       btnClass,
       disabledClass,
       (isActive && props.activeClass) ? props.activeClass : '',
-      // props.collapsed
-      //   ? ''
-      //   : 'px-4'
     ]"
   >
     <span

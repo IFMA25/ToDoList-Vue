@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed } from "vue";
+
+import { ListData } from "../types";
 
 import { useModal } from "@/shared/composables/useModal";
 import { colorsList } from "@/shared/config/colorMap";
@@ -10,8 +12,24 @@ import VModal from "@/shared/ui/modal/VModal.vue";
 
 const { close: closeListEditModal } = useModal("listEditModal");
 
-const editListName = ref<string>("");
-const selectedListColor = ref<string>(colorsList[0]);
+const { selectedListData, loading } = defineProps<{
+  selectedListData: ListData | null;
+  loading: boolean;
+}>();
+
+const editListName = defineModel<string>("name");
+const editListColor = defineModel<string>("color");
+
+const emit = defineEmits(["updateList"]);
+
+const isDataChanged = computed(() => {
+  if (!selectedListData) return false;
+
+  const isNameChanged = editListName.value !== selectedListData.title;
+  const isColorChanged = editListColor.value !== (selectedListData.hexColor || colorsList[0]);
+
+  return isNameChanged || isColorChanged;
+});
 
 </script>
 
@@ -23,7 +41,7 @@ const selectedListColor = ref<string>(colorsList[0]);
   >
     <template #default>
       <VInput
-        v-modal="editListName"
+        v-model="editListName"
         :label="$t('lists.editListModal.labelName')"
         class="text-sm text-secondary font-medium leading-[1.2] mb-4"
       />
@@ -34,7 +52,7 @@ const selectedListColor = ref<string>(colorsList[0]);
         <VColorRadio
           v-for="color in colorsList"
           :key="color"
-          v-model="selectedListColor"
+          v-model="editListColor"
           :color="color"
         />
       </div>
@@ -49,6 +67,10 @@ const selectedListColor = ref<string>(colorsList[0]);
       <VButton
         :text="$t('lists.editListModal.saveBtn')"
         variant="outline"
+        :disabled="!isDataChanged"
+        :loading="loading"
+        load-color="text-disabled"
+        @click="emit('updateList')"
       />
     </template>
   </VModal>
